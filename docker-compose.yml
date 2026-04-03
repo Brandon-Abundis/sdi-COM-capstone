@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    container_name: pg-docker
+    environment:
+      # - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=com_db
+    ports:
+      - 5432:5432
+
+  api:
+    # Update the build context to your new folder name
+    build: ./server
+    command: npm run docker:setup
+    ports:
+      - 8080:8080
+    volumes:
+      # Update the host path for the bind mount
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=postgres://postgres:docker@db:5432/com_db
+    depends_on:
+      db:
+        condition: service_healthy
+
+  ui:
+    build: ./client
+    ports:
+      - 5173:5173
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8080
+    command: npm run dev
+    depends_on:
+      - api

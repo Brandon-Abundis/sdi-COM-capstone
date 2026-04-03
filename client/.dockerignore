@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist
+build
+
+# Docker-specific files
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# Version control
+.git
+.gitignore
+
+# OS/IDE metadata
+.vscode
+.DS_Store

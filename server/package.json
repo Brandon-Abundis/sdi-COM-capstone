@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "knex": "^3.2.8",
+    "nodemon": "^3.1.14",
+    "pg": "^8.20.0"
+  },
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "migrate": "knex migrate:latest",
+    "seed": "knex seed:run",
+    "docker:setup": "sleep 5 && npm run migrate && npm run seed && npm start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@faker-js/faker": "^10.4.0"
+  }
+}
