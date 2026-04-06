@@ -6,18 +6,64 @@ import Events from "../features/events/pages/Events";
 import Leaderboard from "../features/leaderboard/pages/Leaderboard";
 import Profile from "../features/profile/pages/Profile";
 import Workouts from "../features/workouts/pages/Workouts";
+import Login from "../features/auth/pages/Login";
+import Signup from "../features/auth/pages/Signup";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   return (
     <div>
-      <h1 className="text-3xl underline">Here's your app stuff:</h1>
       <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/workouts" element={<Workouts />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/calendar"
+          element={
+            <ProtectedRoute>
+              <Calendar />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/events"
+          element={
+            <ProtectedRoute>
+              <Events />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/leaderboard"
+          element={
+            <ProtectedRoute>
+              <Leaderboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/workouts"
+          element={
+            <ProtectedRoute>
+              <Workouts />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );
