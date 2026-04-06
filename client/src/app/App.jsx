@@ -10,7 +10,7 @@ import Workouts from "../features/workouts/pages/Workouts";
 function App() {
   return (
     <div>
-      <h1 className="4xl underline">Here's your app stuff:</h1>
+      <h1 className="text-3xl underline">Here's your app stuff:</h1>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/calendar" element={<Calendar />} />
