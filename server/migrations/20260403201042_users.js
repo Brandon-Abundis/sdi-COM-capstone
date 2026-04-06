@@ -5,7 +5,21 @@
 exports.up = function(knex) {
   return knex.schema.createTable('users', table => {
     table.increments();
-    table.string('name');
+    table.boolean('is_admin').defaultTo(false);
+    table.string('first_name');
+    table.string('last_name');
+    table.string('email');
+    table.string('password');
+    table.string('rank');
+    table.string('gender');
+    table.integer('age');
+    table.integer('xp');
+
+    table.timestamps();
+
+    table.string('badges_ids');
+    table.string('titles_ids');
+    table.string('cosmetic_ids');
   })
 };
 

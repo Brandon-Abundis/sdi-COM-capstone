@@ -12,7 +12,7 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db("users").select("*").where("id", id);
+    const result = await db("users").select("*").where("id", id).first();
     res.status(200).send(result);
   } catch (err) {
     res.status(500).send({ message: err });
