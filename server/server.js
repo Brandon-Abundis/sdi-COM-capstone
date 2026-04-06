@@ -5,11 +5,13 @@ const app = express();
 const port = 8080;
 
 const userRoutes = require("./routes/users");
+const groupRoutes = require("./routes/groups");
 
 app.use(express.json());
 app.use(cors());
 
 app.use("/users", userRoutes);
+app.use("/groups", groupRoutes);
 
 app.get("/", (req, res) => {
   return res
