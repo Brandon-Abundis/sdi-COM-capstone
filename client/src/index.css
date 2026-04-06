@@ -1,4 +1,7 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: business;
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "nightshade";
+  default: true;
 }
