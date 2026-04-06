@@ -22,16 +22,11 @@ const getById = async (req, res) => {
 const getGroupsById = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db("groups").select("id", "user_ids");
-    // const groupWithUserId = result.map((obj) => {
-    //   const userIds = obj.user_ids.split(",");
-    //   userIds.forEach((userId) => {
+    const groupData = await db("groups")
+      .select("*")
+      .whereRaw("? = ANY(string_to_array(user_ids, ','))", [id]);
 
-    //     if (userId === id) return obj;
-    //   });
-    //   return;
-    // });
-    res.status(200).send(result);
+    res.status(200).send(groupData);
   } catch (err) {
     res.status(500).send({ message: err });
   }
