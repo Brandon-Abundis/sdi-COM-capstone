@@ -1,0 +1,10 @@
+#WorkoutBox {
+  background-color: #6045cd;
+  margin: calc(var(--spacing) * 2);
+  height: calc(var(--spacing) * 70);
+  width: calc(var(--spacing) * 70);
+  border-radius: var(--radius-lg);
+  color: #aa80f2;
+  text-wrap: wrap;
+  text-align: center;
+}
