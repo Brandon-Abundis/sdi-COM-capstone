@@ -1,3 +1,9 @@
+import ProfileInfo from "../Components/ProfileInfo";
+
 export default function Profile() {
-  return <h1>Profile</h1>;
+  return (
+    <>
+      <ProfileInfo></ProfileInfo>
+    </>
+  );
 }
