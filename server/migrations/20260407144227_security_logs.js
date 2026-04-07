@@ -2,7 +2,7 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.schema.createTable("security_logs", (table) => {
     table.increments();
     table.timestamp("occured_at").defaultTo(knex.fn.now());
@@ -11,8 +11,7 @@ exports.up = function(knex) {
     table.integer("status_code"); // e.g., 200, 401, 500
 
     // The "Who"
-    table.integer("user_id").unsigned()
-      .references("id").inTable("users").onDelete("SET NULL");
+    table.integer("user_id");
 
     // The "What" (Postgres JSONB is great for this)
     table.jsonb("metadata");
@@ -25,6 +24,6 @@ exports.up = function(knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = function(knex) {
+exports.down = function (knex) {
   return knex.schema.dropTableIfExists("security_logs");
 };

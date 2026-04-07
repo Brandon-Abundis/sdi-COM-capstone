@@ -1,4 +1,5 @@
 const db = require("../db/db");
+const { createLog } = require("../support/createLog");
 
 const getAll = async (req, res) => {
   try {
@@ -13,8 +14,24 @@ const getById = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await db("users").select("*").where("id", id).first();
+    if (result) {
+      createLog({
+        method: "GET",
+        action: "FETCH_USERS",
+        status_code: 200,
+        user_id: result.id,
+        metadata: JSON.stringify(result),
+      });
+    }
     res.status(200).send(result);
   } catch (err) {
+    createLog({
+      method: "GET",
+      action: "FETCH_USER",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
     res.status(500).send({ message: err });
   }
 };
@@ -24,9 +41,25 @@ const getGroupsById = async (req, res) => {
   try {
     const groupData = await db("groups")
       .select("*")
-      .whereRaw("? = ANY(string_to_array(user_ids, ','))", [id]);
+      .whereRaw("? = ANY(user_ids)", [id]);
+    if (groupData) {
+      createLog({
+        method: "GET",
+        action: "FETCH_USER_GROUPS",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(groupData),
+      });
+    }
     res.status(200).send(groupData);
   } catch (err) {
+    createLog({
+      method: "GET",
+      action: "FETCH_USER_GROUPS",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
     res.status(500).send({ message: err });
   }
 };
