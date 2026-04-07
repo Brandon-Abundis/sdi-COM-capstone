@@ -4,6 +4,7 @@
   font-family: sans-serif;
   border: 1px solid #ddd;
   padding: 10px;
+  border-radius: 20px;
 }
 
 header {
@@ -15,7 +16,7 @@ header {
 
 .calendarGuts {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 equal columns */
+  grid-template-columns: repeat(7, 1fr);
   gap: 5px;
 }
 
@@ -26,9 +27,10 @@ header {
 .day,
 .blank {
   padding: 60px;
-  text-align: center;
+
   border: 1px solid #eee;
   cursor: pointer;
+  border-radius: 10px;
 }
 
 .day:hover {
