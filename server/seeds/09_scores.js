@@ -8,7 +8,7 @@ exports.seed = async function(knex) {
 
   const scores = [];
 
-  for (let userId = 1; userId <= 26; userId++) {
+  for (let userId = 1; userId <= 51; userId++) {
     scores.push({
       user_id: userId,
       // One random score between 100 and 5000
