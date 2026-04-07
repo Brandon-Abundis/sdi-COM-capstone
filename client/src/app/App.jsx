@@ -8,7 +8,7 @@ import Events from "../features/events/pages/Events";
 import Leaderboard from "../features/leaderboard/pages/Leaderboard";
 import Profile from "../features/profile/pages/Profile";
 import Workouts from "../features/workouts/pages/Workouts";
-
+import ChatAndGroup from "../features/chatandgroup/chatandgroup";
 import PublicRoute from "./routes/PublicRoute.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import PublicLayout from "./layouts/PublicLayout.jsx";
@@ -42,6 +42,7 @@ function App() {
         <Route path="events" element={<Events />} />
         <Route path="leaderboard" element={<Leaderboard />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="profile/:id" element={<Profile />} />
         <Route path="workouts" element={<Workouts />} />
       </Route>
 
