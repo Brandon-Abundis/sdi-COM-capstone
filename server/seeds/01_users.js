@@ -11,27 +11,35 @@ exports.seed = async function (knex) {
     '2nd Lt', '1st Lt', 'Capt', 'Maj', 'LtCol', 'Col', 'General'
   ];
 
+  const allIds = Array.from({ length: 51 }, (_, i) => i + 1);
+
   const users = [];
 
-  for (let i=0; i<50; i++) {
+  for (let i = 0; i < 50; i++) {
+    const currentId = i + 2; // Offset by 2 because admin is ID 1
+
+    // Pick 1 to 3 rivals, excluding the current user's ID
+    const possibleRivals = allIds.filter(id => id !== currentId);
+    const rivalCount = faker.number.int({ min: 1, max: 3 });
+
     users.push({
       first_name: faker.person.firstName(),
       last_name: faker.person.lastName(),
       email: faker.internet.email(),
       password: 'hashed_password_here',
-
       rank: faker.helpers.arrayElement(SF_RANKS),
-
       gender: faker.person.sex(),
       age: faker.number.int({ min: 18, max: 45 }),
       xp: faker.number.int({ min: 0, max: 5000 }),
       is_admin: false,
 
-      // 5 elements, random numerical IDs (1-5) -> unknown amount of stuff????
+      // New Rival IDs logic
+      rival_ids: faker.helpers.arrayElements(possibleRivals, rivalCount),
+
       badges_ids: Array.from({ length: 5 }, () => faker.number.int({ min: 1, max: 5 })),
       titles_ids: Array.from({ length: 5 }, () => faker.number.int({ min: 1, max: 5 })),
       cosmetic_ids: Array.from({ length: 5 }, () => faker.number.int({ min: 1, max: 5 }))
-    })
+    });
   }
   // admin user at the top
   users.unshift({
@@ -44,6 +52,7 @@ exports.seed = async function (knex) {
     gender: "Male",
     age: 21,
     xp: 100,
+    rival_ids: [2, 3, 4],
     badges_ids: [1, 2],
     titles_ids: [1, 2],
     cosmetic_ids: [3, 4],
