@@ -14,9 +14,9 @@ exports.seed = async function (knex) {
       email: "abc@gmail.com",
       age: 25,
       xp: 100,
-      badges_ids: "1,2",
-      titles_ids: "1,2",
-      cosmetic_ids: "3,4",
+      badges_ids: [1,2],
+      titles_ids: [1,2],
+      cosmetic_ids: [3,4],
     },
   ]);
 };
