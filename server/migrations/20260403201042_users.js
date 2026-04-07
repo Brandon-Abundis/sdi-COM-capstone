@@ -13,13 +13,13 @@ exports.up = function (knex) {
     table.string("rank");
     table.string("gender");
     table.integer("age");
-    table.integer("xp");
+    table.integer("xp").defaultTo(0);
 
     table.timestamps(true, true);
 
-    table.text("badges_ids");
-    table.text("titles_ids");
-    table.text("cosmetic_ids");
+    table.specificType("badges_ids", "integer[]");
+    table.specificType("titles_ids", "integer[]");
+    table.specificType("cosmetic_ids", "integer[]");
   });
 };
 
