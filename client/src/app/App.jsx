@@ -7,20 +7,74 @@ import Leaderboard from "../features/leaderboard/pages/Leaderboard";
 import Profile from "../features/profile/pages/Profile";
 import Workouts from "../features/workouts/pages/Workouts";
 import ChatAndGroup from "../features/chatandgroup/chatandgroup";
+import Login from "../features/auth/pages/Login";
+import Signup from "../features/auth/pages/Signup";
+import ProtectedRoute from "./ProtectedRoute";
+import Navbar from "./Navbar/Navbar";
 
 function App() {
   return (
     <div>
-      <h1 className="text-3xl underline">Here's your app stuff:</h1>
+      <Navbar />
       <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/profile/:id" element={<Profile />} />
-        <Route path="/workouts" element={<Workouts />} />
-        <Route path="/groups" element={<ChatAndGroup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/calendar"
+          element={
+            <ProtectedRoute>
+              <Calendar />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/events"
+          element={
+            <ProtectedRoute>
+              <Events />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/leaderboard"
+          element={
+            <ProtectedRoute>
+              <Leaderboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:id"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/workouts"
+          element={
+            <ProtectedRoute>
+              <Workouts />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   );
