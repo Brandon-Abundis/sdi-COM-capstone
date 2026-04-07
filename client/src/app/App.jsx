@@ -44,6 +44,7 @@ function App() {
         <Route path="profile" element={<Profile />} />
         <Route path="profile/:id" element={<Profile />} />
         <Route path="workouts" element={<Workouts />} />
+        <Route path="chatandgroups" element={<ChatAndGroup />} />
       </Route>
 
       {/* Catch-all for paths that do not match any listed above */}
