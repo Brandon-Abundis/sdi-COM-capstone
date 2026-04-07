@@ -8,7 +8,7 @@ exports.up = function(knex) {
     table.string("name");
     table.string("type");
     table.integer("time");
-    table.integer("distance");
+    table.float("distance");
     table.integer("reps");
     table.string("muscle_group");
     table.integer("weight");
