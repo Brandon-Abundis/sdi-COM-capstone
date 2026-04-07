@@ -6,6 +6,7 @@ import Events from "../features/events/pages/Events";
 import Leaderboard from "../features/leaderboard/pages/Leaderboard";
 import Profile from "../features/profile/pages/Profile";
 import Workouts from "../features/workouts/pages/Workouts";
+import ChatAndGroup from "../features/chatandgroup/chatandgroup";
 import Login from "../features/auth/pages/Login";
 import Signup from "../features/auth/pages/Signup";
 import ProtectedRoute from "./ProtectedRoute";
@@ -52,6 +53,14 @@ function App() {
         />
         <Route
           path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/:id"
           element={
             <ProtectedRoute>
               <Profile />
