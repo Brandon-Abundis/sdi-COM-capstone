@@ -13,7 +13,7 @@ export default function ProfileInfo() {
     rank: "rank",
     gender: "gender",
     age: 2,
-    xp: "1520",
+    xp: 1520,
     updated_at: "time_stamp",
     badges: [
       "https://img.daisyui.com/images/profile/demo/batperson@192.webp",
