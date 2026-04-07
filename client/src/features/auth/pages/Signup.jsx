@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../../app/AuthProvider";
 import { useState } from "react";
 
@@ -37,59 +37,74 @@ export default function Signup() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <h2>Signup</h2>
-        {error && <div className="text-red-700 px-4 py-3">{error}</div>}
-        <input
-          className="input"
-          name="firstName"
-          type="firstName"
-          required
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-        <input
-          className="input"
-          name="lastName"
-          type="lastName"
-          required
-          placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <input
-          className="input"
-          name="email"
-          type="email"
-          required
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="input"
-          name="password"
-          type="password"
-          required
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input
-          className="input"
-          name="confirmPassword"
-          type="password"
-          required
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        <button type="submit" className="cursor-pointer">
-          Create Account
-        </button>
-      </form>
+    <div className="min-h-screen bg-[#0f0d17] flex items-center justify-center p-6">
+      <div className="card card-border border-amber-400 bg-base-100 w-full max-w-lg shadow-xl">
+        <div className="card-body">
+          <h2 className="card-title text-[#7c3aed] text-2xl pb-3">Signup</h2>
+          {error && <div className="alert alert-error">{error}</div>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              className="input input-bordered w-full"
+              name="firstName"
+              type="text"
+              required
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            <input
+              className="input input-bordered w-full"
+              name="lastName"
+              type="text"
+              required
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+            <input
+              className="input input-bordered w-full"
+              name="email"
+              type="email"
+              required
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              className="input input-bordered w-full"
+              name="password"
+              type="password"
+              required
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <input
+              className="input input-bordered w-full"
+              name="confirmPassword"
+              type="password"
+              required
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <div className="card-actions justify-end">
+              <button
+                type="submit"
+                className="btn btn-primary bg-[#7c3aed] hover:border-[#a78bfa]"
+              >
+                Create Account
+              </button>
+            </div>
+          </form>
+          <p className="text-center pt-3">
+            Already have an account?{" "}
+            <Link to="/login" className="link text-amber-500">
+              Log in
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
