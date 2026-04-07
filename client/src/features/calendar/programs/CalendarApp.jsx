@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 
 export default function CalendarApp() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedYear, setSelectedYear] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
 
+  // useEffect(() => {}, [currentDate])
   let year = currentDate.getFullYear();
+  console.log("this is the year:" + year);
   let month = currentDate.getMonth();
-
+  console.log("this is the month:" + month);
+  console.log("this is the currentDate:" + currentDate);
   let firstDayOfMonth = new Date(year, month, 1).getDay();
   let daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -21,8 +25,9 @@ export default function CalendarApp() {
     <div className="calendar">
       <header>
         <button
+          type="button"
           onClick={() => {
-            setCurrentDate(year, month - 1);
+            setCurrentDate(new Date(year, month - 1));
           }}
         >
           Prev
@@ -35,7 +40,7 @@ export default function CalendarApp() {
         </h2>
         <button
           onClick={() => {
-            setCurrentDate(year, month + 1);
+            setCurrentDate(new Date(year, month + 1));
           }}
         >
           Next
