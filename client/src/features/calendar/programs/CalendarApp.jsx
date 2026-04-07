@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 export default function CalendarApp() {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
 
   let year = currentDate.getFullYear();
@@ -52,13 +53,22 @@ export default function CalendarApp() {
         ))}
 
         {days.map((day) => (
-          <div
-            key={day}
-            className={`day ${selectedDay === day ? "selected" : ""}`}
-            onClick={() => setSelectedDay(day)}
-          >
-            {day}
-          </div>
+          <>
+            <div
+              key={day}
+              className={`day ${selectedDay === day ? "selected" : ""}`}
+              onClick={() => setSelectedDay(day)}
+            >
+              {day}
+              <div className="Workouts">
+                {/* <ul>
+                  <li>test1</li>
+                  <li>test2</li>
+                  <li>test3</li>
+                </ul> */}
+              </div>
+            </div>
+          </>
         ))}
       </div>
     </div>
