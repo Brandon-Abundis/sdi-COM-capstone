@@ -15,6 +15,8 @@ exports.up = function (knex) {
     table.integer("age");
     table.integer("xp").defaultTo(0);
 
+    table.specificType("rival_ids", "integer[]");
+
     table.timestamps(true, true);
 
     table.specificType("badges_ids", "integer[]");
