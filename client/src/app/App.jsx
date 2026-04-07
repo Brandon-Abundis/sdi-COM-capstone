@@ -9,10 +9,12 @@ import Workouts from "../features/workouts/pages/Workouts";
 import Login from "../features/auth/pages/Login";
 import Signup from "../features/auth/pages/Signup";
 import ProtectedRoute from "./ProtectedRoute";
+import Navbar from "./Navbar/Navbar";
 
 function App() {
   return (
     <div>
+      <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
