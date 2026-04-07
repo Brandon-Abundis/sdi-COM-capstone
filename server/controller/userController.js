@@ -83,13 +83,29 @@ const getGroupsById = async (req, res) => {
 const getGoalsById = async (req, res) => {
   const { id } = req.params;
   try {
-    //uncomment these code when user_goals is ready
-    // const result = await db("user_goals").select("*").where("user_id", id).first();
-    // res.status(200).send(result);
-    res
-      .status(200)
-      .send({ message: "you made it, the data you require is not ready yet" });
+    const result = await db("user_goals")
+      .select("*")
+      .where("user_id", id)
+      .first();
+
+    if (result) {
+      createLog({
+        method: "GET",
+        action: "FETCH_USER_GOALS",
+        status_code: 200,
+        user_id: result.id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result);
   } catch (err) {
+    createLog({
+      method: "GET",
+      action: "FETCH_USER_GOALS",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
     res.status(500).send({ message: err });
   }
 };
@@ -97,13 +113,28 @@ const getGoalsById = async (req, res) => {
 const getWorkoutsById = async (req, res) => {
   const { id } = req.params;
   try {
-    //uncomment these code when user_goals is ready
-    // const result = await db("user_workouts").select("*").where("user_id", id).first();
-    // res.status(200).send(result);
-    res
-      .status(200)
-      .send({ message: "you made it, the data you require is not ready yet" });
+    const result = await db("user_workouts")
+      .select("*")
+      .where("user_id", id)
+      .first();
+    if (result) {
+      createLog({
+        method: "GET",
+        action: "FETCH_USER_WORKOUTS",
+        status_code: 200,
+        user_id: result.id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result);
   } catch (err) {
+    createLog({
+      method: "GET",
+      action: "FETCH_USER_WORKOUTS",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
     res.status(500).send({ message: err });
   }
 };
@@ -111,13 +142,28 @@ const getWorkoutsById = async (req, res) => {
 const getEventsById = async (req, res) => {
   const { id } = req.params;
   try {
-    //uncomment these code when user_goals is ready
-    // const result = await db("user_events").select("*").where("user_id", id).first();
-    // res.status(200).send(result);
-    res
-      .status(200)
-      .send({ message: "you made it, the data you require is not ready yet" });
+    const result = await db("user_events")
+      .select("*")
+      .where("user_id", id)
+      .first();
+    if (result) {
+      createLog({
+        method: "GET",
+        action: "FETCH_USER_EVENTS",
+        status_code: 200,
+        user_id: result.id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result);
   } catch (err) {
+    createLog({
+      method: "GET",
+      action: "FETCH_USER_EVENTS",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
     res.status(500).send({ message: err });
   }
 };
@@ -125,13 +171,25 @@ const getEventsById = async (req, res) => {
 const getScoresById = async (req, res) => {
   const { id } = req.params;
   try {
-    //uncomment these code when user_goals is ready
-    // const result = await db("scores").select("*").where("user_id", id).first();
-    // res.status(200).send(result);
-    res
-      .status(200)
-      .send({ message: "you made it, the data you require is not ready yet" });
+    const result = await db("scores").select("*").where("user_id", id).first();
+    if (result) {
+      createLog({
+        method: "GET",
+        action: "FETCH_USER_SCORES",
+        status_code: 200,
+        user_id: result.id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result);
   } catch (err) {
+    createLog({
+      method: "GET",
+      action: "FETCH_USER_SCORES",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
     res.status(500).send({ message: err });
   }
 };
