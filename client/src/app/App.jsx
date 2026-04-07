@@ -6,6 +6,7 @@ import Events from "../features/events/pages/Events";
 import Leaderboard from "../features/leaderboard/pages/Leaderboard";
 import Profile from "../features/profile/pages/Profile";
 import Workouts from "../features/workouts/pages/Workouts";
+import ChatAndGroup from "../features/chatandgroup/chatandgroup";
 
 function App() {
   return (
@@ -17,7 +18,9 @@ function App() {
         <Route path="/events" element={<Events />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:id" element={<Profile />} />
         <Route path="/workouts" element={<Workouts />} />
+        <Route path="/groups" element={<ChatAndGroup />} />
       </Routes>
     </div>
   );
