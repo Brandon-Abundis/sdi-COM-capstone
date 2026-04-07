@@ -1,15 +1,24 @@
-const db = require('./db/db');
+const express = require("express");
+const cors = require("cors");
 
-const express = require('express');
-const cors = require('cors');
 const app = express();
 const port = 8080;
+
+const userRoutes = require("./routes/users");
+const groupRoutes = require("./routes/groups");
+const authRoutes = require("./routes/auth");
 
 app.use(express.json());
 app.use(cors());
 
-app.get('/', (req,res) => {
-  return res.status(200).json({message: 'Welcome to the empty route traveler ♡(˶>⩊<˶)'})
+app.use("/users", userRoutes);
+app.use("/groups", groupRoutes);
+app.use("/auth", authRoutes);
+
+app.get("/", (req, res) => {
+  return res
+    .status(200)
+    .json({ message: "Welcome to the empty route traveler ♡(˶>⩊<˶)" });
 });
 
 app.listen(port, () => console.log(`Express server listening on port ${port}`));
