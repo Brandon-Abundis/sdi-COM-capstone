@@ -4,6 +4,8 @@ base endpoint, no data from here
 
 - http://localhost:8080
 
+## Users
+
 users endpoint, you can get all users info from here
 
 - http://localhost:8080/users
@@ -32,6 +34,8 @@ user endpoint, you can get all user scores info associated to a user by passing 
 
 - http://localhost:8080/users/scores/id/:id
 
+## Groups
+
 groups endpoint, you can get all groups info from here
 
 - http://localhost:8080/groups/
@@ -52,9 +56,7 @@ group endpoint, you can get specific group events from here by passing group id
 
 - http://localhost:8080/groups/group_events/id/:id
 
-security log endpoint, you can get all logs from here
-
-- http://localhost:8080/logs
+## Auth
 
 account registeration endpoint, you can post new user here
 
@@ -63,3 +65,9 @@ account registeration endpoint, you can post new user here
 account login endpoint, you can login to a user using email and password post here
 
 - http://localhost:8080/auth/register
+
+## Logs
+
+security log endpoint, you can get all logs from here
+
+- http://localhost:8080/logs
