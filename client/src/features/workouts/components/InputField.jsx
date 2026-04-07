@@ -1,5 +1,6 @@
-export default function InputField({ type, choices }) {
-  if (type == "selection") {
+export default function InputField({ style, choices, def, chosen }) {
+  console.log(style)
+  if (style == "selection") {
     return (
       <div>
         <label for="types"> Workout Type: </label>
@@ -7,7 +8,14 @@ export default function InputField({ type, choices }) {
         <select name="type" id="workoutSelection">
           {choices.map((choice) => {
             let showChoice = choice.charAt(0).toUpperCase() + choice.slice(1);
-            console.log(showChoice);
+            if (choice == chosen) {
+              // if there's already a type, select it
+              return (
+                <option value={choice} selected="selected">
+                  {showChoice}
+                </option>
+              );
+            }
             return <option value={choice}> {showChoice} </option>;
           })}
         </select>
@@ -16,7 +24,7 @@ export default function InputField({ type, choices }) {
   }
   return (
     <div>
-      <input placeholder={type} />
+      <input placeholder={style} defaultValue={def} className={"rounded-md text-center bg-white text-black w-80 border-3 border-[#0e001f]  text-wrap focus:border-[#7300ff]"}/>
     </div>
   );
 }
