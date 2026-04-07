@@ -12,10 +12,10 @@ exports.up = function(knex) {
     table.specificType("goals_list", "integer[]"); // basic postgres array
     table.specificType("workouts_list", "integer[]");
 
-    table.integer("user_id")
+    table.integer("group_id")
       .unsigned() // consistancy with auto increment IDs
       .references("id") // colomn points to parent table
-      .inTable("users") // parent table name
+      .inTable("groups") // parent table name
       .onDelete("CASCADE"); // deletes child rows if user is deleted...
 
     table.timestamps(true, true);
