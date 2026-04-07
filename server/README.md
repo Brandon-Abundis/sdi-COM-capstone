@@ -51,3 +51,15 @@ group endpoint, you can get specific group workouts from here by passing group i
 group endpoint, you can get specific group events from here by passing group id
 
 - http://localhost:8080/groups/group_events/id/:id
+
+security log endpoint, you can get all logs from here
+
+- http://localhost:8080/logs
+
+account registeration endpoint, you can post new user here
+
+- http://localhost:8080/auth/register
+
+account login endpoint, you can login to a user using email and password post here
+
+- http://localhost:8080/auth/register
