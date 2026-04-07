@@ -25,11 +25,74 @@ const getGroupsById = async (req, res) => {
     const groupData = await db("groups")
       .select("*")
       .whereRaw("? = ANY(string_to_array(user_ids, ','))", [id]);
-
     res.status(200).send(groupData);
   } catch (err) {
     res.status(500).send({ message: err });
   }
 };
 
-module.exports = { getAll, getById, getGroupsById };
+const getGoalsById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    //uncomment these code when user_goals is ready
+    // const result = await db("user_goals").select("*").where("user_id", id).first();
+    // res.status(200).send(result);
+    res
+      .status(200)
+      .send({ message: "you made it, the data you require is not ready yet" });
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
+};
+
+const getWorkoutsById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    //uncomment these code when user_goals is ready
+    // const result = await db("user_workouts").select("*").where("user_id", id).first();
+    // res.status(200).send(result);
+    res
+      .status(200)
+      .send({ message: "you made it, the data you require is not ready yet" });
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
+};
+
+const getEventsById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    //uncomment these code when user_goals is ready
+    // const result = await db("user_events").select("*").where("user_id", id).first();
+    // res.status(200).send(result);
+    res
+      .status(200)
+      .send({ message: "you made it, the data you require is not ready yet" });
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
+};
+
+const getScoresById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    //uncomment these code when user_goals is ready
+    // const result = await db("scores").select("*").where("user_id", id).first();
+    // res.status(200).send(result);
+    res
+      .status(200)
+      .send({ message: "you made it, the data you require is not ready yet" });
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
+};
+
+module.exports = {
+  getAll,
+  getById,
+  getGroupsById,
+  getGoalsById,
+  getWorkoutsById,
+  getEventsById,
+  getScoresById,
+};
