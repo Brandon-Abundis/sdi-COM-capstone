@@ -1,30 +1,99 @@
 import WorkoutBox from "../components/WorkoutBox";
 import AddWorkout from "../components/AddWorkout";
 import Modal from "../components/Modal";
-import ModalContent from "../components/ModalContent";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Workouts() {
   let [showModal, setShowModal] = useState(false);
   let [editInfo, setEditInfo] = useState(null);
+  let defaultString = "N/A";
+  let currentUser = JSON.parse(localStorage.getItem("user")).email;
 
-  let info = { title: "thisisaTest thisisaTest", type: "strength" };
+  useEffect(() => {
+    fetch("http://localhost:8080/users/")
+      .then((data) => data.json())
+      .then((data) =>
+        data.forEach((user) => {
+          if (user.email == currentUser) {
+            fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
+              .then((data) => data.json())
+              .then((data) => {
+                let {
+                  name,
+                  type,
+                  time,
+                  distance,
+                  reps,
+                  notes,
+                  weight,
+                  muscle_groups,
+                } = data;
+                setEditInfo({
+                  title: name || defaultString,
+                  type: type || defaultString,
+                  time: time || defaultString,
+                  distance: distance || defaultString,
+                  reps: reps || defaultString,
+                  muscle_groups: muscle_groups || defaultString,
+                  weight: weight || defaultString,
+                  notes: notes || defaultString,
+                });
+                console.log(editInfo);
+              });
+          }
+        }),
+      );
+  }, []);
+
+  let info = {
+    id: 1,
+    title: "thisisaTest thisisaTest",
+    type: "strength",
+    time: "45",
+    distance: "N/A",
+    reps: "375",
+    muscle_groups: "Arms !",
+    weight: "100",
+    notes: "test note !",
+  };
+
+  if (!editInfo) {
+    return <h2> Loading :3 </h2>;
+  }
   return (
     <div>
       <div>
         <h1 className={"text-[#7c3aed]"}> Your Workouts !</h1>
       </div>
       <div id={"workoutArea"} className={"p-4 grid grid-cols-4"}>
-        <AddWorkout onClick={() => setShowModal(true)} />
-          <Modal openModal={showModal} closeModal={() => setShowModal(false)}>
-            <ModalContent />
-          </Modal>
-        <WorkoutBox info={info} />
-        <WorkoutBox info={info} />
-        <WorkoutBox info={info} />
-        <WorkoutBox info={info} />
-        <WorkoutBox info={info} />
-        <WorkoutBox info={info} />
+        <AddWorkout
+          onClick={() => {
+            setEditInfo({
+              title: defaultString,
+              type: defaultString,
+              time: defaultString,
+              distance: defaultString,
+              reps: defaultString,
+              muscle_groups: defaultString,
+              weight: defaultString,
+              notes: defaultString,
+            });
+            setShowModal(true);
+          }}
+        />
+        <WorkoutBox
+          details={editInfo}
+          onClick={() => {
+            setShowModal(true);
+          }}
+        />
+
+        <Modal
+          openModal={showModal}
+          closeModal={() => setShowModal(false)}
+          info={editInfo}
+          key={"new"}
+        />
       </div>
     </div>
   );

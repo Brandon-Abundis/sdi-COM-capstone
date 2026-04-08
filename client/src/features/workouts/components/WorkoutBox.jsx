@@ -2,10 +2,14 @@ import "../styles/WorkoutBox.css";
 // importing because tailwind was getting too long D:
 import Icon from "./Icon";
 
-export default function WorkoutBox({info}) {
-  let {title, type} = info
+export default function WorkoutBox({ details, onClick }) {
+
+  let { title, type, time, notes } = details;
+  title = title.charAt(0).toUpperCase() + title.slice(1) || ""
+  let displayType = type.charAt(0).toUpperCase() + type.slice(1)
   return (
     <div
+      onClick={onClick}
       id={"WorkoutBox"}
       className={
         "border-2 border-[#240014] hover:border-[#ee80ff] hover:scale-105 cursor-pointer active:scale-100"
@@ -23,17 +27,13 @@ export default function WorkoutBox({info}) {
         >
           {title}
         </h2>
-        <Icon
-          type={type}
-        />
+        <Icon type={type} />
       </div>
-      <div className={"m-4 w-60 h-49 bg-[#220d23]"}>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
+      <div className={"m-4 w-60 h-49 bg-[#220d23] flex flex-col justify-around rounded-sm"}>
+        <h2 className={"text-center mt-1 text-3xl"}> {displayType} </h2>
+        <h2 className={"text-center mt-1"}> {time} Min. </h2>
+        <h2 className={"text-center mt-1"}> {notes} </h2>
+        <h2 className={"text-center mt-1 bg-black w-50 self-center rounded-2xl"}> Click for more details </h2>
       </div>
     </div>
   );
