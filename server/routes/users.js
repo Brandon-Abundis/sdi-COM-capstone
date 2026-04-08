@@ -9,7 +9,7 @@ const {
   getEventsById,
   createEvent,
 } = require("../controller/userController");
-const router = express();
+const router = express.Router();
 
 router.get("/", getAll);
 router.get("/id/:id", getById);

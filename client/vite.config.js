@@ -9,5 +9,12 @@ export default defineConfig({
     host: "0.0.0.0", // Listen on all network interfaces
     port: 5173,
     strictPort: true, // Fail if port 5173 is already in use
+    proxy: {
+      "/api": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
 });

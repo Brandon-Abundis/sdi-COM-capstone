@@ -1,34 +1,33 @@
-import { useState, useEffect } from "react";
 
-export default function CalendarApp() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(null);
-  const [selectedDay, setSelectedDay] = useState(null);
+export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events }) {
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+  const blanks = Array.from({ length: firstDayOfMonth });
 
-  // useEffect(() => {}, [currentDate])
-  let year = currentDate.getFullYear();
-  console.log("this is the year:" + year);
-  let month = currentDate.getMonth();
-  console.log("this is the month:" + month);
-  console.log("this is the currentDate:" + currentDate);
-  let firstDayOfMonth = new Date(year, month, 1).getDay();
-  let daysInMonth = new Date(year, month + 1, 0).getDate();
+  function eventsForDay(day) {
+    return events.filter((e) => {
+      const d = new Date(e.date);
+      return (
+        d.getUTCFullYear() === year &&
+        d.getUTCMonth() === month &&
+        d.getUTCDate() === day
+      );
+    });
+  }
 
-  let days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-  let blanks = Array.from({ length: firstDayOfMonth });
+  function handleDayClick(day) {
+    onDaySelect(selectedDay === day ? null : day);
+  }
 
-  useEffect(() => {
-    console.log(selectedDay);
-  }, [selectedDay]);
   return (
     <div className="calendar">
       <header>
         <button
           type="button"
-          onClick={() => {
-            setCurrentDate(new Date(year, month - 1));
-          }}
+          onClick={() => onMonthChange(new Date(year, month - 1))}
         >
           Prev
         </button>
@@ -39,13 +38,13 @@ export default function CalendarApp() {
           })}
         </h2>
         <button
-          onClick={() => {
-            setCurrentDate(new Date(year, month + 1));
-          }}
+          type="button"
+          onClick={() => onMonthChange(new Date(year, month + 1))}
         >
           Next
         </button>
       </header>
+
       <div className="calendarGuts">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
           <div key={d} className="day-names">
@@ -57,24 +56,26 @@ export default function CalendarApp() {
           <div key={`blank-${i}`} className="blank" />
         ))}
 
-        {days.map((day) => (
-          <>
+        {days.map((day) => {
+          const dayEvents = eventsForDay(day);
+          return (
             <div
               key={day}
               className={`day ${selectedDay === day ? "selected" : ""}`}
-              onClick={() => setSelectedDay(day)}
+              onClick={() => handleDayClick(day)}
             >
-              {day}
-              <div className="Workouts">
-                {/* <ul>
-                  <li>test1</li>
-                  <li>test2</li>
-                  <li>test3</li>
-                </ul> */}
-              </div>
+              <span className="day-number">{day}</span>
+              {dayEvents.slice(0, 3).map((e) => (
+                <span key={e.id} className="event-tab">
+                  {e.name}
+                </span>
+              ))}
+              {dayEvents.length > 3 && (
+                <span className="event-tab-more">+{dayEvents.length - 3} more</span>
+              )}
             </div>
-          </>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
