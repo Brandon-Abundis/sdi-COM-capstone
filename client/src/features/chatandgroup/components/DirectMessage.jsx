@@ -1,101 +1,102 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAuth } from "../../../app/AuthProvider";
 import MessageBubble from "./MessageBubble";
 import ChallengeCard from "./ChallengeCard";
 
-const CURRENT_USER_ID = 1;
-
-// Mock DM threads keyed by the other user's id
-const mockDMs = {
-  2: [
-    { id: 1, type: "message",   user_id: 2, full_name: "E. Ortiz",   avatar: "https://i.pravatar.cc/40?u=2", text: "Yo you hitting the bench challenge?", timestamp: "Mon 09:00" },
-    { id: 2, type: "message",   user_id: 1, full_name: "J. DeCarlo", avatar: "https://i.pravatar.cc/40?u=1", text: "For sure. Wanna make it official?",    timestamp: "Mon 09:01" },
-    {
-      id: 3,
-      type: "challenge",
-      from_user_id: 1,
-      from_name: "J. DeCarlo",
-      from_avatar: "https://i.pravatar.cc/40?u=1",
-      exercise: "Bench Press 1RM",
-      goal: "Whoever hits a higher 1RM wins",
-      date: "2026-04-15",
-      time: "1400",
-      time_until: "8 days",
-      status: "pending",
-      timestamp: "Mon 09:02",
-    },
-  ],
-  3: [
-    { id: 1, type: "message", user_id: 3, full_name: "B. Adams",   avatar: "https://i.pravatar.cc/40?u=3", text: "You ready for leg day gauntlet?", timestamp: "Tue 07:45" },
-    { id: 2, type: "message", user_id: 1, full_name: "J. DeCarlo", avatar: "https://i.pravatar.cc/40?u=1", text: "Born ready.",                     timestamp: "Tue 07:46" },
-  ],
-  4: [
-    { id: 1, type: "message", user_id: 4, full_name: "J. Torres", avatar: "https://i.pravatar.cc/40?u=4", text: "5K challenge?", timestamp: "Wed 06:00" },
-    {
-      id: 2,
-      type: "challenge",
-      from_user_id: 4,
-      from_name: "J. Torres",
-      from_avatar: "https://i.pravatar.cc/40?u=4",
-      exercise: "5K Run",
-      goal: "Fastest time wins",
-      date: "2026-04-25",
-      time: "0500",
-      time_until: "18 days",
-      status: "pending",
-      timestamp: "Wed 06:01",
-    },
-  ],
-};
+function formatTimestamp(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", hour12: true });
+}
 
 export default function DirectMessage({ dmUser }) {
+  const { user } = useAuth();
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [showChallengeForm, setShowChallengeForm] = useState(false);
   const [challengeForm, setChallengeForm] = useState({
-    exercise: "", goal: "", date: "", time: "", time_until: "",
+    exercise: "", goal: "", date: "", time: "",
   });
+  const bottomRef = useRef(null);
 
-  const thread = mockDMs[dmUser.user_id] ?? [];
+  useEffect(() => {
+    if (!user?.id || !dmUser?.user_id) return;
+    fetch(`http://localhost:8080/messages/dm/${user.id}/${dmUser.user_id}`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then(setMessages)
+      .catch(() => {});
+  }, [user?.id, dmUser?.user_id]);
 
-  function handleSend(e) {
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  async function handleSend(e) {
     e.preventDefault();
+    if (!input.trim()) return;
+    const res = await fetch("http://localhost:8080/messages/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: input.trim(), user_id: user.id, to_user_id: dmUser.user_id }),
+    });
+    if (res.ok) {
+      const msg = await res.json();
+      setMessages((prev) => [
+        ...prev,
+        {
+          ...msg,
+          first_name: user.first_name,
+          last_name: user.last_name,
+        },
+      ]);
+    }
     setInput("");
   }
 
   function handleChallengeSubmit(e) {
     e.preventDefault();
-    // Wire to API when backend ready
     setShowChallengeForm(false);
-    setChallengeForm({ exercise: "", goal: "", date: "", time: "", time_until: "" });
+    setChallengeForm({ exercise: "", goal: "", date: "", time: "" });
   }
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
-      {/* DM header */}
       <div className="px-4 py-3 border-b border-[#1e1838] flex items-center gap-3">
-        <img src={dmUser.avatar} alt={dmUser.full_name} className="w-8 h-8 rounded-full border-2 border-[#2a2245]" />
-        <span className="font-semibold text-[#e2dff5] text-sm">{dmUser.full_name}</span>
+        <img
+          src={`https://i.pravatar.cc/40?u=${dmUser.user_id}`}
+          alt={dmUser.full_name}
+          className="w-8 h-8 rounded-full border-2 border-[#2a2245]"
+        />
+        <div>
+          <span className="font-semibold text-[#e2dff5] text-sm">{dmUser.full_name}</span>
+          {dmUser.rank && <span className="ml-2 text-xs text-[#a78bfa]">{dmUser.rank}</span>}
+        </div>
       </div>
 
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {thread.map((item) =>
-          item.type === "challenge" ? (
-            <ChallengeCard
-              key={item.id}
-              challenge={item}
-              isOwn={item.from_user_id === CURRENT_USER_ID}
-            />
+        {messages.length === 0 && (
+          <p className="text-sm text-[#e2dff5]/40 text-center mt-8">No messages yet. Start the conversation!</p>
+        )}
+        {messages.map((msg) =>
+          msg.type === "challenge" ? (
+            <ChallengeCard key={msg.id} challenge={msg} isOwn={msg.user_id === user?.id} />
           ) : (
             <MessageBubble
-              key={item.id}
-              message={item}
-              isOwn={item.user_id === CURRENT_USER_ID}
+              key={msg.id}
+              message={{
+                id: msg.id,
+                user_id: msg.user_id,
+                full_name: `${msg.first_name} ${msg.last_name}`,
+                avatar: `https://i.pravatar.cc/40?u=${msg.user_id}`,
+                text: msg.text,
+                timestamp: formatTimestamp(msg.created_at),
+              }}
+              isOwn={msg.user_id === user?.id}
             />
           )
         )}
+        <div ref={bottomRef} />
       </div>
 
-      {/* Challenge form */}
       {showChallengeForm && (
         <form
           onSubmit={handleChallengeSubmit}
@@ -143,7 +144,6 @@ export default function DirectMessage({ dmUser }) {
         </form>
       )}
 
-      {/* Input */}
       <form onSubmit={handleSend} className="p-3 border-t border-[#1e1838] flex gap-2">
         <button
           type="button"
