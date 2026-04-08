@@ -35,6 +35,6 @@ router.post("/user_workouts/update/id/:id", updateWorkoutById);
 router.post("/user_workouts/create/", createWorkout);
 router.get("/user_events/", getAllEvents);
 router.get("/user_events/id/:id", getEventsById);
-router.post("/user_events/id/:id", createEvent);
+router.post("/user_events", createEvent);
 
 module.exports = router;
