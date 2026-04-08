@@ -154,6 +154,7 @@
   color: #c084fc;
 }
 
+<<<<<<< HEAD
 /* ── Event tabs inside day cells ─────────────────────────── */
 .event-tab {
   display: flex;
@@ -334,4 +335,8 @@
   font-size: 0.8rem;
   color: #f87171;
   margin: 0;
+=======
+.clickable {
+  cursor: pointer;
+>>>>>>> de61ca7 (calendar select bug fixes)
 }

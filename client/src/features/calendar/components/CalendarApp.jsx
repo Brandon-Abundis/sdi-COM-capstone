@@ -40,14 +40,28 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
 
   useEffect(() => {
     console.log(selectedDay);
+<<<<<<< HEAD
   }, [selectedDay]);
 >>>>>>> b4dcd50 (updated Calendar display, built temp to-do list):client/src/features/calendar/components/CalendarApp.jsx
+=======
+    console.log(selectedMonth);
+    console.log(selectedYear);
+  }, [selectedDay, selectedMonth, selectedYear]);
+
+>>>>>>> de61ca7 (calendar select bug fixes)
   return (
     <div className="calendar">
       <header>
         <button
+<<<<<<< HEAD
           type="button"
           onClick={() => onMonthChange(new Date(year, month - 1))}
+=======
+          className="clickable"
+          onClick={() => {
+            setCurrentDate(new Date(year, month - 1));
+          }}
+>>>>>>> de61ca7 (calendar select bug fixes)
         >
           Prev
         </button>
@@ -58,8 +72,15 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
           })}
         </h2>
         <button
+<<<<<<< HEAD
           type="button"
           onClick={() => onMonthChange(new Date(year, month + 1))}
+=======
+          className="clickable"
+          onClick={() => {
+            setCurrentDate(new Date(year, month + 1));
+          }}
+>>>>>>> de61ca7 (calendar select bug fixes)
         >
           Next
         </button>
@@ -86,6 +107,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
           return (
             <div
               key={day}
+<<<<<<< HEAD
 <<<<<<< HEAD:client/src/features/calendar/programs/CalendarApp.jsx
               className={`day ${selectedDay === day ? "selected" : ""}`}
               onClick={() => handleDayClick(day)}
@@ -102,6 +124,10 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
 =======
               className={`day ${selectDayDisplay(selectedDay, day)}`}
               onClick={() => setSelectedDay(day)}
+=======
+              className={`day ${selectDayDisplay(selectedDay, selectedMonth, selectedYear, day, month, year)}`}
+              onClick={() => {setSelectedDay(day); setSelectedMonth(month); setSelectedYear(year)}}
+>>>>>>> de61ca7 (calendar select bug fixes)
             >
               {day}
               <div className="Workouts">

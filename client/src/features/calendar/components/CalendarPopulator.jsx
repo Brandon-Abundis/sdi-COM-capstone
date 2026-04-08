@@ -9,7 +9,7 @@ export default function CalendarPopulator() {
     return (
         <>
             <ul>
-                <li>Hehe hellooo</li>
+                <li>workout test</li>
             </ul>
         </>
     )
