@@ -139,13 +139,23 @@ const getWorkoutsById = async (req, res) => {
   }
 };
 
+const getAllEvents = async (req, res) => {
+  try {
+    const result = await db("user_events").select("*");
+    createLog({ method: "GET", action: "FETCH_ALL_USER_EVENTS", status_code: 200, user_id: null, metadata: JSON.stringify(result) });
+    res.status(200).send(result);
+  } catch (err) {
+    createLog({ method: "GET", action: "FETCH_ALL_USER_EVENTS", status_code: 500, user_id: null, metadata: err });
+    res.status(500).send({ message: err });
+  }
+};
+
 const getEventsById = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await db("user_events")
       .select("*")
-      .where("user_id", id)
-      .first();
+      .where("user_id", id);
     if (result) {
       createLog({
         method: "GET",
@@ -200,6 +210,7 @@ module.exports = {
   getGroupsById,
   getGoalsById,
   getWorkoutsById,
+  getAllEvents,
   getEventsById,
   getScoresById,
 };

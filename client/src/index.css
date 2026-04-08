@@ -1,4 +1,112 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: synthwave;
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "nightshade";
+  default: true;
+
+  /* ── Backgrounds ── */
+  --color-base-100: #0f0d17;
+  --color-base-200: #16112a;
+  --color-base-300: #1e1838;
+
+  /* ── Text ── */
+  --color-base-content: #e2dff5;
+
+  /* ── Primary — vivid purple ── */
+  --color-primary: #7c3aed;
+  --color-primary-content: #ffffff;
+
+  /* ── Secondary — soft lavender ── */
+  --color-secondary: #a78bfa;
+  --color-secondary-content: #0f0d17;
+
+  /* ── Accent — bright violet ── */
+  --color-accent: #c084fc;
+  --color-accent-content: #0f0d17;
+
+  /* ── Neutral ── */
+  --color-neutral: #2a2245;
+  --color-neutral-content: #e2dff5;
+
+  /* ── Status ── */
+  --color-info: #818cf8;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+
+  /* ── Rounded corners ── */
+  --radius-box: 0.75rem;
+  --radius-btn: 0.5rem;
+  --radius-badge: 1rem;
+}
+
+/* ── Sidebar / Navbar ── */
+/* Slightly different purple so it doesn't merge with base-100 pages */
+.sidebar {
+  background-color: #120e22;
+  border-right: 1px solid #1e1838;
+}
+
+/* ── Leaderboard panels — override the grey hardcoded backgrounds ── */
+#PT_Scores,
+#Two_Mile,
+#Push-Ups,
+#Sit-Ups,
+#Minutes {
+  background-color: #16112a;
+  border: 1px solid #1e1838;
+  border-radius: 0.75rem;
+  color: #e2dff5;
+  padding: 1rem;
+}
+
+/* ── Leaderboard global h1/h2 override — scoped so it doesn't bleed app-wide ── */
+#LBs h1 {
+  text-decoration: none;
+  font-weight: bold;
+  justify-self: center;
+}
+#LBs h2 {
+  font-weight: bold;
+  justify-self: center;
+}
+
+/* ── Calendar — override hardcoded light colors ── */
+.calendar {
+  border-color: #1e1838;
+  background-color: #0f0d17;
+}
+
+.day,
+.blank {
+  border-color: #1e1838;
+  background-color: #16112a;
+  color: #e2dff5;
+}
+
+.day:hover {
+  border: 2px solid #7c3aed;
+  background-color: #1e1838;
+}
+
+.day-names {
+  background-color: #120e22;
+  color: #a78bfa;
+}
+
+.selected {
+  background-color: #7c3aed;
+  color: #ffffff;
+}
+
+/* ── Workout Box — align to palette ── */
+#WorkoutBox {
+  background-color: #16112a;
+  border: 2px solid #1e1838;
+  color: #a78bfa;
+}
+
+#WorkoutBox:hover {
+  border-color: #a78bfa;
 }
