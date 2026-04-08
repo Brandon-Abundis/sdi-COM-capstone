@@ -1,8 +1,11 @@
-export default async function edit(id) {
+export default async function edit(id, formData) {
   try {
-    const response = await fetch(`http://localhost:8080/user/${id}`, {
+    const response = await fetch(`http://localhost:8080/users/id/${id}`, {
       method: "PATCH",
       body: JSON.stringify(formData),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     if (!response.ok) {

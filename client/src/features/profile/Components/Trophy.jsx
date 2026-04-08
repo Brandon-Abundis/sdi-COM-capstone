@@ -11,7 +11,7 @@ export default function Trophy({ userData }) {
           Trophy Case
         </h3>
         <span className="badge badge-sm badge-ghost opacity-50 font-mono text-[10px]">
-          {userData.badges.length} COLLECTED
+          {userData.badges_ids.length} COLLECTED
         </span>
       </div>
 
@@ -19,18 +19,19 @@ export default function Trophy({ userData }) {
         id="trophies"
         className="flex gap-6 overflow-x-auto pb-4 px-2 scrollbar-hide snap-x"
       >
-        {userData.badges.map((badge, index) => (
+        {userData.badges_ids.map((badge, index) => (
           <div key={index} className="snap-start shrink-0 group cursor-help">
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
               <div className="avatar">
                 <div className="w-40 h-40 rounded-2xl bg-gradient-to-br from-base-200 to-base-300 shadow-lg border border-base-100 group-hover:border-primary/50 transition-all duration-300 group-hover:-translate-y-2">
-                  <img
+                  {/* <img
                     src={badge}
                     alt="Trophy"
                     className="object-contain p-1"
-                  />
+                  /> */}
+                  Badge ID (to be replaced with image): {badge}
                 </div>
               </div>
             </div>
@@ -56,12 +57,12 @@ export default function Trophy({ userData }) {
           Earned Titles
         </h3>
         <div className="flex flex-wrap gap-1">
-          {userData.titles.map((title, index) => (
+          {userData.titles_ids.map((title, index) => (
             <span
               key={index}
               className="badge badge-ghost badge-lg font-medium whitespace-nowrap"
             >
-              {title}
+              Title ID (to be replaced with title): {title}
             </span>
           ))}
         </div>
