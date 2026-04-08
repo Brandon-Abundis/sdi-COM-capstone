@@ -1,51 +1,303 @@
-.calendar {
-  max-width: 1200px;
-  margin: 20px auto;
-  font-family: sans-serif;
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 20px;
+/* ── Page layout ─────────────────────────────────────────── */
+.calendar-page {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  align-items: flex-start;
+  color: #e2dff5;
 }
 
-header {
+.calendar-box {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ── Calendar shell ──────────────────────────────────────── */
+.calendar {
+  background: #16112a;
+  border: 1px solid #1e1838;
+  border-radius: 16px;
+  padding: 16px;
+  font-family: sans-serif;
+  color: #e2dff5;
+}
+
+.calendar header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
+.calendar header h2 {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #c084fc;
+  letter-spacing: 0.03em;
+}
+
+.calendar header button {
+  background: #2a2245;
+  color: #e2dff5;
+  border: 1px solid #1e1838;
+  border-radius: 8px;
+  padding: 4px 14px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.calendar header button:hover {
+  background: #7c3aed;
+  border-color: #7c3aed;
+  color: #fff;
+}
+
+/* ── Grid ────────────────────────────────────────────────── */
 .calendarGuts {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
 }
 
+/* Day-name header row */
 .day-names {
   text-align: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #a78bfa;
+  background: #120e22;
+  padding: 6px 0;
+  border-radius: 6px;
 }
 
+/* Day cells + blank spacers */
 .day,
 .blank {
-  padding: 8px;
-  height: 120px;
-  border: 1px solid #eee;
-  cursor: pointer;
+  background: #0f0d17;
+  border: 1px solid #1e1838;
   border-radius: 10px;
+  padding: 6px;
+  height: 110px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow: hidden;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.blank {
+  cursor: default;
+  opacity: 0.3;
+}
+
+.day {
+  cursor: pointer;
 }
 
 .day:hover {
-  border: 2px, solid, yellow;
+  border-color: #7c3aed;
+  background: #16112a;
 }
 
-.day-names {
+/* Selected state */
+.day.selected {
+  background: #2a1a5e;
+  border-color: #7c3aed;
+  border-width: 2px;
+}
+
+/* Day number */
+.day-number {
   font-weight: bold;
-  background-color: black;
+  font-size: 0.8rem;
+  color: #e2dff5;
+  margin-bottom: 4px;
 }
 
-.selected {
-  background-color: violet;
-  color: black;
+.day.selected .day-number {
+  color: #c084fc;
+}
+
+/* ── Event tabs inside day cells ─────────────────────────── */
+.event-tab {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  background: #2a2245;
+  color: #a78bfa;
+  border: 1px solid #3b2d6e;
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.4;
+}
+
+.event-tab::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #7c3aed;
+  flex-shrink: 0;
+}
+
+.day.selected .event-tab {
+  background: #3b2d6e;
+  color: #e2dff5;
+  border-color: #7c3aed;
+}
+
+.event-tab-more {
+  font-size: 0.65rem;
+  color: #6d5aad;
+  margin-top: 2px;
+  padding-left: 4px;
+}
+
+/* ── Side panel ──────────────────────────────────────────── */
+.calendar-side-panel {
+  width: 280px;
+  flex-shrink: 0;
+  background: #16112a;
+  border: 1px solid #1e1838;
+  border-radius: 16px;
+  padding: 20px;
+  color: #e2dff5;
+  position: sticky;
+  top: 20px;
+}
+
+.calendar-side-panel .panel-empty {
+  font-size: 0.85rem;
+  color: #6d5aad;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.panel-date-heading {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #c084fc;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1e1838;
+}
+
+/* Event list */
+.event-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.event-list li {
+  background: #0f0d17;
+  border: 1px solid #1e1838;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transition: border-color 0.15s;
+}
+
+.event-list li:hover {
+  border-color: #7c3aed;
+}
+
+.event-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e2dff5;
+}
+
+.event-time {
+  font-size: 0.75rem;
+  color: #a78bfa;
+}
+
+.no-events {
+  font-size: 0.82rem;
+  color: #6d5aad;
+  margin-bottom: 16px;
+}
+
+/* ── Add event form ──────────────────────────────────────── */
+.add-event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid #1e1838;
+}
+
+.add-event-form h3 {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #a78bfa;
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+.add-event-form input {
+  background: #0f0d17;
+  border: 1px solid #2a2245;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  color: #e2dff5;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.add-event-form input::placeholder {
+  color: #4a3d7a;
+}
+
+.add-event-form input:focus {
+  border-color: #7c3aed;
+}
+
+/* Chrome time picker icon color fix for dark theme */
+.add-event-form input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6) sepia(1) saturate(3) hue-rotate(220deg);
+}
+
+.add-event-form button {
+  background: #7c3aed;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.15s;
+}
+
+.add-event-form button:hover {
+  background: #6d28d9;
+}
+
+.add-event-form button:disabled {
+  background: #2a2245;
+  color: #4a3d7a;
+  cursor: not-allowed;
+}
+
+.save-error {
+  font-size: 0.8rem;
+  color: #f87171;
+  margin: 0;
 }

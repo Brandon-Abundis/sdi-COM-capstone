@@ -178,6 +178,35 @@ const getEventsById = async (req, res) => {
   }
 };
 
+const createEvent = async (req, res) => {
+  const { name, date, time, user_id } = req.body;
+  if (!name || !date || !user_id) {
+    return res.status(400).send({ message: "name, date, and user_id are required" });
+  }
+  try {
+    const [newEvent] = await db("user_events")
+      .insert({ name, date, time: time || null, user_id })
+      .returning("*");
+    createLog({
+      method: "POST",
+      action: "CREATE_USER_EVENT",
+      status_code: 201,
+      user_id,
+      metadata: JSON.stringify(newEvent),
+    });
+    res.status(201).send(newEvent);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "CREATE_USER_EVENT",
+      status_code: 500,
+      user_id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
 const getScoresById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -212,5 +241,6 @@ module.exports = {
   getWorkoutsById,
   getAllEvents,
   getEventsById,
+  createEvent,
   getScoresById,
 };
