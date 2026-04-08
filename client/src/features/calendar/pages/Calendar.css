@@ -58,17 +58,26 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
+  height: 70vh
 }
 
 /* Day-name header row */
 .day-names {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
   text-align: center;
+<<<<<<< HEAD
   font-size: 0.75rem;
   font-weight: bold;
   color: #a78bfa;
   background: #120e22;
   padding: 6px 0;
   border-radius: 6px;
+=======
+  margin-bottom: 10px;
+  height: 25px
+>>>>>>> b4dcd50 (updated Calendar display, built temp to-do list)
 }
 
 /* Day cells + blank spacers */
@@ -96,11 +105,30 @@
   cursor: pointer;
 }
 
+/* .day.small,
+.blank.small{
+  padding-top: 60%;
+  padding-bottom: 60% 
+}
+
+.day.medium,
+.blank.medium{
+
+  padding-top: 40%;
+  padding-bottom: 40% 
+}
+
+.day.large,
+.blank.large{
+  padding-top: 60%;
+  padding-bottom: 60% 
+} */
 .day:hover {
   border-color: #7c3aed;
   background: #16112a;
 }
 
+<<<<<<< HEAD
 /* Selected state */
 .day.selected {
   background: #2a1a5e;
@@ -114,6 +142,12 @@
   font-size: 0.8rem;
   color: #e2dff5;
   margin-bottom: 4px;
+=======
+.day-names .day-names-height{
+  font-weight: bold;
+  background-color: rgb(0, 3, 168);
+  border-radius: 10px;
+>>>>>>> b4dcd50 (updated Calendar display, built temp to-do list)
 }
 
 .day.selected .day-number {

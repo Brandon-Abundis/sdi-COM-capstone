@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import "./Calendar.css";
+<<<<<<< HEAD
 import CalendarApp from "../programs/CalendarApp.jsx";
 import { useAuth } from "../../../app/AuthProvider.jsx";
+=======
+import CalendarApp from "../components/CalendarApp.jsx";
+>>>>>>> b4dcd50 (updated Calendar display, built temp to-do list)
 
 export default function Calendar() {
   const { user } = useAuth();

@@ -1,3 +1,9 @@
+<<<<<<< HEAD:client/src/features/calendar/programs/CalendarApp.jsx
+=======
+import { useState, useEffect } from "react";
+import { selectDayDisplay } from "./CalendarFuncs.jsx"
+import CalendarPopulator from "./CalendarPopulator.jsx";
+>>>>>>> b4dcd50 (updated Calendar display, built temp to-do list):client/src/features/calendar/components/CalendarApp.jsx
 
 export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events }) {
   const year = currentDate.getFullYear();
@@ -7,6 +13,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const blanks = Array.from({ length: firstDayOfMonth });
 
+<<<<<<< HEAD:client/src/features/calendar/programs/CalendarApp.jsx
   function eventsForDay(day) {
     return events.filter((e) => {
       const d = new Date(e.date);
@@ -22,6 +29,19 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
     onDaySelect(selectedDay === day ? null : day);
   }
 
+=======
+  let year = currentDate.getFullYear();
+  let month = currentDate.getMonth();
+  let firstDayOfMonth = new Date(year, month, 1).getDay();
+  let daysInMonth = new Date(year, month + 1, 0).getDate();
+  let days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+  let blanks = Array.from({ length: firstDayOfMonth });
+
+
+  useEffect(() => {
+    console.log(selectedDay);
+  }, [selectedDay]);
+>>>>>>> b4dcd50 (updated Calendar display, built temp to-do list):client/src/features/calendar/components/CalendarApp.jsx
   return (
     <div className="calendar">
       <header>
@@ -44,13 +64,18 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
           Next
         </button>
       </header>
+<<<<<<< HEAD:client/src/features/calendar/programs/CalendarApp.jsx
 
+=======
+      <div className="day-names">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+            <div key={d} className="day-names-height">
+              {d}
+            </div>
+          ))}
+      </div>
+>>>>>>> b4dcd50 (updated Calendar display, built temp to-do list):client/src/features/calendar/components/CalendarApp.jsx
       <div className="calendarGuts">
-        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-          <div key={d} className="day-names">
-            {d}
-          </div>
-        ))}
 
         {blanks.map((_, i) => (
           <div key={`blank-${i}`} className="blank" />
@@ -61,6 +86,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
           return (
             <div
               key={day}
+<<<<<<< HEAD:client/src/features/calendar/programs/CalendarApp.jsx
               className={`day ${selectedDay === day ? "selected" : ""}`}
               onClick={() => handleDayClick(day)}
             >
@@ -73,6 +99,15 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
               {dayEvents.length > 3 && (
                 <span className="event-tab-more">+{dayEvents.length - 3} more</span>
               )}
+=======
+              className={`day ${selectDayDisplay(selectedDay, day)}`}
+              onClick={() => setSelectedDay(day)}
+            >
+              {day}
+              <div className="Workouts">
+                <CalendarPopulator/>
+              </div>
+>>>>>>> b4dcd50 (updated Calendar display, built temp to-do list):client/src/features/calendar/components/CalendarApp.jsx
             </div>
           );
         })}
