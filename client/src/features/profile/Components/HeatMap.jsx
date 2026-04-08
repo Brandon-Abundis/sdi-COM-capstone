@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CalendarHeatmap from "react-calendar-heatmap";
 
 export default function WorkoutHeatmap({ userData }) {
@@ -14,7 +14,13 @@ export default function WorkoutHeatmap({ userData }) {
 
   const heatmapValues = () => {
     const counts = {};
-    workouts.forEach((w) => {
+
+    const workoutsThisYear = workouts.filter((w) => {
+      const workoutYear = new Date(w.created_at).getFullYear();
+      return workoutYear === currentYear;
+    });
+
+    workoutsThisYear.forEach((w) => {
       const d = new Date(w.created_at).toISOString().split("T")[0];
       counts[d] = (counts[d] || 0) + 1;
     });
@@ -40,7 +46,7 @@ export default function WorkoutHeatmap({ userData }) {
           </p>
         </div>
         <div className="text-[10px] font-black text-white/40 uppercase bg-white/5 px-3 py-1 rounded-full border border-white/5">
-          {heatmapValues.length} Days Active
+          {heatmapValues().length} Workouts This Year
         </div>
       </div>
 
