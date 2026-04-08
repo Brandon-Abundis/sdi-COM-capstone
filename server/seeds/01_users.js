@@ -1,4 +1,6 @@
-const { faker } = require('@faker-js/faker');
+const { faker } = require("@faker-js/faker");
+const bcrypt = require("bcrypt");
+const SALT_ROUNDS = 10;
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
@@ -6,9 +8,26 @@ const { faker } = require('@faker-js/faker');
 exports.seed = async function (knex) {
   await knex.raw("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
   const SF_RANKS = [
-    'Spc1', 'Spc2', 'Spc3', 'Spc4', 'Sgt', 'TSgt', 'MSgt', 'SMSgt', 'CMSgt',
-    '2nd Lt', '1st Lt', 'Capt', 'Maj', 'LtCol', 'Col', 'General'
+    "Spc1",
+    "Spc2",
+    "Spc3",
+    "Spc4",
+    "Sgt",
+    "TSgt",
+    "MSgt",
+    "SMSgt",
+    "CMSgt",
+    "2nd Lt",
+    "1st Lt",
+    "Capt",
+    "Maj",
+    "LtCol",
+    "Col",
+    "General",
   ];
+
+  const defaultPassword = await bcrypt.hash("password", SALT_ROUNDS);
+  const adminPassword = await bcrypt.hash("123", SALT_ROUNDS);
 
   const allIds = Array.from({ length: 51 }, (_, i) => i + 1);
 
@@ -18,14 +37,14 @@ exports.seed = async function (knex) {
     const currentId = i + 2; // Offset by 2 because admin is ID 1
 
     // Pick 1 to 3 rivals, excluding the current user's ID
-    const possibleRivals = allIds.filter(id => id !== currentId);
+    const possibleRivals = allIds.filter((id) => id !== currentId);
     const rivalCount = faker.number.int({ min: 1, max: 3 });
 
     users.push({
       first_name: faker.person.firstName(),
       last_name: faker.person.lastName(),
       email: faker.internet.email(),
-      password: 'hashed_password_here',
+      password: defaultPassword,
       rank: faker.helpers.arrayElement(SF_RANKS),
       gender: faker.person.sex(),
       age: faker.number.int({ min: 18, max: 45 }),
@@ -35,9 +54,15 @@ exports.seed = async function (knex) {
       // New Rival IDs logic
       rival_ids: faker.helpers.arrayElements(possibleRivals, rivalCount),
 
-      badges_ids: Array.from({ length: 5 }, () => faker.number.int({ min: 1, max: 5 })),
-      titles_ids: Array.from({ length: 5 }, () => faker.number.int({ min: 1, max: 5 })),
-      cosmetic_ids: Array.from({ length: 5 }, () => faker.number.int({ min: 1, max: 5 }))
+      badges_ids: Array.from({ length: 5 }, () =>
+        faker.number.int({ min: 1, max: 5 }),
+      ),
+      titles_ids: Array.from({ length: 5 }, () =>
+        faker.number.int({ min: 1, max: 5 }),
+      ),
+      cosmetic_ids: Array.from({ length: 5 }, () =>
+        faker.number.int({ min: 1, max: 5 }),
+      ),
     });
   }
   // admin user at the top
@@ -45,7 +70,7 @@ exports.seed = async function (knex) {
     is_admin: true,
     first_name: "admin",
     last_name: "Wegenke",
-    password: "123",
+    password: adminPassword,
     email: "abc@gmail.com",
     rank: "General",
     gender: "Male",

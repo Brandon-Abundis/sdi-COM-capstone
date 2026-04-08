@@ -12,12 +12,12 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    const fakeUser = { id: 1, email: email, password: password };
+
     try {
-      await login(fakeUser);
+      await login({ email, password });
       navigate("/dashboard");
     } catch (err) {
-      setError("Invalid credentials");
+      setError(err.message || "Invalid credentials");
     }
   };
 
