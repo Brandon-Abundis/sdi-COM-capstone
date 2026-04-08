@@ -8,6 +8,7 @@ const userRoutes = require("./routes/users");
 const groupRoutes = require("./routes/groups");
 const authRoutes = require("./routes/auth");
 const logRoutes = require("./routes/logs");
+const messageRoutes = require("./routes/messages");
 
 app.use(express.json());
 app.use(cors());
@@ -16,6 +17,7 @@ app.use("/users", userRoutes);
 app.use("/groups", groupRoutes);
 app.use("/auth", authRoutes);
 app.use("/logs", logRoutes);
+app.use("/messages", messageRoutes);
 
 app.get("/", (req, res) => {
   return res
