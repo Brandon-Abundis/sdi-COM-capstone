@@ -1,3 +1,10 @@
+/*
+const isHashedPassword = typeof user.password === "string" && user.password.startsWith("$2");
+    const matches = isHashedPassword
+      ? await bcrypt.compare(password, user.password)
+      : password === user.password;
+*/
+
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
@@ -26,12 +33,29 @@ export function AuthProvider({ children }) {
     restoreSession();
   }, []);
 
-  // Login - using local storage with fake user for now, but will call backend later
-  const login = async (fakeUser) => {
+  const BASE_URL = "http://localhost:8080";
+
+  // Login with backend authentication
+  const login = async (credentials) => {
     setLoading(true);
     try {
-      setUser(fakeUser);
-      localStorage.setItem("user", JSON.stringify(fakeUser));
+      const response = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to log in");
+      }
+
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      return data;
     } catch (err) {
       throw err;
     } finally {
@@ -45,12 +69,13 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user");
   };
 
-  // Signup - same as login for now
-  const signup = async (fakeUser) => {
+  // Signup - backend signup will be wired later
+  const signup = async (user) => {
     setLoading(true);
     try {
-      setUser(fakeUser);
-      localStorage.setItem("user", JSON.stringify(fakeUser));
+      setUser(user);
+      localStorage.setItem("user", JSON.stringify(user));
+      return user;
     } catch (err) {
       throw err;
     } finally {
