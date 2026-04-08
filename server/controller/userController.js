@@ -113,10 +113,7 @@ const getGoalsById = async (req, res) => {
 const getWorkoutsById = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db("user_workouts")
-      .select("*")
-      .where("user_id", id)
-      .first();
+    const result = await db("user_workouts").select("*").where("user_id", id);
     if (result) {
       createLog({
         method: "GET",
@@ -142,10 +139,22 @@ const getWorkoutsById = async (req, res) => {
 const getAllEvents = async (req, res) => {
   try {
     const result = await db("user_events").select("*");
-    createLog({ method: "GET", action: "FETCH_ALL_USER_EVENTS", status_code: 200, user_id: null, metadata: JSON.stringify(result) });
+    createLog({
+      method: "GET",
+      action: "FETCH_ALL_USER_EVENTS",
+      status_code: 200,
+      user_id: null,
+      metadata: JSON.stringify(result),
+    });
     res.status(200).send(result);
   } catch (err) {
-    createLog({ method: "GET", action: "FETCH_ALL_USER_EVENTS", status_code: 500, user_id: null, metadata: err });
+    createLog({
+      method: "GET",
+      action: "FETCH_ALL_USER_EVENTS",
+      status_code: 500,
+      user_id: null,
+      metadata: err,
+    });
     res.status(500).send({ message: err });
   }
 };
@@ -153,9 +162,7 @@ const getAllEvents = async (req, res) => {
 const getEventsById = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db("user_events")
-      .select("*")
-      .where("user_id", id);
+    const result = await db("user_events").select("*").where("user_id", id);
     if (result) {
       createLog({
         method: "GET",
@@ -181,7 +188,9 @@ const getEventsById = async (req, res) => {
 const createEvent = async (req, res) => {
   const { name, date, time, user_id } = req.body;
   if (!name || !date || !user_id) {
-    return res.status(400).send({ message: "name, date, and user_id are required" });
+    return res
+      .status(400)
+      .send({ message: "name, date, and user_id are required" });
   }
   try {
     const [newEvent] = await db("user_events")
@@ -207,32 +216,6 @@ const createEvent = async (req, res) => {
   }
 };
 
-const getScoresById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await db("scores").select("*").where("user_id", id).first();
-    if (result) {
-      createLog({
-        method: "GET",
-        action: "FETCH_USER_SCORES",
-        status_code: 200,
-        user_id: result.id,
-        metadata: JSON.stringify(result),
-      });
-    }
-    res.status(200).send(result);
-  } catch (err) {
-    createLog({
-      method: "GET",
-      action: "FETCH_USER_SCORES",
-      status_code: 500,
-      user_id: id,
-      metadata: err,
-    });
-    res.status(500).send({ message: err });
-  }
-};
-
 module.exports = {
   getAll,
   getById,
@@ -242,5 +225,4 @@ module.exports = {
   getAllEvents,
   getEventsById,
   createEvent,
-  getScoresById,
 };

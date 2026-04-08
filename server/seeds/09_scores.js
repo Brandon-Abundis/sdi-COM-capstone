@@ -12,7 +12,7 @@ exports.seed = async function(knex) {
     scores.push({
       user_id: userId,
       // One random score between 100 and 5000
-      score: faker.number.int({ min: 100, max: 5000 }),
+      score: faker.number.int({ min: 100, max: 1500 }),
       created_at: knex.fn.now(),
       updated_at: knex.fn.now()
     });
