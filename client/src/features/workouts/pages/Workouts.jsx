@@ -8,6 +8,7 @@ export default function Workouts() {
   let [editInfo, setEditInfo] = useState(null);
   let [allInfo, setAllInfo] = useState([]);
   let empty = "";
+  let empty = "";
   let defaultString = "N/A";
   let [maxLen, setMaxLen] = useState(0);
   let currentUser = JSON.parse(localStorage.getItem("user")).email;
@@ -22,7 +23,7 @@ export default function Workouts() {
             fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
               .then((data) => data.json())
               .then((dataArray) => {
-                setMaxLen(dataArray.length);
+                setMaxLen(dataArray.length)
                 dataArray.forEach((data, index) => {
                   let {
                     name,
@@ -37,17 +38,17 @@ export default function Workouts() {
                   } = data;
 
                   let currentData = {
-                    id: id,
-                    title: name || defaultString,
-                    type: type || defaultString,
-                    time: time || defaultString,
-                    distance: distance || defaultString,
-                    reps: reps || defaultString,
-                    muscle_groups: muscle_groups || defaultString,
-                    weight: weight || defaultString,
-                    notes: notes || defaultString,
-                  };
-                  setAllInfo((prev) => [...prev, currentData]);
+                  id: index,
+                  title: name || defaultString,
+                  type: type || defaultString,
+                  time: time || defaultString,
+                  distance: distance || defaultString,
+                  reps: reps || defaultString,
+                  muscle_groups: muscle_groups || defaultString,
+                  weight: weight || defaultString,
+                  notes: notes || defaultString,
+                }
+                setAllInfo(prev => [...prev, currentData])
                 });
               });
           }
@@ -94,23 +95,28 @@ export default function Workouts() {
               muscle_groups: empty,
               weight: empty,
               notes: empty,
+              title: empty,
+              type: empty,
+              time: empty,
+              distance: empty,
+              reps: empty,
+              muscle_groups: empty,
+              weight: empty,
+              notes: empty,
             });
             setShowModal(true);
           }}
         />
 
-        {allInfo.map((elem, index) => {
-          return (
-            <WorkoutBox
-              details={elem}
-              onClick={() => {
-                console.log(elem);
-                setEditInfo(allInfo[index]);
-                setShowModal(true);
-              }}
-              key={index}
-            />
-          );
+        {allInfo.map((elem) => {
+          return <WorkoutBox
+          details={elem}
+          onClick={() => {
+            console.log(elem)
+            setEditInfo(allInfo[elem.id])
+            setShowModal(true);
+          }}
+        />
         })}
 
         <Modal
