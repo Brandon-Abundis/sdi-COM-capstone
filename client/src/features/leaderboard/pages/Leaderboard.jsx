@@ -1,11 +1,31 @@
 import "./Leaderboard.css";
-// import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function Leaderboard() {
   //const user = [ (user:pt score, push ups, situps, minutes, 2 mile)]
   // use .sort to organize by score asc -> desc
   //Fetch for user scores will go here
+  const [users, setUsers] = useState();
 
+  useEffect(() => {
+    fetch(`http://localhost:8080/users`)
+      .then((response) => response.json())
+      .then((data) => {
+        setUsers(data);
+        console.log(data);
+      });
+  }, []);
+
+  // const scores = [];
+  // function getScores() {
+  //   users.forEach(() => {
+  //     fetch(`http://localhost:8080/users/scores/id/${users[id]}`)
+  //       .then((response) => response.json())
+  //       .then((data) => console.log(data));
+  //   });
+  // }
+
+  if (!users || !scores) return <h1>Loading Leaderboards...</h1>;
   return (
     <>
       <h1 className="text-3xl font-bold text-[#7c3aed] mb-6 tracking-wide">
