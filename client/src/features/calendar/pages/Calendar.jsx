@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Calendar.css";
-import CalendarApp from "../programs/CalendarApp.jsx";
+import CalendarApp from "../components/CalendarApp.jsx";
 import { useAuth } from "../../../app/AuthProvider.jsx";
 
 export default function Calendar() {

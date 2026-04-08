@@ -1,4 +1,6 @@
 
+import CalendarPopulator from "./CalendarPopulator.jsx"
+
 export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events }) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -7,7 +9,6 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const blanks = Array.from({ length: firstDayOfMonth });
 
-<<<<<<< HEAD:client/src/features/calendar/programs/CalendarApp.jsx
   function eventsForDay(day) {
     return events.filter((e) => {
       const d = new Date(e.date);
@@ -23,39 +24,14 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
     onDaySelect(selectedDay === day ? null : day);
   }
 
-=======
-  let year = currentDate.getFullYear();
-  let month = currentDate.getMonth();
-  let firstDayOfMonth = new Date(year, month, 1).getDay();
-  let daysInMonth = new Date(year, month + 1, 0).getDate();
-  let days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-  let blanks = Array.from({ length: firstDayOfMonth });
 
-
-  useEffect(() => {
-    console.log(selectedDay);
-<<<<<<< HEAD
-  }, [selectedDay]);
->>>>>>> b4dcd50 (updated Calendar display, built temp to-do list):client/src/features/calendar/components/CalendarApp.jsx
-=======
-    console.log(selectedMonth);
-    console.log(selectedYear);
-  }, [selectedDay, selectedMonth, selectedYear]);
-
->>>>>>> de61ca7 (calendar select bug fixes)
   return (
     <div className="calendar">
       <header>
         <button
-<<<<<<< HEAD
+
           type="button"
           onClick={() => onMonthChange(new Date(year, month - 1))}
-=======
-          className="clickable"
-          onClick={() => {
-            setCurrentDate(new Date(year, month - 1));
-          }}
->>>>>>> de61ca7 (calendar select bug fixes)
         >
           Prev
         </button>
@@ -66,22 +42,14 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
           })}
         </h2>
         <button
-<<<<<<< HEAD
+
           type="button"
           onClick={() => onMonthChange(new Date(year, month + 1))}
-=======
           className="clickable"
-          onClick={() => {
-            setCurrentDate(new Date(year, month + 1));
-          }}
->>>>>>> de61ca7 (calendar select bug fixes)
         >
           Next
         </button>
       </header>
-<<<<<<< HEAD:client/src/features/calendar/programs/CalendarApp.jsx
-
-=======
       <div className="day-names">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
             <div key={d} className="day-names-height">
@@ -89,9 +57,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
             </div>
           ))}
       </div>
->>>>>>> b4dcd50 (updated Calendar display, built temp to-do list):client/src/features/calendar/components/CalendarApp.jsx
       <div className="calendarGuts">
-
         {blanks.map((_, i) => (
           <div key={`blank-${i}`} className="blank" />
         ))}
@@ -101,8 +67,6 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
           return (
             <div
               key={day}
-<<<<<<< HEAD
-<<<<<<< HEAD:client/src/features/calendar/programs/CalendarApp.jsx
               className={`day ${selectedDay === day ? "selected" : ""}`}
               onClick={() => handleDayClick(day)}
             >
@@ -115,19 +79,9 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
               {dayEvents.length > 3 && (
                 <span className="event-tab-more">+{dayEvents.length - 3} more</span>
               )}
-=======
-              className={`day ${selectDayDisplay(selectedDay, day)}`}
-              onClick={() => setSelectedDay(day)}
-=======
-              className={`day ${selectDayDisplay(selectedDay, selectedMonth, selectedYear, day, month, year)}`}
-              onClick={() => {setSelectedDay(day); setSelectedMonth(month); setSelectedYear(year)}}
->>>>>>> de61ca7 (calendar select bug fixes)
-            >
-              {day}
               <div className="Workouts">
                 <CalendarPopulator/>
               </div>
->>>>>>> b4dcd50 (updated Calendar display, built temp to-do list):client/src/features/calendar/components/CalendarApp.jsx
             </div>
           );
         })}
