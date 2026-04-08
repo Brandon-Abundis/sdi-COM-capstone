@@ -7,38 +7,24 @@ const SALT_ROUNDS = 10;
  */
 exports.seed = async function (knex) {
   await knex.raw("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
+
   const SF_RANKS = [
-    "Spc1",
-    "Spc2",
-    "Spc3",
-    "Spc4",
-    "Sgt",
-    "TSgt",
-    "MSgt",
-    "SMSgt",
-    "CMSgt",
-    "2nd Lt",
-    "1st Lt",
-    "Capt",
-    "Maj",
-    "LtCol",
-    "Col",
-    "General",
+    "Spc1", "Spc2", "Spc3", "Spc4", "Sgt", "TSgt", "MSgt", "SMSgt",
+    "CMSgt", "2nd Lt", "1st Lt", "Capt", "Maj", "LtCol", "Col", "General",
   ];
 
   const defaultPassword = await bcrypt.hash("password", SALT_ROUNDS);
   const adminPassword = await bcrypt.hash("123", SALT_ROUNDS);
 
-  const allIds = Array.from({ length: 51 }, (_, i) => i + 1);
+  const allUserIds = Array.from({ length: 51 }, (_, i) => i + 1);
+  // Pool for badges/titles/cosmetics (1-15)
+  const assetPool = Array.from({ length: 15 }, (_, i) => i + 1);
 
   const users = [];
 
   for (let i = 0; i < 50; i++) {
-    const currentId = i + 2; // Offset by 2 because admin is ID 1
-
-    // Pick 1 to 3 rivals, excluding the current user's ID
-    const possibleRivals = allIds.filter((id) => id !== currentId);
-    const rivalCount = faker.number.int({ min: 1, max: 3 });
+    const currentId = i + 2;
+    const possibleRivals = allUserIds.filter((id) => id !== currentId);
 
     users.push({
       first_name: faker.person.firstName(),
@@ -51,21 +37,15 @@ exports.seed = async function (knex) {
       xp: faker.number.int({ min: 0, max: 5000 }),
       is_admin: false,
 
-      // New Rival IDs logic
-      rival_ids: faker.helpers.arrayElements(possibleRivals, rivalCount),
+      rival_ids: faker.helpers.arrayElements(possibleRivals, faker.number.int({ min: 1, max: 3 })),
 
-      badges_ids: Array.from({ length: 5 }, () =>
-        faker.number.int({ min: 1, max: 5 }),
-      ),
-      titles_ids: Array.from({ length: 5 }, () =>
-        faker.number.int({ min: 1, max: 5 }),
-      ),
-      cosmetic_ids: Array.from({ length: 5 }, () =>
-        faker.number.int({ min: 1, max: 5 }),
-      ),
+      // Logic: Pick a random count (0-7), then pick that many unique IDs from the 1-15 pool
+      badges_ids: faker.helpers.arrayElements(assetPool, faker.number.int({ min: 0, max: 7 })),
+      titles_ids: faker.helpers.arrayElements(assetPool, faker.number.int({ min: 0, max: 7 })),
+      cosmetic_ids: faker.helpers.arrayElements(assetPool, faker.number.int({ min: 0, max: 7 })),
     });
   }
-  // admin user at the top
+
   users.unshift({
     is_admin: true,
     first_name: "admin",

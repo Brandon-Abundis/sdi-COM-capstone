@@ -6,7 +6,7 @@ const { faker } = require('@faker-js/faker');
 exports.seed = async function(knex) {
   await knex('user_workouts').del();
 
-  const EXERCISES = [
+  const BASE_EXERCISES = [
     { name: 'Back Squat', type: 'Strength', muscle: 'Legs' },
     { name: 'Bench Press', type: 'Strength', muscle: 'Chest' },
     { name: 'Deadlift', type: 'Power', muscle: 'Back/Legs' },
@@ -16,25 +16,26 @@ exports.seed = async function(knex) {
     { name: 'Lunges', type: 'Strength', muscle: 'Legs' }
   ];
 
+  const PFA_COMPONENTS = [
+    { name: '2-Mile Run', type: 'Cardio', muscle: 'Full Body' },
+    { name: '1-Minute Push-ups', type: 'Strength', muscle: 'Chest' },
+    { name: '1-Minute Sit-ups', type: 'Core', muscle: 'Abs' }
+  ];
+
+  // Increase probability: Add PFA components 3 times each to the pool
+  const WEIGHTED_POOL = [...BASE_EXERCISES, ...PFA_COMPONENTS, ...PFA_COMPONENTS, ...PFA_COMPONENTS];
+
   const userWorkouts = [];
 
   for (let userId = 1; userId <= 51; userId++) {
-    for (let i = 0; i < 8; i++) {
-      let exercise;
-
-      // GUARANTEE all 3 PFA components for every user
-      if (i === 0) {
-        exercise = { name: '2-Mile Run', type: 'Cardio', muscle: 'Full Body' };
-      } else if (i === 1) {
-        exercise = { name: '1-Minute Push-ups', type: 'Strength', muscle: 'Chest' };
-      } else if (i === 2) {
-        exercise = { name: '1-Minute Sit-ups', type: 'Core', muscle: 'Abs' };
-      } else {
-        exercise = faker.helpers.arrayElement(EXERCISES);
-      }
+    for (let i = 0; i < 32; i++) {
+      const exercise = faker.helpers.arrayElement(WEIGHTED_POOL);
 
       const isRun = exercise.name === '2-Mile Run';
       const isPFAStrength = exercise.name.includes('1-Minute');
+
+      // Randomize timestamp: spread across the last 60 days
+      const randomDate = faker.date.recent({ days: 365 });
 
       userWorkouts.push({
         name: exercise.name,
@@ -42,21 +43,23 @@ exports.seed = async function(knex) {
         muscle_group: exercise.muscle,
         user_id: userId,
 
-        // Logic for different workout types
         reps: isRun ? null : (isPFAStrength ? faker.number.int({ min: 35, max: 60 }) : faker.number.int({ min: 1, max: 12 })),
         weight: (isRun || isPFAStrength) ? 0 : faker.number.int({ min: 45, max: 315 }),
 
         time: isRun ? faker.number.int({ min: 840, max: 1140 }) : (isPFAStrength ? 60 : null),
         distance: isRun ? 2.0 : null,
 
-        notes: i < 3 ? 'Official PT Test Component' : faker.helpers.arrayElement([
-          'Felt strong today', 'Focusing on form', 'Pushed through', 'Next time go heavier'
+        notes: faker.helpers.arrayElement([
+          'Felt strong today', 'Focusing on form', 'Pushed through the last set',
+          'Next time go heavier', 'Form was a bit shaky', 'Great session'
         ]),
 
-        created_at: faker.date.recent({ days: 30 })
+        created_at: randomDate,
+        updated_at: randomDate
       });
     }
   }
 
-  await knex('user_workouts').insert(userWorkouts);
+  // With 1,600+ records (51 * 32), batchInsert is mandatory to avoid Postgres errors
+  await knex.batchInsert('user_workouts', userWorkouts, 100);
 };
