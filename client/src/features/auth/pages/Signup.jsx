@@ -62,10 +62,10 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0d17] flex items-center justify-center p-6">
-      <div className="card card-border border-amber-400 bg-base-100 w-full max-w-lg shadow-xl">
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="card card-border border-accent bg-base-200 w-full max-w-lg">
         <div className="card-body">
-          <h2 className="card-title text-[#7c3aed] text-2xl pb-3">Signup</h2>
+          <h2 className="card-title text-primary text-2xl pb-3">Signup</h2>
           {error && <div className="alert alert-error">{error}</div>}
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
@@ -147,7 +147,7 @@ export default function Signup() {
             <div className="card-actions justify-end">
               <button
                 type="submit"
-                className="btn btn-primary bg-[#7c3aed] hover:border-[#a78bfa]"
+                className="btn btn-primary bg-primary hover:border-secondary"
               >
                 Create Account
               </button>
@@ -155,7 +155,7 @@ export default function Signup() {
           </form>
           <p className="text-center pt-3">
             Already have an account?{" "}
-            <Link to="/login" className="link text-amber-500">
+            <Link to="/login" className="link text-amber-400">
               Log in
             </Link>
           </p>
