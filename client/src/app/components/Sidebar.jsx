@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import CloseIcon from "./CloseIcon.jsx";
 
 export default function Sidebar({ isOpen, onClose }) {
   return (
@@ -10,44 +11,45 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className="px-4 py-8">
         <button
           onClick={onClose}
-          className="text-[#e2dff5] hover:text-[#7c3aed] mb-4"
+          className="hover:text-primary mb-4 flex items-center gap-2 ml-auto"
+          aria-label="Close sidebar"
         >
-          ✕ Close
+          <CloseIcon />
         </button>
         <nav className="space-y-2">
           <Link
             to="/dashboard"
-            className="block py-2 px-4 text-[#e2dff5] hover:bg-[#7c3aed] rounded"
+            className="block py-2 px-4 hover:bg-primary rounded"
           >
             Dashboard
           </Link>
           <Link
             to="/calendar"
-            className="block py-2 px-4 text-[#e2dff5] hover:bg-[#7c3aed] rounded"
+            className="block py-2 px-4 hover:bg-primary rounded"
           >
             Calendar
           </Link>
           <Link
             to="/events"
-            className="block py-2 px-4 text-[#e2dff5] hover:bg-[#7c3aed] rounded"
+            className="block py-2 px-4 hover:bg-primary rounded"
           >
             Events
           </Link>
           <Link
             to="/leaderboard"
-            className="block py-2 px-4 text-[#e2dff5] hover:bg-[#7c3aed] rounded"
+            className="block py-2 px-4 hover:bg-primary rounded"
           >
             Leaderboards
           </Link>
           <Link
             to="/workouts"
-            className="block py-2 px-4 text-[#e2dff5] hover:bg-[#7c3aed] rounded"
+            className="block py-2 px-4 hover:bg-primary rounded"
           >
             Workouts
           </Link>
           <Link
             to="/chatandgroups"
-            className="block py-2 px-4 text-[#e2dff5] hover:bg-[#7c3aed] rounded"
+            className="block py-2 px-4 hover:bg-primary rounded"
           >
             Chat & Groups
           </Link>
