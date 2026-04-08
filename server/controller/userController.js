@@ -101,6 +101,109 @@ const updateById = async (req, res) => {
   }
 };
 
+const updateRivalById = async (req, res) => {
+  const { id } = req.params;
+  const { rival_id } = req.body;
+  try {
+    if (!rival_id) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER_RIVAL",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const userData = await db("users").select("rival_ids").where("id", id);
+
+    if (userData[0].rival_ids.includes(rival_id)) {
+      createLog({
+        method: "GET",
+        action: "UPDATE_USER_RIVALS",
+        status_code: 500,
+        user_id: id,
+        metadata: { message: "rival already exist" },
+      });
+      res.status(400).json({ message: "rival already exist" });
+    }
+
+    const newRivals = [...userData[0].rival_ids, rival_id];
+    const result = await db("users")
+      .select("rival_ids")
+      .where("id", id)
+      .update({ rival_ids: newRivals })
+      .returning("*");
+
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER_RIVALS",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result);
+  } catch (err) {
+    createLog({
+      method: "GET",
+      action: "UPDATE_USER_RIVALS",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const removeRivalById = async (req, res) => {
+  const { id } = req.params;
+  const { rival_id } = req.body;
+  try {
+    if (!rival_id) {
+      createLog({
+        method: "POST",
+        action: "REVEMO_USER_RIVAL",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const userData = await db("users").select("rival_ids").where("id", id);
+    const newRivals = userData[0].rival_ids.filter(
+      (currId) => currId !== rival_id,
+    );
+    console.log(await newRivals);
+    const result = await db("users")
+      .select("rival_ids")
+      .where("id", id)
+      .update({ rival_ids: newRivals })
+      .returning("*");
+
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER_RIVALS",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result);
+  } catch (err) {
+    createLog({
+      method: "GET",
+      action: "UPDATE_USER_RIVALS",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
 const getGroupsById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -275,4 +378,6 @@ module.exports = {
   getEventsById,
   createEvent,
   updateById,
+  updateRivalById,
+  removeRivalById,
 };
