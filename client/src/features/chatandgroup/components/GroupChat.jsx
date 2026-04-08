@@ -1,55 +1,78 @@
-import { useState } from "react";
-import MessageBubble from "./MessageBubble";
+import { useEffect, useRef, useState } from "react";
+import { useAuth } from "../../../app/AuthProvider";
 import GroupMemberList from "./GroupMemberList";
+import MessageBubble from "./MessageBubble";
 
-const CURRENT_USER_ID = 1;
-
-// Mock messages keyed by group_id
-const mockGroupMessages = {
-  1: [
-    { id: 1, user_id: 2, full_name: "E. Ortiz",   avatar: "https://i.pravatar.cc/40?u=2", text: "Who's hitting the bench challenge this week?",      timestamp: "Mon 08:12" },
-    { id: 2, user_id: 1, full_name: "J. DeCarlo", avatar: "https://i.pravatar.cc/40?u=1", text: "I'm in. Aiming for 315.",                            timestamp: "Mon 08:14" },
-    { id: 3, user_id: 3, full_name: "B. Adams",   avatar: "https://i.pravatar.cc/40?u=3", text: "Same. Leg day gauntlet after?",                      timestamp: "Mon 08:15" },
-    { id: 4, user_id: 2, full_name: "E. Ortiz",   avatar: "https://i.pravatar.cc/40?u=2", text: "Let's go. Don't skip leg day.",                      timestamp: "Mon 08:17" },
-  ],
-  2: [
-    { id: 1, user_id: 4, full_name: "J. Torres",  avatar: "https://i.pravatar.cc/40?u=4", text: "5K time trial is coming up fast.",                   timestamp: "Tue 07:00" },
-    { id: 2, user_id: 1, full_name: "J. DeCarlo", avatar: "https://i.pravatar.cc/40?u=1", text: "I've been running every morning. Feeling good.",      timestamp: "Tue 07:03" },
-  ],
-  3: [
-    { id: 1, user_id: 3, full_name: "B. Adams",   avatar: "https://i.pravatar.cc/40?u=3", text: "Iron Company Games signup is open!",                 timestamp: "Wed 06:30" },
-  ],
-};
+function formatTimestamp(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", hour12: true });
+}
 
 export default function GroupChat({ group }) {
+  const { user } = useAuth();
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const messages = mockGroupMessages[group.id] ?? [];
+  const bottomRef = useRef(null);
 
-  function handleSend(e) {
+  useEffect(() => {
+    if (!group?.id) return;
+    fetch(`http://localhost:8080/messages/group/${group.id}`)
+      .then((res) => (res.ok ? res.json() : []))
+      .then(setMessages)
+      .catch(() => {});
+  }, [group?.id]);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  async function handleSend(e) {
     e.preventDefault();
-    // Wire up to API when backend is ready
+    if (!input.trim()) return;
+    const res = await fetch("http://localhost:8080/messages/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: input.trim(), user_id: user.id, group_id: group.id }),
+    });
+    if (res.ok) {
+      const msg = await res.json();
+      setMessages((prev) => [
+        ...prev,
+        {
+          ...msg,
+          first_name: user.first_name,
+          last_name: user.last_name,
+        },
+      ]);
+    }
     setInput("");
   }
 
   return (
     <div className="flex flex-1 overflow-hidden">
-      {/* Message area */}
       <div className="flex flex-col flex-1 overflow-hidden">
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.length === 0 && (
+            <p className="text-sm text-[#e2dff5]/40 text-center mt-8">No messages yet. Say something!</p>
+          )}
           {messages.map((msg) => (
             <MessageBubble
               key={msg.id}
-              message={msg}
-              isOwn={msg.user_id === CURRENT_USER_ID}
+              message={{
+                id: msg.id,
+                user_id: msg.user_id,
+                full_name: `${msg.first_name} ${msg.last_name}`,
+                avatar: `https://i.pravatar.cc/40?u=${msg.user_id}`,
+                text: msg.text,
+                timestamp: formatTimestamp(msg.created_at),
+              }}
+              isOwn={msg.user_id === user?.id}
             />
           ))}
+          <div ref={bottomRef} />
         </div>
 
-        {/* Input */}
-        <form
-          onSubmit={handleSend}
-          className="p-3 border-t border-[#1e1838] flex gap-2"
-        >
+        <form onSubmit={handleSend} className="p-3 border-t border-[#1e1838] flex gap-2">
           <input
             type="text"
             value={input}
@@ -66,7 +89,7 @@ export default function GroupChat({ group }) {
         </form>
       </div>
 
-      <GroupMemberList members={group.members} />
+      <GroupMemberList group={group} />
     </div>
   );
 }

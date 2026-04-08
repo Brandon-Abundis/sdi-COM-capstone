@@ -4,8 +4,7 @@ const { faker } = require('@faker-js/faker');
  * @returns { Promise<void> }
  */
 exports.seed = async function (knex) {
-  // Deletes ALL existing entries
-  await knex("users").del();
+  await knex.raw("TRUNCATE TABLE users RESTART IDENTITY CASCADE");
   const SF_RANKS = [
     'Spc1', 'Spc2', 'Spc3', 'Spc4', 'Sgt', 'TSgt', 'MSgt', 'SMSgt', 'CMSgt',
     '2nd Lt', '1st Lt', 'Capt', 'Maj', 'LtCol', 'Col', 'General'

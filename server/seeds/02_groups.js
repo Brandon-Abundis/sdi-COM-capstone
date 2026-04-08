@@ -4,8 +4,7 @@ const { faker } = require('@faker-js/faker');
  * @returns { Promise<void> }
  */
 exports.seed = async function (knex) {
-  // Deletes ALL existing entries
-  await knex("groups").del();
+  await knex.raw("TRUNCATE TABLE groups RESTART IDENTITY CASCADE");
 
   const SF_GROUPS = [
     'Delta 11', '25 SRS', '33 RGS', '57 SAS', '98 SAS', '328 WPS', '392 CTS', '527 SAS'
