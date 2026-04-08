@@ -1,31 +1,60 @@
 import "./Leaderboard.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export default function Leaderboard() {
   //const user = [ (user:pt score, push ups, situps, minutes, 2 mile)]
   // use .sort to organize by score asc -> desc
   //Fetch for user scores will go here
   const [users, setUsers] = useState();
+  const [scores, setScores] = useState();
+  const [merged, setMerged] = useState();
 
+  // useEffect(() => {
+  //   fetch(`http://localhost:8080/scores`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setScores(data);
+  //       console.log(data);
+  //     });
+  //   fetch(`http://localhost:8080/users`)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setUsers(data);
+  //       console.log(data);
+  //     });
+  // }, []);
   useEffect(() => {
-    fetch(`http://localhost:8080/users`)
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data);
-        console.log(data);
-      });
+    const fetchData = async () => {
+      try {
+        const [scoresRes, usersRes] = await Promise.all([
+          fetch("http://localhost:8080/scores"),
+          fetch("http://localhost:8080/users"),
+        ]);
+
+        const scoresData = await scoresRes.json();
+        const usersData = await usersRes.json();
+
+        // Set individual states
+        setScores(scoresData);
+        setUsers(usersData);
+
+        // Merge arrays on 'id'
+        const mergedData = usersData.map((user) => ({
+          ...user,
+          ...scoresData.find((score) => score.id === user.id),
+        }));
+
+        setMerged(mergedData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
+  console.log(merged);
 
-  // const scores = [];
-  // function getScores() {
-  //   users.forEach(() => {
-  //     fetch(`http://localhost:8080/users/scores/id/${users[id]}`)
-  //       .then((response) => response.json())
-  //       .then((data) => console.log(data));
-  //   });
-  // }
-
-  if (!users || !scores) return <h1>Loading Leaderboards...</h1>;
+  if (!users && !scores) return <h1>Loading Leaderboards...</h1>;
   return (
     <>
       <h1 className="text-3xl font-bold text-[#7c3aed] mb-6 tracking-wide">
@@ -35,11 +64,11 @@ export default function Leaderboard() {
         <div id="PT_Scores">
           <h1 className="text-lg font-bold text-[#c084fc]">Top 10 PT Scores</h1>
           <ol>
-            <li>1. Cmdr Jimmy "James" DeCarlo: 100%</li>
-            <li>1. Cmdr Jimmy "James" DeCarlo: 100%</li>
-            <li>1. Cmdr Jimmy "James" DeCarlo: 100%</li>
-            <li>1. Cmdr Jimmy "James" DeCarlo: 100%</li>
-            <li>1. Cmdr Jimmy "James" DeCarlo: 100%</li>
+            {merged.map((merge) => (
+              <li key={merge.id}>
+                {merge.rank} {merge.last_name}:{merge.score}
+              </li>
+            ))}
           </ol>
         </div>
         <div id="Small_LBs">
@@ -48,11 +77,11 @@ export default function Leaderboard() {
               Top 10 Fastest 2-Mile Runs
             </h1>
             <ol>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 4:00</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 4:00</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 4:00</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 4:00</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 4:00</li>
+              {merged.map((merge) => (
+                <li key={merge.id}>
+                  {merge.rank} {merge.last_name}:{merge.score}
+                </li>
+              ))}
             </ol>
           </div>
           <div id="Push-Ups">
@@ -60,11 +89,11 @@ export default function Leaderboard() {
               Top 10 Most Push Ups (M/F)
             </h1>
             <ol>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
+              {merged.map((merge) => (
+                <li key={merge.id}>
+                  {merge.rank} {merge.last_name}:{merge.score}
+                </li>
+              ))}
             </ol>
           </div>
           <div id="Sit-Ups">
@@ -72,24 +101,23 @@ export default function Leaderboard() {
               Top 10 Most Sit Ups (M/F)
             </h1>
             <ol>
-              <li> 1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
-              <li> 1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
-              <li> 1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
-              <li> 1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
-              <li> 1. Cmdr Jimmy "James" DeCarlo: 1,000 Reps</li>
+              {merged.map((merge) => (
+                <li key={merge.id}>
+                  {merge.rank} {merge.last_name}:{merge.score}
+                </li>
+              ))}
             </ol>
           </div>
           <div id="Minutes">
             <h1 className="text-lg font-bold text-[#c084fc]">
-              {" "}
               Top 10 Most PT Minutes
             </h1>
             <ol>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 12,000,000 Mins</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 12,000,000 Mins</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 12,000,000 Mins</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 12,000,000 Mins</li>
-              <li>1. Cmdr Jimmy "James" DeCarlo: 12,000,000 Mins</li>
+              {merged.map((merge) => (
+                <li key={merge.id}>
+                  {merge.rank} {merge.last_name}: {merge.score}
+                </li>
+              ))}
             </ol>
           </div>
         </div>
