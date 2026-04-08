@@ -4,15 +4,6 @@ const { createLog } = require("../support/createLog");
 const getAll = async (req, res) => {
   try {
     const result = await db("users").select("*");
-    if (result) {
-      createLog({
-        method: "GET",
-        action: "FETCH_USERS",
-        status_code: 200,
-        user_id: null,
-        metadata: JSON.stringify(result),
-      });
-    }
     res.status(200).send(result);
   } catch (err) {
     createLog({
@@ -44,6 +35,64 @@ const getById = async (req, res) => {
     createLog({
       method: "GET",
       action: "FETCH_USER",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const updateById = async (req, res) => {
+  const { id } = req.params;
+  const { is_admin, first_name, last_name, email, rank, age, xp } = req.body;
+  try {
+    if (
+      !is_admin &&
+      !first_name &&
+      !last_name &&
+      !email &&
+      !rank &&
+      !age &&
+      !xp
+    ) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const userData = await db("users").select("*").where("id", id);
+    const result = await db("users")
+      .select("*")
+      .where("id", id)
+      .update({
+        is_admin: is_admin ? is_admin : userData.is_admin,
+        first_name: first_name ? first_name : userData.first_name,
+        last_name: last_name ? last_name : userData.last_name,
+        email: email ? email : userData.email,
+        rank: rank ? rank : userData.rank,
+        age: age ? age : userData.age,
+        xp: xp ? xp : userData.xp,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "GET",
+      action: "UPDATE_USER",
       status_code: 500,
       user_id: id,
       metadata: err,
@@ -225,4 +274,5 @@ module.exports = {
   getAllEvents,
   getEventsById,
   createEvent,
+  updateById,
 };
