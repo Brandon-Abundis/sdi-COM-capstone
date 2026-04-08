@@ -24,7 +24,13 @@ export default function InputField({ style, choices, def, chosen }) {
   }
   return (
     <div>
-      <input placeholder={style} defaultValue={def} className={"rounded-md text-center bg-white text-black w-80 border-3 border-[#0e001f]  text-wrap focus:border-[#7300ff]"}/>
+      <input
+        placeholder={style}
+        defaultValue={def}
+        className={
+          "rounded-md text-center bg-white text-black w-80 border-3 border-[#0e001f]  text-wrap focus:border-[#7300ff] mb-3"
+        }
+      />
     </div>
   );
 }

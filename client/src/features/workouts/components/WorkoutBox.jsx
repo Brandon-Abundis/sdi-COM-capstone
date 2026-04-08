@@ -3,7 +3,10 @@ import "../styles/WorkoutBox.css";
 import Icon from "./Icon";
 
 export default function WorkoutBox({ details, onClick }) {
-  let { title, type } = details;
+
+  let { title, type, time, notes } = details;
+  title = title.charAt(0).toUpperCase() + title.slice(1) || ""
+  let displayType = type.charAt(0).toUpperCase() + type.slice(1)
   return (
     <div
       onClick={onClick}
@@ -26,13 +29,11 @@ export default function WorkoutBox({ details, onClick }) {
         </h2>
         <Icon type={type} />
       </div>
-      <div className={"m-4 w-60 h-49 bg-[#220d23]"}>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
-        <h2 className={"text-center mt-1"}> this is test text</h2>
+      <div className={"m-4 w-60 h-49 bg-[#220d23] flex flex-col justify-around rounded-sm"}>
+        <h2 className={"text-center mt-1 text-3xl"}> {displayType} </h2>
+        <h2 className={"text-center mt-1"}> {time} Min. </h2>
+        <h2 className={"text-center mt-1"}> {notes} </h2>
+        <h2 className={"text-center mt-1 bg-black w-50 self-center rounded-2xl"}> Click for more details </h2>
       </div>
     </div>
   );

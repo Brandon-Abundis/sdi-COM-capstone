@@ -1,17 +1,65 @@
 import WorkoutBox from "../components/WorkoutBox";
 import AddWorkout from "../components/AddWorkout";
 import Modal from "../components/Modal";
-import ModalContent from "../components/ModalContent";
 import { useState, useEffect } from "react";
 
 export default function Workouts() {
   let [showModal, setShowModal] = useState(false);
-  let [editInfo, setEditInfo] = useState([]);
+  let [editInfo, setEditInfo] = useState(null);
+  let defaultString = "N/A";
+  let currentUser = JSON.parse(localStorage.getItem("user")).email;
 
-  let info = { title: "thisisaTest thisisaTest", type: "strength" };
-  let info2 = { title: "thisisaTest2 thisisaTest2", type: "cardio" };
-  let info3 = { title: "thisisaTest3 thisisaTest3", type: "other" };
+  useEffect(() => {
+    fetch("http://localhost:8080/users/")
+      .then((data) => data.json())
+      .then((data) =>
+        data.forEach((user) => {
+          if (user.email == currentUser) {
+            fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
+              .then((data) => data.json())
+              .then((data) => {
+                let {
+                  name,
+                  type,
+                  time,
+                  distance,
+                  reps,
+                  notes,
+                  weight,
+                  muscle_groups,
+                } = data;
+                setEditInfo({
+                  title: name || defaultString,
+                  type: type || defaultString,
+                  time: time || defaultString,
+                  distance: distance || defaultString,
+                  reps: reps || defaultString,
+                  muscle_groups: muscle_groups || defaultString,
+                  weight: weight || defaultString,
+                  notes: notes || defaultString,
+                });
+                console.log(editInfo);
+              });
+          }
+        }),
+      );
+  }, []);
 
+  let info = {
+    id: 1,
+    title: "thisisaTest thisisaTest",
+    type: "strength",
+    time: "45",
+    distance: "N/A",
+    reps: "375",
+    muscle_groups: "Arms !",
+    weight: "100",
+    notes: "test note !",
+  };
+
+  if (!editInfo) {
+    return <h2> Loading :3 </h2>;
+  }
   return (
     <div>
       <div>
@@ -20,40 +68,35 @@ export default function Workouts() {
       <div id={"workoutArea"} className={"p-4 grid grid-cols-4"}>
         <AddWorkout
           onClick={() => {
-            setEditInfo(null);
+            setEditInfo({
+              title: defaultString,
+              type: defaultString,
+              time: defaultString,
+              distance: defaultString,
+              reps: defaultString,
+              muscle_groups: defaultString,
+              weight: defaultString,
+              notes: defaultString,
+            });
             setShowModal(true);
           }}
         />
         <WorkoutBox
-          details={info}
+          details={editInfo}
           onClick={() => {
-            setEditInfo(info);
-            console.log(info);
             setShowModal(true);
           }}
         />
-        <WorkoutBox
-          details={info2}
-          onClick={() => {
-            setEditInfo(info2);
-            console.log(info2);
-            setShowModal(true);
-          }}
-        />
-        <WorkoutBox
-          details={info3}
-          onClick={() => {
-            setEditInfo(info3);
-            console.log(info3);
-            setShowModal(true);
-          }}
-        />
+
         <Modal
           openModal={showModal}
           closeModal={() => setShowModal(false)}
           info={editInfo}
+          key={"new"}
         />
       </div>
     </div>
   );
 }
+
+
