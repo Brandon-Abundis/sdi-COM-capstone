@@ -8,6 +8,6 @@ const {
 const router = express();
 
 router.get("/", getAllScores);
-router.get("/id/:id", getAllScores);
+router.get("/id/:id", getScoresById);
 
 module.exports = router;
