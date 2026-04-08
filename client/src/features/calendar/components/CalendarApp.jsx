@@ -1,9 +1,3 @@
-<<<<<<< HEAD:client/src/features/calendar/programs/CalendarApp.jsx
-=======
-import { useState, useEffect } from "react";
-import { selectDayDisplay } from "./CalendarFuncs.jsx"
-import CalendarPopulator from "./CalendarPopulator.jsx";
->>>>>>> b4dcd50 (updated Calendar display, built temp to-do list):client/src/features/calendar/components/CalendarApp.jsx
 
 export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events }) {
   const year = currentDate.getFullYear();
