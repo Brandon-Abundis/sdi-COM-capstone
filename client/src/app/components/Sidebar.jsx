@@ -8,7 +8,7 @@ export default function Sidebar({ isOpen, onClose }) {
         isOpen ? "translate-x-0" : "-translate-x-full"
       } transition-transform duration-300 ease-in-out`}
     >
-      <div className="px-4 py-8">
+      <div className="px-4 py-7">
         <button
           onClick={onClose}
           className="hover:text-primary mb-4 flex items-center gap-2 ml-auto"
