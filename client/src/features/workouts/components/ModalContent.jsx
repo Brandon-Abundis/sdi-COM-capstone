@@ -44,7 +44,14 @@ export default function ModalContent({ cancel, info }) {
         <h2> Type </h2>
         <InputField
           style={"selection"}
-          choices={["strength", "hypertrophy", "power", "cardio", "other"]}
+          choices={[
+            "strength",
+            "hypertrophy",
+            "power",
+            "cardio",
+            "core",
+            "other",
+          ]}
           chosen={type}
         />
         <h2> Time Estimate (Min.)</h2>

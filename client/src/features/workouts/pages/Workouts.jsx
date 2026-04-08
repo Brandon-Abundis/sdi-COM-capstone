@@ -6,8 +6,11 @@ import { useState, useEffect } from "react";
 export default function Workouts() {
   let [showModal, setShowModal] = useState(false);
   let [editInfo, setEditInfo] = useState(null);
+  let [allInfo, setAllInfo] = useState([]);
   let defaultString = "N/A";
+  let [maxLen, setMaxLen] = useState(0)
   let currentUser = JSON.parse(localStorage.getItem("user")).email;
+  console.log("start... up !");
 
   useEffect(() => {
     fetch("http://localhost:8080/users/")
@@ -17,18 +20,22 @@ export default function Workouts() {
           if (user.email == currentUser) {
             fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
               .then((data) => data.json())
-              .then((data) => {
-                let {
-                  name,
-                  type,
-                  time,
-                  distance,
-                  reps,
-                  notes,
-                  weight,
-                  muscle_groups,
-                } = data;
-                setEditInfo({
+              .then((dataArray) => {
+                setMaxLen(dataArray.length)
+                dataArray.forEach((data) => {
+                  let {
+                    name,
+                    type,
+                    time,
+                    distance,
+                    reps,
+                    notes,
+                    weight,
+                    muscle_groups,
+                  } = data;
+
+                  let currentData = {
+                  id: allInfo.length + 1,
                   title: name || defaultString,
                   type: type || defaultString,
                   time: time || defaultString,
@@ -37,8 +44,11 @@ export default function Workouts() {
                   muscle_groups: muscle_groups || defaultString,
                   weight: weight || defaultString,
                   notes: notes || defaultString,
+                }
+                setAllInfo(prev => [...prev, currentData])
                 });
-                console.log(editInfo);
+
+
               });
           }
         }),
@@ -57,7 +67,7 @@ export default function Workouts() {
     notes: "test note !",
   };
 
-  if (!editInfo) {
+  if (maxLen === null || allInfo.length !== maxLen ) {
     return <h2> Loading :3 </h2>;
   }
   return (
@@ -81,12 +91,18 @@ export default function Workouts() {
             setShowModal(true);
           }}
         />
-        <WorkoutBox
-          details={editInfo}
+
+        {allInfo.map((elem) => {
+          console.log(elem)
+          return <WorkoutBox
+          details={elem}
           onClick={() => {
+            setEditInfo(allInfo[elem.id])
             setShowModal(true);
           }}
         />
+        })}
+
 
         <Modal
           openModal={showModal}

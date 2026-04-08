@@ -1,5 +1,4 @@
 export default function InputField({ style, choices, def, chosen }) {
-  console.log(style)
   if (style == "selection") {
     return (
       <div>
