@@ -1,10 +1,3 @@
-/*
-const isHashedPassword = typeof user.password === "string" && user.password.startsWith("$2");
-    const matches = isHashedPassword
-      ? await bcrypt.compare(password, user.password)
-      : password === user.password;
-*/
-
 import { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
@@ -69,13 +62,27 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user");
   };
 
-  // Signup - backend signup will be wired later
-  const signup = async (user) => {
+  // Signup with backend authentication
+  const signup = async (credentials) => {
     setLoading(true);
     try {
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
-      return user;
+      const response = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to create account");
+      }
+
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      return data;
     } catch (err) {
       throw err;
     } finally {
