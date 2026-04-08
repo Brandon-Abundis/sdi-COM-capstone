@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 
 export default function CalendarApp() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -15,12 +14,6 @@ export default function CalendarApp() {
   let firstDayOfMonth = new Date(year, month, 1).getDay();
   let daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  let days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-  let blanks = Array.from({ length: firstDayOfMonth });
-
-  useEffect(() => {
-    console.log(selectedDay);
-  }, [selectedDay]);
   return (
     <div className="calendar">
       <header>
@@ -46,6 +39,7 @@ export default function CalendarApp() {
           Next
         </button>
       </header>
+
       <div className="calendarGuts">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
           <div key={d} className="day-names">
