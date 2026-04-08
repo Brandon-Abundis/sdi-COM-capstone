@@ -15,13 +15,13 @@ exports.up = function (knex) {
     table.integer("age");
     table.integer("xp").defaultTo(0);
 
-    table.specificType("rival_ids", "integer[]");
+    table.specificType("rival_ids", "integer[]").defaultTo(knex.raw("'{}'"));
 
     table.timestamps(true, true);
 
-    table.specificType("badges_ids", "integer[]");
-    table.specificType("titles_ids", "integer[]");
-    table.specificType("cosmetic_ids", "integer[]");
+    table.specificType("badges_ids", "integer[]").defaultTo(knex.raw("'{}'"));
+    table.specificType("titles_ids", "integer[]").defaultTo(knex.raw("'{}'"));
+    table.specificType("cosmetic_ids", "integer[]").defaultTo(knex.raw("'{}'"));
   });
 };
 
