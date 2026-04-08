@@ -7,6 +7,7 @@ const {
   getWorkoutsById,
   getAllEvents,
   getEventsById,
+  createEvent,
 } = require("../controller/userController");
 const router = express();
 
@@ -17,5 +18,6 @@ router.get("/user_goals/id/:id", getGoalsById);
 router.get("/user_workouts/id/:id", getWorkoutsById);
 router.get("/user_events/", getAllEvents);
 router.get("/user_events/id/:id", getEventsById);
+router.post("/user_events", createEvent);
 
 module.exports = router;
