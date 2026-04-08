@@ -15,6 +15,12 @@ const createUser = async (user) => {
       "gender",
       "rank",
       "age",
+      "xp",
+      "rival_ids",
+      "created_at",
+      "badges_ids",
+      "titles_ids",
+      "cosmetic_ids",
     ]);
 };
 
@@ -118,6 +124,12 @@ const login = async (req, res) => {
       gender: user.gender,
       rank: user.rank,
       age: user.age,
+      xp: user.xp,
+      rival_ids: user.rival_ids,
+      created_at: user.created_at,
+      badges_ids: user.badges_ids,
+      titles_ids: user.titles_ids,
+      cosmetic_ids: user.cosmetic_ids,
     });
   } catch (err) {
     createLog({
