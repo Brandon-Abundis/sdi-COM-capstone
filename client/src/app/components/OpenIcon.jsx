@@ -1,4 +1,4 @@
-export default function CloseIcon() {
+export default function OpenIcon() {
   return (
     <div className="flex">
       <svg
@@ -18,25 +18,25 @@ export default function CloseIcon() {
           strokeWidth="2"
         />
         <line
-          x1="6"
+          x1="14"
           y1="9"
-          x2="10"
+          x2="18"
           y2="9"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
         />
         <line
-          x1="6"
+          x1="14"
           y1="15"
-          x2="10"
+          x2="18"
           y2="15"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
         />
         <path
-          d="M18 8 L13 12 L18 16"
+          d="M6 8 L11 12 L6 16"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"

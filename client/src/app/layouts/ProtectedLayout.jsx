@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Outlet, Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar.jsx";
+import OpenIcon from "../components/OpenIcon.jsx";
 
 export default function ProtectedLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function ProtectedLayout() {
           onClick={toggleSidebar}
           className="text-[#e2dff5] hover:text-primary text-2xl hover:cursor-pointer"
         >
-          ☰
+          <OpenIcon />
         </button>
 
         {/* Profile icon */}
