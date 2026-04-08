@@ -191,7 +191,7 @@ export default function ProfileInfo({ userData, setUserData }) {
                     </button>
                     <button
                       className="btn btn-primary btn-sm px-6"
-                      onClick={() => edit(id, formData)}
+                      onClick={() => edit(userData.id, formData)}
                     >
                       Save Changes
                     </button>
