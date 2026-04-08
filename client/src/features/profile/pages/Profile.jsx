@@ -12,14 +12,14 @@ export default function Profile() {
   const { id } = useParams();
   const [userData, setUserData] = useState();
 
-  //   This will be the useEffect to fetch user data from express API.
+  // This will be the useEffect to fetch user data from express API.
   useEffect(() => {
-    fetch(`http://localhost:8080/users/id/${id}`)
+    fetch(`http://localhost:8080/users/id/${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         setUserData(data);
       });
-  }, []);
+  }, [user]);
 
   if (!userData) return <h1>Loading...</h1>;
   return (
