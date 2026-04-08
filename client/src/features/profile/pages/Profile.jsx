@@ -32,7 +32,6 @@ export default function Profile() {
   return (
     <>
       <div className="relative min-h-screen w-full bg-base-300">
-        {/* Sign Out Button - Moved slightly for better spacing */}
         <button
           onClick={handleSignOut}
           className="absolute top-4 right-4 z-50 px-4 py-2 bg-red-500/10 hover:bg-red-500 hover:text-white text-red-500 text-xs font-black uppercase tracking-widest border border-red-500/20 rounded-lg transition-all duration-300 backdrop-blur-sm"
