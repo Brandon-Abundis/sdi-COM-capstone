@@ -13,40 +13,46 @@ exports.seed = async function(knex) {
     { name: 'Overhead Press', type: 'Strength', muscle: 'Shoulders' },
     { name: 'Pull-ups', type: 'Strength', muscle: 'Back' },
     { name: 'Bicep Curls', type: 'Hypertrophy', muscle: 'Arms' },
-    { name: 'Lunges', type: 'Strength', muscle: 'Legs' },
-    { name: '2-Mile Run', type: 'Cardio', muscle: 'Full Body' }
+    { name: 'Lunges', type: 'Strength', muscle: 'Legs' }
   ];
 
   const userWorkouts = [];
 
   for (let userId = 1; userId <= 51; userId++) {
     for (let i = 0; i < 8; i++) {
-      const exercise = faker.helpers.arrayElement(EXERCISES);
+      let exercise;
+
+      // GUARANTEE all 3 PFA components for every user
+      if (i === 0) {
+        exercise = { name: '2-Mile Run', type: 'Cardio', muscle: 'Full Body' };
+      } else if (i === 1) {
+        exercise = { name: '1-Minute Push-ups', type: 'Strength', muscle: 'Chest' };
+      } else if (i === 2) {
+        exercise = { name: '1-Minute Sit-ups', type: 'Core', muscle: 'Abs' };
+      } else {
+        exercise = faker.helpers.arrayElement(EXERCISES);
+      }
+
       const isRun = exercise.name === '2-Mile Run';
+      const isPFAStrength = exercise.name.includes('1-Minute');
 
       userWorkouts.push({
         name: exercise.name,
         type: exercise.type,
         muscle_group: exercise.muscle,
+        user_id: userId,
 
-        // Lifts get reps/weight, Runs get null
-        reps: isRun ? null : faker.number.int({ min: 1, max: 12 }),
-        weight: isRun ? null : faker.number.int({ min: 45, max: 315 }),
+        // Logic for different workout types
+        reps: isRun ? null : (isPFAStrength ? faker.number.int({ min: 35, max: 60 }) : faker.number.int({ min: 1, max: 12 })),
+        weight: (isRun || isPFAStrength) ? 0 : faker.number.int({ min: 45, max: 315 }),
 
-        // Runs get time/distance, Lifts get null
-        time: isRun ? faker.number.int({ min: 840, max: 1320 }) : null, // 14:00 to 22:00 mins
+        time: isRun ? faker.number.int({ min: 840, max: 1140 }) : (isPFAStrength ? 60 : null),
         distance: isRun ? 2.0 : null,
 
-        notes: faker.helpers.arrayElement([
-          'Felt strong today',
-          'Focusing on form',
-          'Pushed through the last set',
-          'Next time go heavier',
-          'Form was a bit shaky',
-          'Great cardio session'
+        notes: i < 3 ? 'Official PT Test Component' : faker.helpers.arrayElement([
+          'Felt strong today', 'Focusing on form', 'Pushed through', 'Next time go heavier'
         ]),
 
-        user_id: userId,
         created_at: faker.date.recent({ days: 30 })
       });
     }

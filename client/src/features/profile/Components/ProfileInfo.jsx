@@ -12,7 +12,7 @@ export default function ProfileInfo({ userData, setUserData }) {
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(` http://localhost:8080/users/groups/id/${id}`)
+    fetch(` http://localhost:8080/users/groups/id/${userData.id}`)
       .then((res) => res.json())
       .then((data) => {
         setGroups(data);
