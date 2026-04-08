@@ -1,39 +1,22 @@
 import ProfileInfo from "../Components/ProfileInfo";
 import Trophy from "../Components/Trophy";
+import WorkoutHeatmap from "../Components/HeatMap";
 
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 export default function Profile() {
-  const [userData, setUserData] = useState({
-    id: 1,
-    is_admin: false,
-    first_name: "First",
-    last_name: "Last",
-    password: "password",
-    email: "email",
-    rank: "rank",
-    gender: "gender",
-    age: 2,
-    xp: 4000,
-    updated_at: "time_stamp",
-    badges: [
-      "https://img.daisyui.com/images/profile/demo/batperson@192.webp",
-      "https://img.daisyui.com/images/profile/demo/yellingwoman@192.webp",
-    ],
-    groups: ["group1", "group2"],
-    titles: ["the best", "the sprinter", "beast"],
-  });
-
-  // This is the edit account functionality that currently doesn't work because the data strucutre doesn't exists yet.
+  const { id } = useParams();
+  const [userData, setUserData] = useState();
 
   //   This will be the useEffect to fetch user data from express API.
-  // useEffect(() => {
-  //   fetch(`http://localhost:8080/user/${id}`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       return setUserData(data);
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch(`http://localhost:8080/users/id/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUserData(data);
+      });
+  }, []);
 
   if (!userData) return <h1>Loading...</h1>;
   return (
@@ -46,6 +29,7 @@ export default function Profile() {
           ></ProfileInfo>
           <Trophy userData={userData} setUserData={setUserData}></Trophy>
         </div>
+        <WorkoutHeatmap userData={userData}></WorkoutHeatmap>
       </div>
     </>
   );
