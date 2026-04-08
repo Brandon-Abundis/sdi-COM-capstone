@@ -1,11 +1,14 @@
 import ProfileInfo from "../Components/ProfileInfo";
 import Trophy from "../Components/Trophy";
 import WorkoutHeatmap from "../Components/HeatMap";
+import { useAuth } from "../../../app/AuthProvider";
 
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export default function Profile() {
+  const { user } = useAuth();
+
   const { id } = useParams();
   const [userData, setUserData] = useState();
 

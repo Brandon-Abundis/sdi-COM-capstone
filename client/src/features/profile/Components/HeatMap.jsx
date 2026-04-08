@@ -1,33 +1,25 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import CalendarHeatmap from "react-calendar-heatmap";
 
 export default function WorkoutHeatmap({ userData }) {
   const [workouts, setWorkouts] = useState([]);
 
   useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8080/users/user_workouts/id/${userData.id}`,
-        );
-        const data = await response.json();
-        setWorkouts(Array.isArray(data) ? data : [data]);
-      } catch (err) {
-        console.error("Heatmap Fetch Error:", err);
-      }
-    };
-    if (userData.id) fetchWorkouts();
+    fetch(`http://localhost:8080/users/user_workouts/id/${userData.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setWorkouts(data);
+      });
   }, [userData.id]);
 
-  const heatmapValues = useMemo(() => {
+  const heatmapValues = () => {
     const counts = {};
     workouts.forEach((w) => {
-      if (!w.created_at) return;
       const d = new Date(w.created_at).toISOString().split("T")[0];
       counts[d] = (counts[d] || 0) + 1;
     });
     return Object.keys(counts).map((d) => ({ date: d, count: counts[d] }));
-  }, [workouts]);
+  };
 
   const today = new Date();
   const currentYear = today.getFullYear();
@@ -56,7 +48,7 @@ export default function WorkoutHeatmap({ userData }) {
         <CalendarHeatmap
           startDate={start}
           endDate={end}
-          values={heatmapValues}
+          values={heatmapValues()}
           showWeekdayLabels={true}
           gutterSize={1.5}
           classForValue={(v) => {
@@ -70,7 +62,7 @@ export default function WorkoutHeatmap({ userData }) {
         <div className="flex gap-4">
           <div className="flex items-center gap-3">
             <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">
-              None
+              0 Workouts
             </span>
 
             <div className="flex gap-1">
