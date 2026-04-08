@@ -7,6 +7,7 @@ export default function Workouts() {
   let [showModal, setShowModal] = useState(false);
   let [editInfo, setEditInfo] = useState(null);
   let [allInfo, setAllInfo] = useState([]);
+  let empty = "";
   let defaultString = "N/A";
   let [maxLen, setMaxLen] = useState(0)
   let currentUser = JSON.parse(localStorage.getItem("user")).email;
@@ -22,7 +23,7 @@ export default function Workouts() {
               .then((data) => data.json())
               .then((dataArray) => {
                 setMaxLen(dataArray.length)
-                dataArray.forEach((data) => {
+                dataArray.forEach((data, index) => {
                   let {
                     name,
                     type,
@@ -35,7 +36,7 @@ export default function Workouts() {
                   } = data;
 
                   let currentData = {
-                  id: allInfo.length + 1,
+                  id: index,
                   title: name || defaultString,
                   type: type || defaultString,
                   time: time || defaultString,
@@ -79,24 +80,24 @@ export default function Workouts() {
         <AddWorkout
           onClick={() => {
             setEditInfo({
-              title: defaultString,
-              type: defaultString,
-              time: defaultString,
-              distance: defaultString,
-              reps: defaultString,
-              muscle_groups: defaultString,
-              weight: defaultString,
-              notes: defaultString,
+              title: empty,
+              type: empty,
+              time: empty,
+              distance: empty,
+              reps: empty,
+              muscle_groups: empty,
+              weight: empty,
+              notes: empty,
             });
             setShowModal(true);
           }}
         />
 
         {allInfo.map((elem) => {
-          console.log(elem)
           return <WorkoutBox
           details={elem}
           onClick={() => {
+            console.log(elem)
             setEditInfo(allInfo[elem.id])
             setShowModal(true);
           }}
