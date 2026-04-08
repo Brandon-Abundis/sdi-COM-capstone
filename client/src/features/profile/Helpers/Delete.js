@@ -1,6 +1,6 @@
 export default async function delete_account(id) {
   try {
-    const response = await fetch(`http://localhost:8080/user/${id}`, {
+    const response = await fetch(`http://localhost:8080/users/id/${id}`, {
       method: "DELETE",
     });
 

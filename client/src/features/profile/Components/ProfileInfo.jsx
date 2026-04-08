@@ -1,12 +1,26 @@
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+
 import delete_account from "../Helpers/Delete";
 import edit from "../Helpers/Edit";
 
 export default function ProfileInfo({ userData, setUserData }) {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({ ...userData });
+  const [groups, setGroups] = useState();
+
+  const { id } = useParams();
+
+  useEffect(() => {
+    fetch(` http://localhost:8080/users/groups/id/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setGroups(data);
+      });
+  }, []);
 
   if (!userData) return <h1>Loading...</h1>;
+  if (!groups) return <h1>Loading...</h1>;
 
   return (
     <>
@@ -177,7 +191,7 @@ export default function ProfileInfo({ userData, setUserData }) {
                     </button>
                     <button
                       className="btn btn-primary btn-sm px-6"
-                      onClick={edit}
+                      onClick={() => edit(id, formData)}
                     >
                       Save Changes
                     </button>
@@ -191,12 +205,12 @@ export default function ProfileInfo({ userData, setUserData }) {
                         </h3>
 
                         <div className="flex flex-wrap gap-1">
-                          {userData.groups.map((group, index) => (
+                          {groups.map((group, index) => (
                             <span
                               key={index}
                               className="badge badge-ghost badge-sm font-medium whitespace-nowrap"
                             >
-                              {group}
+                              {group.name}
                             </span>
                           ))}
                         </div>
