@@ -1,6 +1,7 @@
 import ProfileInfo from "../Components/ProfileInfo";
 import Trophy from "../Components/Trophy";
 import WorkoutHeatmap from "../Components/HeatMap";
+import Table from "../Components/Table";
 import { useAuth } from "../../../app/AuthProvider";
 
 import { useState, useEffect } from "react";
@@ -47,6 +48,7 @@ export default function Profile() {
             <Trophy userData={userData} setUserData={setUserData}></Trophy>
           </div>
           <WorkoutHeatmap userData={userData}></WorkoutHeatmap>
+          <Table userData={userData}></Table>
         </div>
       </div>
     </>
