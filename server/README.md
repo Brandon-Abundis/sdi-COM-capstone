@@ -34,9 +34,25 @@ user endpoint, you can get all user goal info associated to a user by passing us
 
 - http://localhost:8080/users/user_goals/id/:id (GET)
 
+user endpoint, you can update user goal info by passing in user_goal id to the endpoint and new info as in the body
+
+- http://localhost:8080/users/user_goals/update/id/:id (POST)
+
+user endpoint, you can create new user goal by passing in new info in the body (this endpoint requires user_id to be passed in in the body)
+
+- http://localhost:8080/users/user_goals/create/ (POST)
+
 user endpoint, you can get all user workout info associated to a user by passing user id
 
 - http://localhost:8080/users/user_workouts/id/:id (GET)
+
+user endpoint, you can update user workout info by passing in user_goal id to the endpoint and new info as in the body
+
+- http://localhost:8080/users/user_workouts/update/id/:id (POST)
+
+user endpoint, you can create new user workout by passing in new info in the body (this endpoint requires user_id to be passed in in the body)
+
+- http://localhost:8080/users/user_workouts/create/ (POST)
 
 user endpoint, you can get all user event info associated to a user by passing user id
 
