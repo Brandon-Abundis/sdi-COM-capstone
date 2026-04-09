@@ -1,10 +1,10 @@
-/* ── Page layout ─────────────────────────────────────────── */
-.calendar-page {
-  display: flex;
-  gap: 20px;
-  padding: 20px;
-  align-items: flex-start;
-  color: #e2dff5;
+.calendar {
+  max-width: 1200px;
+  margin: 20px auto;
+  font-family: sans-serif;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 20px;
 }
 
 .calendar-box {
@@ -74,26 +74,14 @@
 /* Day cells + blank spacers */
 .day,
 .blank {
-  background: #0f0d17;
-  border: 1px solid #1e1838;
-  border-radius: 10px;
-  padding: 6px;
-  height: 110px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  overflow: hidden;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.blank {
-  cursor: default;
-  opacity: 0.3;
-}
-
-.day {
+  padding: 8px;
+  height: 120px;
+  border: 1px solid #eee;
   cursor: pointer;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .day:hover {
