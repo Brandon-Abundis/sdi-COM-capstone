@@ -46,18 +46,20 @@ export default function EventsWidget() {
     (event) => event.workouts_list && event.workouts_list.length > 0,
   );
 
-  // Sort by events by date
+  // Sort by events by start_date
   const sortedEvents = eventsWithWorkouts.sort(
-    (a, b) => new Date(a.date) - new Date(b.date),
+    (a, b) => new Date(a.start_date) - new Date(b.start_date),
   );
 
   // Today's date in date-only ISO format (YYYY-MM-DD)
   const today = new Date().toISOString().split("T")[0];
 
   // Get today's events and upcoming events (near-term events past today)
-  const todayEvents = sortedEvents.filter((event) => event.date === today);
+  const todayEvents = sortedEvents.filter(
+    (event) => event.start_date === today,
+  );
   const upcomingEvents = sortedEvents
-    .filter((event) => event.date > today)
+    .filter((event) => event.start_date > today)
     .slice(0, 3);
 
   return (
@@ -69,7 +71,8 @@ export default function EventsWidget() {
           <ul className="space-y-1">
             {todayEvents.map((event) => (
               <li key={event.id} className="text-sm">
-                <strong>{event.name}</strong> - {event.time}
+                <strong>{event.name}</strong> - {event.start_time}{" "}
+                {event.end_time && `- ${event.end_time}`}
                 {event.workouts_list.length > 0 && (
                   <div className="ml-2 text-xs text-gray-400">
                     Workouts:{" "}
@@ -89,8 +92,21 @@ export default function EventsWidget() {
           <ul className="space-y-1">
             {upcomingEvents.map((event) => (
               <li key={event.id} className="text-sm">
-                <strong>{event.name}</strong> -{" "}
-                {new Date(event.date).toLocaleDateString()} {event.time}
+                <strong>{event.name}</strong> -
+                {event.start_date === event.end_date ? (
+                  <span>
+                    {" "}
+                    {new Date(event.start_date).toLocaleDateString()}{" "}
+                    {event.start_time}
+                    {event.end_time && `- ${event.end_time}`}
+                  </span>
+                ) : (
+                  <span>
+                    {" "}
+                    {new Date(event.start_date).toLocaleDateString()} -{" "}
+                    {new Date(event.end_date).toLocaleDateString()}
+                  </span>
+                )}
                 {event.workouts_list.length > 0 && (
                   <div className="ml-2 text-xs text-gray-400">
                     Workouts:{" "}
