@@ -8,8 +8,8 @@ exports.up = function (knex) {
     table.string("name");
     table.timestamp(true, true);
 
-    table.specificType("admin_ids", "integer[]");
-    table.specificType("user_ids", "integer[]");
+    table.specificType("admin_ids", "integer[]").defaultTo(knex.raw("'{}'"));
+    table.specificType("user_ids", "integer[]").defaultTo(knex.raw("'{}'"));
   });
 };
 
