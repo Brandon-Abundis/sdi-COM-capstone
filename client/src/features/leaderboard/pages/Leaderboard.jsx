@@ -34,11 +34,9 @@ export default function Leaderboard() {
         const scoresData = await scoresRes.json();
         const usersData = await usersRes.json();
 
-        // Set individual states
         setScores(scoresData);
         setUsers(usersData);
 
-        // Merge arrays on 'id'
         const mergedData = usersData.map((user) => ({
           ...user,
           ...scoresData.find((score) => score.id === user.id),
@@ -64,11 +62,15 @@ export default function Leaderboard() {
         <div id="PT_Scores">
           <h1 className="text-lg font-bold text-[#c084fc]">Top 10 PT Scores</h1>
           <ol>
-            {merged.map((merge) => (
-              <li key={merge.id}>
-                {merge.rank} {merge.last_name}:{merge.score}
-              </li>
-            ))}
+            {merged
+              .sort((a, b) => b.score - a.score)
+              .slice(0, 10)
+              .map((merge) => (
+                <li key={merge.id}>
+                  {merge.rank} {merge.last_name}:{" "}
+                  {((merge.score / 20) * 1.27).toFixed(0)}
+                </li>
+              ))}
           </ol>
         </div>
         <div id="Small_LBs">
@@ -77,11 +79,15 @@ export default function Leaderboard() {
               Top 10 Fastest 2-Mile Runs
             </h1>
             <ol>
-              {merged.map((merge) => (
-                <li key={merge.id}>
-                  {merge.rank} {merge.last_name}:{merge.score}
-                </li>
-              ))}
+              {merged
+                .sort((a, b) => a.score - b.score)
+                .slice(0, 10)
+                .map((merge) => (
+                  <li key={merge.id}>
+                    {merge.rank} {merge.last_name}:{" "}
+                    {(merge.score / 17.5).toFixed(2)} Minutes
+                  </li>
+                ))}
             </ol>
           </div>
           <div id="Push-Ups">
@@ -89,11 +95,15 @@ export default function Leaderboard() {
               Top 10 Most Push Ups (M/F)
             </h1>
             <ol>
-              {merged.map((merge) => (
-                <li key={merge.id}>
-                  {merge.rank} {merge.last_name}:{merge.score}
-                </li>
-              ))}
+              {merged
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10)
+                .map((merge) => (
+                  <li key={merge.id}>
+                    {merge.rank} {merge.last_name}:{" "}
+                    {(merge.score / 25).toFixed(0)} Reps
+                  </li>
+                ))}
             </ol>
           </div>
           <div id="Sit-Ups">
@@ -101,11 +111,15 @@ export default function Leaderboard() {
               Top 10 Most Sit Ups (M/F)
             </h1>
             <ol>
-              {merged.map((merge) => (
-                <li key={merge.id}>
-                  {merge.rank} {merge.last_name}:{merge.score}
-                </li>
-              ))}
+              {merged
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10)
+                .map((merge) => (
+                  <li key={merge.id}>
+                    {merge.rank} {merge.last_name}:{" "}
+                    {(merge.score / 22).toFixed(0)} Reps
+                  </li>
+                ))}
             </ol>
           </div>
           <div id="Minutes">
@@ -113,11 +127,15 @@ export default function Leaderboard() {
               Top 10 Most PT Minutes
             </h1>
             <ol>
-              {merged.map((merge) => (
-                <li key={merge.id}>
-                  {merge.rank} {merge.last_name}: {merge.score}
-                </li>
-              ))}
+              {merged
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 10)
+                .map((merge) => (
+                  <li key={merge.id}>
+                    {merge.rank} {merge.last_name}:{" "}
+                    {(merge.score / 10).toFixed(2)} Minutes
+                  </li>
+                ))}
             </ol>
           </div>
         </div>

@@ -17,7 +17,7 @@ const {
   updateRivalById,
   removeRivalById,
 } = require("../controller/userController");
-const router = express.Router();
+const router = express();
 
 router.get("/", getAll);
 router.get("/id/:id", getById);
