@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/AuthProvider";
 import EventsWidget from "../components/EventsWidget";
+import GoalsWidget from "../components/GoalsWidget";
 
 export default function Dashboard() {
   const { logout } = useAuth();
@@ -18,12 +19,7 @@ export default function Dashboard() {
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <EventsWidget />
-        <div className="card bg-base-200 p-4">
-          <h3 className="text-2xl font-semibold text-primary mb-4">Widget 2</h3>
-          <p className="text-md text-base-content">
-            Placeholder for second widget.
-          </p>
-        </div>
+        <GoalsWidget />
         <div className="card bg-base-200 p-4">
           <h3 className="text-2xl font-semibold text-primary mb-4">Widget 3</h3>
           <p className="text-md text-base-content">
