@@ -43,7 +43,7 @@ export default function ProfileInfo({ userData, setUserData }) {
       console.error("Error:", error);
     }
   }
-  async function delete_account(userData, id) {
+  async function delete_account(id) {
     try {
       const response = await fetch(`http://localhost:8080/users/id/${id}`, {
         method: "POST",
@@ -63,7 +63,7 @@ export default function ProfileInfo({ userData, setUserData }) {
         setIsEditing(false);
       }
 
-      console.log("Account edited successfully");
+      console.log("Account deleted successfully");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -290,9 +290,7 @@ export default function ProfileInfo({ userData, setUserData }) {
                           <div className="flex gap-2 shrink-0">
                             <button
                               className="btn btn-error btn-outline btn-sm px-6"
-                              onClick={() =>
-                                delete_account(userData, userData.id)
-                              }
+                              onClick={() => delete_account(userData.id)}
                             >
                               Delete
                             </button>
