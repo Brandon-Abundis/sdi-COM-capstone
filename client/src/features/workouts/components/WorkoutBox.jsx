@@ -22,7 +22,7 @@ export default function WorkoutBox({ details, onClick }) {
       >
         <h2
           className={
-            "ml-2 bg-[#21003d] p-2 rounded-md border-2 border-[#9e65ff] w-60 h-18"
+            "ml-2 bg-[#21003d] p-2 rounded-md border-2 border-[#9e65ff] w-60 h-18 flex items-center justify-center "
           }
         >
           {title}
