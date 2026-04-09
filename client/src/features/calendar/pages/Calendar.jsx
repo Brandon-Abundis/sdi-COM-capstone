@@ -3,6 +3,20 @@ import "./Calendar.css";
 import CalendarApp from "../components/CalendarApp.jsx";
 import { useAuth } from "../../../app/AuthProvider.jsx";
 
+function formatTime(timeStr) {
+  if (!timeStr) return "";
+  const [h, m] = timeStr.split(":").map(Number);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const hour = h % 12 || 12;
+  const mins = (m || 0) > 0 ? `:${String(m).padStart(2, "0")}` : "";
+  return `${hour}${mins} ${ampm}`;
+}
+
+function timeToMinutes(timeStr) {
+  if (!timeStr) return Infinity;
+  const [h, m] = timeStr.split(":").map(Number);
+  return h * 60 + (m || 0);
+}
 
 export default function Calendar() {
   const { user } = useAuth();
@@ -12,20 +26,18 @@ export default function Calendar() {
   const [form, setForm] = useState({ name: "", time: "" });
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
-
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-
   useEffect(() => {
     if (!user?.id) return;
-    fetch(`/api/users/user_events/id/${user.id}`)
+    fetch(`http://localhost:8080/users/user_events/id/${user.id}`)
       .then((r) => r.json())
       .then((data) => setEvents(Array.isArray(data) ? data : []))
       .catch(() => setEvents([]));
   }, [user?.id]);
-
 
   // Clear selected day when month changes so the side panel doesn't show stale data
   function handleMonthChange(newDate) {
@@ -33,26 +45,44 @@ export default function Calendar() {
     setSelectedDay(null);
   }
 
-
   const selectedDate =
     selectedDay != null ? new Date(Date.UTC(year, month, selectedDay)) : null;
 
-
   const upcomingDate =
-    selectedDay != null ? new Date(Date.UTC(year, month, selectedDay + 1)) : null;
-
+    selectedDay != null
+      ? new Date(Date.UTC(year, month, selectedDay + 1))
+      : null;
 
   const dayEvents = selectedDate
-    ? events.filter((e) => {
-        const d = new Date(e.date);
-        return (
-          d.getUTCFullYear() === selectedDate.getUTCFullYear() &&
-          d.getUTCMonth() === selectedDate.getUTCMonth() &&
-          d.getUTCDate() === selectedDate.getUTCDate()
-        );
-      })
+    ? events
+        .filter((e) => {
+          const d = new Date(e.date);
+          return (
+            d.getUTCFullYear() === selectedDate.getUTCFullYear() &&
+            d.getUTCMonth() === selectedDate.getUTCMonth() &&
+            d.getUTCDate() === selectedDate.getUTCDate()
+          );
+        })
+        .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
     : [];
 
+  async function handleDeleteEvent(id) {
+    try {
+      const res = await fetch(
+        `http://localhost:8080/users/user_events/id/${id}`,
+        {
+          method: "DELETE",
+        },
+      );
+      if (res.ok) {
+        setEvents((prev) => prev.filter((ev) => ev.id !== id));
+      }
+    } catch {
+      // silently fail — event stays in list if request fails
+    } finally {
+      setConfirmDeleteId(null);
+    }
+  }
 
   async function handleAddEvent(e) {
     e.preventDefault();
@@ -60,7 +90,7 @@ export default function Calendar() {
     if (!form.name.trim() || !selectedDate || !user?.id) return;
     setSaving(true);
     try {
-      const res = await fetch("/api/users/user_events/", {
+      const res = await fetch("http://localhost:8080/users/user_events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -85,7 +115,6 @@ export default function Calendar() {
     }
   }
 
-
   const selectedLabel = selectedDate
     ? selectedDate.toLocaleDateString("en-US", {
         month: "long",
@@ -94,7 +123,6 @@ export default function Calendar() {
         timeZone: "UTC",
       })
     : null;
-
 
   const upcomingSelectedLabel = upcomingDate
     ? upcomingDate.toLocaleDateString("en-US", {
@@ -105,29 +133,29 @@ export default function Calendar() {
       })
     : null;
 
-
   return (
     <div className="calendar-page">
-       {selectedDay === null ? (<></>) : (
+      {selectedDay === null ? (
+        <></>
+      ) : (
         <aside className="calendar-side-panel">
           <div className="panel-date-heading">Upcoming Events Tomorrow</div>
 
-
-            {dayEvents.length === 0 ? (
-                <p className="no-events">No events yet.</p>
-            ) : (
-              <ul className="event-list">
-                {dayEvents.map((ev) => (
-                  <li key={ev.id}>
-                    <span className="event-name">{ev.name}</span>
-                    {ev.time && <span className="event-time">{ev.time}</span>}
-                  </li>
-                ))}
-              </ul>
-            )}
+          {dayEvents.length === 0 ? (
+            <p className="no-events">No events yet.</p>
+          ) : (
+            <ul className="event-list">
+              {dayEvents.map((ev) => (
+                <li key={ev.id}>
+                  <span className="event-name">{ev.name}</span>
+                  {ev.time && <span className="event-time">{ev.time}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
         </aside>
-        )}
-     
+      )}
+
       <div className="calendar-box">
         <CalendarApp
           currentDate={currentDate}
@@ -138,14 +166,12 @@ export default function Calendar() {
         />
       </div>
 
-
       <aside className="calendar-side-panel">
         {selectedDay == null ? (
           <p className="panel-empty">Select a day to see or add events.</p>
         ) : (
           <>
             <div className="panel-date-heading">{selectedLabel}</div>
-
 
             {dayEvents.length === 0 ? (
               <p className="no-events">No events yet.</p>
@@ -154,12 +180,31 @@ export default function Calendar() {
                 {dayEvents.map((ev) => (
                   <li key={ev.id}>
                     <span className="event-name">{ev.name}</span>
-                    {ev.time && <span className="event-time">{ev.time}</span>}
+                    {ev.time && (
+                      <span className="event-time">{formatTime(ev.time)}</span>
+                    )}
+                    {confirmDeleteId === ev.id ? (
+                      <span className="delete-confirm">
+                        Remove?{" "}
+                        <button onClick={() => handleDeleteEvent(ev.id)}>
+                          Yes
+                        </button>
+                        <button onClick={() => setConfirmDeleteId(null)}>
+                          No
+                        </button>
+                      </span>
+                    ) : (
+                      <button
+                        className="delete-btn"
+                        onClick={() => setConfirmDeleteId(ev.id)}
+                      >
+                        ✕
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
             )}
-
 
             <form className="add-event-form" onSubmit={handleAddEvent}>
               <h3>Add Event</h3>
@@ -167,12 +212,16 @@ export default function Calendar() {
                 type="text"
                 placeholder="Event name"
                 value={form.name}
-                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, name: e.target.value }))
+                }
               />
               <input
                 type="time"
                 value={form.time}
-                onChange={(e) => setForm((f) => ({ ...f, time: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, time: e.target.value }))
+                }
               />
               {saveError && <p className="save-error">{saveError}</p>}
               <button type="submit" disabled={saving || !form.name.trim()}>
@@ -185,7 +234,3 @@ export default function Calendar() {
     </div>
   );
 }
-
-
-
-

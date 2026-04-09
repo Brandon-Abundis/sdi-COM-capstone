@@ -1,6 +1,12 @@
 import CalendarPopulator from "./CalendarPopulator.jsx"
 
 
+function timeToMinutes(timeStr) {
+  if (!timeStr) return Infinity;
+  const [h, m] = timeStr.split(":").map(Number);
+  return h * 60 + (m || 0);
+}
+
 export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events }) {
   const year = currentDate.getUTCFullYear();
   const month = currentDate.getUTCMonth();
@@ -11,14 +17,16 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
 
 
   function eventsForDay(day) {
-    return events.filter((e) => {
-      const d = new Date(e.date);
-      return (
-        d.getUTCFullYear() === year &&
-        d.getUTCMonth() === month &&
-        d.getUTCDate() === day
-      );
-    });
+    return events
+      .filter((e) => {
+        const d = new Date(e.date);
+        return (
+          d.getUTCFullYear() === year &&
+          d.getUTCMonth() === month &&
+          d.getUTCDate() === day
+        );
+      })
+      .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
   }
 
 

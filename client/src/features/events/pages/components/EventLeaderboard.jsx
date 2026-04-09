@@ -17,13 +17,35 @@ export default function EventLeaderboard({ selectedEvent }) {
     if (!selectedEvent?.id) return;
     setLoading(true);
     setError(null);
-    // Expects backend route: GET /events/:id/leaderboard
-    fetch(`http://localhost:8080/events/${selectedEvent.id}/leaderboard`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch leaderboard");
-        return res.json();
+    setEntries([]);
+
+    Promise.all([
+      fetch(`http://localhost:8080/groups/id/${selectedEvent.group_id}`)
+        .then((r) => (r.ok ? r.json() : null)),
+      fetch("http://localhost:8080/scores/")
+        .then((r) => (r.ok ? r.json() : [])),
+      fetch("http://localhost:8080/users/")
+        .then((r) => (r.ok ? r.json() : [])),
+    ])
+      .then(([group, scores, users]) => {
+        const memberIds = new Set(group?.user_ids ?? []);
+        const userMap = Object.fromEntries(
+          users.map((u) => [u.id, `${u.first_name} ${u.last_name}`])
+        );
+
+        const filtered = scores
+          .filter((s) => memberIds.size === 0 || memberIds.has(s.user_id))
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10)
+          .map((s, i) => ({
+            user_id: s.user_id,
+            full_name: userMap[s.user_id] ?? `User #${s.user_id}`,
+            goal_mark: s.score,
+            rank: i === 0 ? "Gold" : i === 1 ? "Silver" : i === 2 ? "Bronze" : `#${i + 1}`,
+          }));
+
+        setEntries(filtered);
       })
-      .then((data) => setEntries(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
   }, [selectedEvent?.id]);
@@ -33,7 +55,7 @@ export default function EventLeaderboard({ selectedEvent }) {
       <div className="flex flex-col gap-3">
         <h2 className="text-lg font-bold text-[#c084fc]">Leaderboard</h2>
         <div className="card bg-[#16112a] border border-[#1e1838] shadow p-4 text-[#e2dff5]/50 text-sm">
-          Select an event to see rankings.
+          Select a current event to see rankings.
         </div>
       </div>
     );
@@ -59,9 +81,9 @@ export default function EventLeaderboard({ selectedEvent }) {
             <span className="text-xl">{medals[index] ?? "🏅"}</span>
             <div className="flex-1">
               <p className="font-semibold text-sm text-[#e2dff5]">{entry.full_name}</p>
-              <p className="text-xs text-[#e2dff5]/60">{entry.goal_mark}</p>
+              <p className="text-xs text-[#e2dff5]/60">Score: {entry.goal_mark}</p>
             </div>
-            <span className={`text-xs font-bold ${rankColors[entry.rank] ?? ""}`}>
+            <span className={`text-xs font-bold ${rankColors[entry.rank] ?? "text-[#e2dff5]/50"}`}>
               {entry.rank}
             </span>
           </div>
