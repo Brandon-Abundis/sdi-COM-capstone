@@ -2,10 +2,10 @@
 import CalendarPopulator from "./CalendarPopulator.jsx"
 
 export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events }) {
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
-  const firstDayOfMonth = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const year = currentDate.getUTCFullYear();
+  const month = currentDate.getUTCMonth();
+  const firstDayOfMonth = new Date(year, month, 1).getUTCDay();
+  const daysInMonth = new Date(year, month + 1, 0).getUTCDate();
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
   const blanks = Array.from({ length: firstDayOfMonth });
 
