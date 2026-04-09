@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Calendar.css";
-import CalendarApp from "../programs/CalendarApp.jsx";
+import CalendarApp from "../components/CalendarApp.jsx";
 import { useAuth } from "../../../app/AuthProvider.jsx";
+
 
 export default function Calendar() {
   const { user } = useAuth();
@@ -12,8 +13,10 @@ export default function Calendar() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
 
+
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+
 
   useEffect(() => {
     if (!user?.id) return;
@@ -23,14 +26,21 @@ export default function Calendar() {
       .catch(() => setEvents([]));
   }, [user?.id]);
 
+
   // Clear selected day when month changes so the side panel doesn't show stale data
   function handleMonthChange(newDate) {
     setCurrentDate(newDate);
     setSelectedDay(null);
   }
 
+
   const selectedDate =
     selectedDay != null ? new Date(Date.UTC(year, month, selectedDay)) : null;
+
+
+  const upcomingDate =
+    selectedDay != null ? new Date(Date.UTC(year, month, selectedDay + 1)) : null;
+
 
   const dayEvents = selectedDate
     ? events.filter((e) => {
@@ -42,6 +52,7 @@ export default function Calendar() {
         );
       })
     : [];
+
 
   async function handleAddEvent(e) {
     e.preventDefault();
@@ -74,6 +85,7 @@ export default function Calendar() {
     }
   }
 
+
   const selectedLabel = selectedDate
     ? selectedDate.toLocaleDateString("en-US", {
         month: "long",
@@ -83,8 +95,39 @@ export default function Calendar() {
       })
     : null;
 
+
+  const upcomingSelectedLabel = upcomingDate
+    ? upcomingDate.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC",
+      })
+    : null;
+
+
   return (
     <div className="calendar-page">
+       {selectedDay === null ? (<></>) : (
+        <aside className="calendar-side-panel">
+          <div className="panel-date-heading">Upcoming Events Tomorrow</div>
+
+
+            {dayEvents.length === 0 ? (
+                <p className="no-events">No events yet.</p>
+            ) : (
+              <ul className="event-list">
+                {dayEvents.map((ev) => (
+                  <li key={ev.id}>
+                    <span className="event-name">{ev.name}</span>
+                    {ev.time && <span className="event-time">{ev.time}</span>}
+                  </li>
+                ))}
+              </ul>
+            )}
+        </aside>
+        )}
+     
       <div className="calendar-box">
         <CalendarApp
           currentDate={currentDate}
@@ -95,12 +138,14 @@ export default function Calendar() {
         />
       </div>
 
+
       <aside className="calendar-side-panel">
         {selectedDay == null ? (
           <p className="panel-empty">Select a day to see or add events.</p>
         ) : (
           <>
             <div className="panel-date-heading">{selectedLabel}</div>
+
 
             {dayEvents.length === 0 ? (
               <p className="no-events">No events yet.</p>
@@ -114,6 +159,7 @@ export default function Calendar() {
                 ))}
               </ul>
             )}
+
 
             <form className="add-event-form" onSubmit={handleAddEvent}>
               <h3>Add Event</h3>
@@ -139,3 +185,7 @@ export default function Calendar() {
     </div>
   );
 }
+
+
+
+
