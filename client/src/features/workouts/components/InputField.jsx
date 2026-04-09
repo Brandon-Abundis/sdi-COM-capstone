@@ -1,10 +1,12 @@
-export default function InputField({ style, choices, def, chosen }) {
+import { forwardRef } from "rect"
+
+export default forwardRef(function InputField({ style, choices, def, chosen }, ref) {
   if (style == "selection") {
     return (
       <div>
         <label for="types"> Workout Type: </label>
 
-        <select name="type" id="workoutSelection" className={"bg-[#0c0916] p-3 rounded-lg border-2 border-[#231d3f] mb-3"}>
+        <select ref={ref} name="type" id="workoutSelection" className={"bg-[#0c0916] p-3 rounded-lg border-2 border-[#231d3f] mb-3"}>
           {choices.map((choice) => {
             let showChoice = choice.charAt(0).toUpperCase() + choice.slice(1);
             if (choice == chosen.toLowerCase()) {
@@ -25,6 +27,7 @@ export default function InputField({ style, choices, def, chosen }) {
   return (
     <div>
       <input
+        ref={ref}
         placeholder={style}
         defaultValue={def}
         className={
@@ -33,4 +36,4 @@ export default function InputField({ style, choices, def, chosen }) {
       />
     </div>
   );
-}
+})

@@ -38,7 +38,7 @@ export default function Workouts() {
                   } = data;
 
                   let currentData = {
-                    id: id,
+                    id: index,
                     title: name || defaultString,
                     type: type || defaultString,
                     time: Math.floor(time / 60 + 0.5) || defaultNum,
@@ -47,6 +47,7 @@ export default function Workouts() {
                     muscle_groups: muscle_groups || defaultString,
                     weight: weight || defaultNum,
                     notes: notes || defaultString,
+                    storedId: id,
                   };
                   setAllInfo((prev) => [...prev, currentData]);
                 });
@@ -87,14 +88,6 @@ export default function Workouts() {
         <AddWorkout
           onClick={() => {
             setEditInfo({
-              title: empty,
-              type: empty,
-              time: empty,
-              distance: empty,
-              reps: empty,
-              muscle_groups: empty,
-              weight: empty,
-              notes: empty,
               title: empty,
               type: empty,
               time: empty,
