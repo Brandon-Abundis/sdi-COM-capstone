@@ -80,12 +80,12 @@ export default function Leaderboard() {
             </h1>
             <ol>
               {merged
-                .sort((a, b) => b.score - a.score)
+                .sort((a, b) => a.score - b.score)
                 .slice(0, 10)
                 .map((merge) => (
                   <li key={merge.id}>
                     {merge.rank} {merge.last_name}:{" "}
-                    {(merge.score / 30).toFixed(2)} Minutes
+                    {(merge.score / 17.5).toFixed(2)} Minutes
                   </li>
                 ))}
             </ol>
