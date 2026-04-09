@@ -101,7 +101,7 @@ export default function Leaderboard() {
                 .map((merge) => (
                   <li key={merge.id}>
                     {merge.rank} {merge.last_name}:{" "}
-                    {(merge.score / 25).toFixed(0)} Reps
+                    {(merge.score / 22).toFixed(0)} Reps
                   </li>
                 ))}
             </ol>
@@ -133,7 +133,7 @@ export default function Leaderboard() {
                 .map((merge) => (
                   <li key={merge.id}>
                     {merge.rank} {merge.last_name}:{" "}
-                    {(merge.score / 10).toFixed(2)} Minutes
+                    {(merge.score / 7).toFixed(2)} Minutes
                   </li>
                 ))}
             </ol>
