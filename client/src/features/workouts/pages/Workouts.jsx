@@ -33,7 +33,7 @@ export default function Workouts() {
                     notes,
                     weight,
                     muscle_groups,
-                    id
+                    id,
                   } = data;
 
                   let currentData = {
@@ -68,12 +68,16 @@ export default function Workouts() {
   };
 
   if (maxLen === null || allInfo.length !== maxLen) {
-    return <h2> Loading :3 </h2>;
+    return <h2> Loading ! </h2>;
   }
   return (
     <div>
       <div>
-        <h1 className={"text-3xl font-bold text-[#7c3aed] mb-6 ml-7 mt-6 tracking-wide"}>
+        <h1
+          className={
+            "text-3xl font-bold text-[#7c3aed] mb-6 ml-7 mt-6 tracking-wide"
+          }
+        >
           {" "}
           WORKOUTS{" "}
         </h1>
@@ -108,17 +112,13 @@ export default function Workouts() {
             />
           );
         })}
-      
+
         <Modal
           openModal={showModal}
           closeModal={() => setShowModal(false)}
           info={editInfo}
           key={"new"}
         />
-        <WorkoutBox details={info} onClick={() => {
-          setEditInfo(info);
-          setShowModal(true);
-        }}/>
       </div>
     </div>
   );
