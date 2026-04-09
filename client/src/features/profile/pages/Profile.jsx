@@ -39,7 +39,7 @@ export default function Profile() {
         >
           Sign Out
         </button>
-        <div className="grid grid-cols-2 grid-rows-2 h-screen w-full bg-base-300 p-6 pt-16">
+        <div className="grid grid-cols-2 grid-rows-2 h-screen w-full bg-base-300 p-6 pt-16 gap-6">
           <div className="row-span-2 h-full flex flex-col gap-6 overflow-y-auto pr-4 scrollbar-hide ">
             <ProfileInfo
               userData={userData}
