@@ -39,12 +39,12 @@ exports.seed = async function(knex) {
       events.push({
         name: eventName,
         // SPREAD: 180 days (6 months) back, 365 days (1 year) forward
-        date: faker.date.between({
+        start_date: faker.date.between({
           from: faker.date.recent({ days: 180 }),
           to: faker.date.soon({ days: 365 })
         }),
         // Ensuring 24-hour format with leading zeros (e.g., 08:00)
-        time: `${faker.number.int({ min: 5, max: 20 }).toString().padStart(2, '0')}:00`,
+        start_time: `${faker.number.int({ min: 5, max: 20 }).toString().padStart(2, '0')}:00`,
         goals_list: goals,
         workouts_list: workouts,
         user_id: userId

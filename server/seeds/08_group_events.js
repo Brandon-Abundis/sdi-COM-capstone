@@ -19,8 +19,8 @@ exports.seed = async function(knex) {
     for (let i = 0; i < 3; i++) {
       groupEvents.push({
         name: faker.helpers.arrayElement(['Squad PT', 'Formation Run', 'Mock PFA', 'Section Training']),
-        date: faker.date.soon({ days: 30 }),
-        time: `${faker.number.int({ min: 5, max: 9 })}:00`, // Military PT usually early!
+        start_date: faker.date.soon({ days: 30 }),
+        start_time: `${faker.number.int({ min: 5, max: 9 })}:00`, // Military PT usually early!
 
         // Take all 4 goals and 4 workouts belonging to this group
         goals_list: [firstId, firstId + 1, firstId + 2, firstId + 3],
