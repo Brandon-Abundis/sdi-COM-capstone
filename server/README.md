@@ -14,10 +14,6 @@ user endpoint, you can get a specific user info from here by passing user id
 
 - http://localhost:8080/users/id/:id (GET)
 
-user endpoint, you can create new user
-
-- http://localhost:8080/create/ (POST)
-
 user endpoint, you can post a specific user info from here by passing user id and user data you want to modify(you cannot change password and rival_ids here)
 
 - http://localhost:8080/users/id/:id (POST)
@@ -91,9 +87,25 @@ group endpoint, you can get specific group goals from here by passing group id
 
 - http://localhost:8080/groups/group_goals/id/:id (GET)
 
+group endpoint, you can update group goals info by passing in group_goals id to the endpoint and new info as in the body
+
+- http://localhost:8080/groups/groups_goals/update/id/:id (POST)
+
+user endpoint, you can create new user goal by passing in new info in the body (this endpoint requires group_id to be passed in in the body)
+
+- http://localhost:8080/groups/groups_goals/create/ (POST)
+
 group endpoint, you can get specific group workouts from here by passing group id
 
 - http://localhost:8080/groups/group_workouts/id/:id (GET)
+
+group endpoint, you can update group workout info by passing in group_workouts id to the endpoint and new info as in the body
+
+- http://localhost:8080/groups/groups_workouts/update/id/:id (POST)
+
+user endpoint, you can create new user workout by passing in new info in the body (this endpoint requires group_id to be passed in in the body)
+
+- http://localhost:8080/groups/groups_workouts/create/ (POST)
 
 group endpoint, you can get specific group events from here by passing group id
 
