@@ -24,6 +24,16 @@ exports.seed = async function(knex) {
 
     for (let i = 0; i < EVENTS_PER_USER; i++) {
       let goals, workouts;
+      const EVENT_TIMES = {
+        'Morning Session':       { min: 5,  max: 9  },
+        'PT workout':            { min: 6,  max: 11 },
+        'Evening Grind':         { min: 17, max: 20 },
+        'Personal Best Attempt': { min: 7,  max: 18 },
+        'Squad Training':        { min: 6,  max: 14 },
+        'Endurance Test':        { min: 6,  max: 16 },
+        'Official PT Assessment':{ min: 6,  max: 9  },
+      };
+
       let eventName = faker.helpers.arrayElement(['Morning Session', 'PT workout', 'Evening Grind', 'Personal Best Attempt', 'Squad Training', 'Endurance Test']);
 
       // Every 15th event (~once every 2 months) is an Official Assessment
@@ -36,6 +46,8 @@ exports.seed = async function(knex) {
         workouts = faker.helpers.arrayElements(userWorkoutPool, faker.number.int({ min: 2, max: 5 }));
       }
 
+      const timeRange = EVENT_TIMES[eventName] || { min: 6, max: 18 };
+
       events.push({
         name: eventName,
         // SPREAD: 180 days (6 months) back, 365 days (1 year) forward
@@ -43,8 +55,7 @@ exports.seed = async function(knex) {
           from: faker.date.recent({ days: 180 }),
           to: faker.date.soon({ days: 365 })
         }),
-        // Ensuring 24-hour format with leading zeros (e.g., 08:00)
-        time: `${faker.number.int({ min: 5, max: 20 }).toString().padStart(2, '0')}:00`,
+        time: `${faker.number.int(timeRange).toString().padStart(2, '0')}:00`,
         goals_list: goals,
         workouts_list: workouts,
         user_id: userId

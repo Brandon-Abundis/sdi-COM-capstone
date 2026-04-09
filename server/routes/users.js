@@ -8,6 +8,7 @@ const {
   getAllEvents,
   getEventsById,
   createEvent,
+  deleteEvent,
   updateById,
   updateRivalById,
   removeRivalById,
@@ -25,5 +26,6 @@ router.get("/user_workouts/id/:id", getWorkoutsById);
 router.get("/user_events/", getAllEvents);
 router.get("/user_events/id/:id", getEventsById);
 router.post("/user_events", createEvent);
+router.delete("/user_events/id/:id", deleteEvent);
 
 module.exports = router;
