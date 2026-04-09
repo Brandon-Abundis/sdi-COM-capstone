@@ -6,11 +6,13 @@ exports.up = function(knex) {
     return knex.schema.createTable("group_events", (table) => {
     table.increments();
     table.string("name");
-    table.date("date");
-    table.string("time");
+    table.date("start_date");
+    table.date("end_date");
+    table.string("start_time");
+    table.string("end_time");
 
-    table.specificType("goals_list", "integer[]"); // basic postgres array
-    table.specificType("workouts_list", "integer[]");
+    table.specificType("goals_list", "integer[]").defaultTo(knex.raw("'{}'")); // basic postgres array
+    table.specificType("workouts_list", "integer[]").defaultTo(knex.raw("'{}'"));
 
     table.integer("group_id")
       .unsigned() // consistancy with auto increment IDs

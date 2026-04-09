@@ -14,6 +14,10 @@ user endpoint, you can get a specific user info from here by passing user id
 
 - http://localhost:8080/users/id/:id (GET)
 
+user endpoint, you can create new user
+
+- http://localhost:8080/create/ (POST)
+
 user endpoint, you can post a specific user info from here by passing user id and user data you want to modify(you cannot change password and rival_ids here)
 
 - http://localhost:8080/users/id/:id (POST)
@@ -34,9 +38,25 @@ user endpoint, you can get all user goal info associated to a user by passing us
 
 - http://localhost:8080/users/user_goals/id/:id (GET)
 
+user endpoint, you can update user goal info by passing in user_goal id to the endpoint and new info as in the body
+
+- http://localhost:8080/users/user_goals/update/id/:id (POST)
+
+user endpoint, you can create new user goal by passing in new info in the body (this endpoint requires user_id to be passed in in the body)
+
+- http://localhost:8080/users/user_goals/create/ (POST)
+
 user endpoint, you can get all user workout info associated to a user by passing user id
 
 - http://localhost:8080/users/user_workouts/id/:id (GET)
+
+user endpoint, you can update user workout info by passing in user_goal id to the endpoint and new info as in the body
+
+- http://localhost:8080/users/user_workouts/update/id/:id (POST)
+
+user endpoint, you can create new user workout by passing in new info in the body (this endpoint requires user_id to be passed in in the body)
+
+- http://localhost:8080/users/user_workouts/create/ (POST)
 
 user endpoint, you can get all user event info associated to a user by passing user id
 
@@ -95,6 +115,20 @@ account registeration endpoint, you can post new user here
 account login endpoint, you can login to a user using email and password post here
 
 - http://localhost:8080/auth/login (POST)
+
+## Global_Events
+
+global endpoint, you can get all global event info
+
+- http://localhost:8080/global (GET)
+
+global endpoint, you can update global evnet info by passing in global_events id to the endpoint and new info as in the body
+
+- http://localhost:8080/global/update/id/:id (POST)
+
+global endpoint, you can create new global event by passing in new info in the body (this endpoint requires user_id to be passed in in the body)
+
+- http://localhost:8080/global/create (POST)
 
 ## Logs
 

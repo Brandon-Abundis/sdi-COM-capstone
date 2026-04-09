@@ -10,6 +10,7 @@ const authRoutes = require("./routes/auth");
 const logRoutes = require("./routes/logs");
 const messageRoutes = require("./routes/messages");
 const scoreRoutes = require("./routes/scores");
+const globalRoutes = require("./routes/global");
 
 app.use(express.json());
 app.use(cors());
@@ -20,6 +21,7 @@ app.use("/auth", authRoutes);
 app.use("/logs", logRoutes);
 app.use("/messages", messageRoutes);
 app.use("/scores", scoreRoutes);
+app.use("/global", globalRoutes);
 
 app.get("/", (req, res) => {
   return res

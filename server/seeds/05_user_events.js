@@ -10,12 +10,9 @@ exports.seed = async function(knex) {
   const GOALS_PER_USER = 32;
   const WORKOUTS_PER_USER = 32;
   const TOTAL_USERS = 51;
-
-  // ~78 weeks (18 months) * 2 events per week = ~150 events
   const EVENTS_PER_USER = 150;
 
   for (let userId = 1; userId <= TOTAL_USERS; userId++) {
-
     const firstGoalId = ((userId - 1) * GOALS_PER_USER) + 1;
     const firstWorkoutId = ((userId - 1) * WORKOUTS_PER_USER) + 1;
 
@@ -36,7 +33,6 @@ exports.seed = async function(knex) {
 
       let eventName = faker.helpers.arrayElement(['Morning Session', 'PT workout', 'Evening Grind', 'Personal Best Attempt', 'Squad Training', 'Endurance Test']);
 
-      // Every 15th event (~once every 2 months) is an Official Assessment
       if (i % 15 === 0) {
         eventName = 'Official PT Assessment';
         goals = [firstGoalId, firstGoalId + 1, firstGoalId + 2];
@@ -46,16 +42,30 @@ exports.seed = async function(knex) {
         workouts = faker.helpers.arrayElements(userWorkoutPool, faker.number.int({ min: 2, max: 5 }));
       }
 
-      const timeRange = EVENT_TIMES[eventName] || { min: 6, max: 18 };
+      // 1. Generate Start Date
+      const startDate = faker.date.between({
+        from: faker.date.recent({ days: 180 }),
+        to: faker.date.soon({ days: 365 })
+      });
+
+      // 2. Probability Logic for End Date
+      let endDate = new Date(startDate);
+      const isMultiDay = Math.random() > 0.90; // 10% chance for multi-day
+
+      if (isMultiDay) {
+        // Add 2-5 days for multi-day events
+        endDate.setDate(startDate.getDate() + faker.number.int({ min: 2, max: 5 }));
+      }
+
+      const startHour = faker.number.int({ min: 5, max: 19 });
+      const duration = faker.number.int({ min: 1, max: 2 });
 
       events.push({
         name: eventName,
-        // SPREAD: 180 days (6 months) back, 365 days (1 year) forward
-        date: faker.date.between({
-          from: faker.date.recent({ days: 180 }),
-          to: faker.date.soon({ days: 365 })
-        }),
-        time: `${faker.number.int(timeRange).toString().padStart(2, '0')}:00`,
+        start_date: startDate,
+        end_date: endDate,
+        start_time: `${startHour.toString().padStart(2, '0')}:00`,
+        end_time: `${(startHour + duration).toString().padStart(2, '0')}:00`,
         goals_list: goals,
         workouts_list: workouts,
         user_id: userId
@@ -63,6 +73,5 @@ exports.seed = async function(knex) {
     }
   }
 
-  // With 7,500+ records, batchInsert is essential for performance
   await knex.batchInsert('user_events', events, 100);
 };
