@@ -279,7 +279,7 @@ const updateGoalsById = async (req, res) => {
     ) {
       createLog({
         method: "POST",
-        action: "UPDATA_USER_GOAL",
+        action: "UPDATE_USER_GOAL",
         status_code: 400,
         user_id: id,
         metadata: { message: "bad data" },
@@ -290,7 +290,7 @@ const updateGoalsById = async (req, res) => {
     if (!userGoalData) {
       createLog({
         method: "POST",
-        action: "UPDATA_USER_GOAL",
+        action: "UPDATE_USER_GOAL",
         status_code: 400,
         user_id: id,
         metadata: { message: "goal does not exist" },
@@ -314,7 +314,7 @@ const updateGoalsById = async (req, res) => {
     if (result) {
       createLog({
         method: "POST",
-        action: "UPDATA_USER_GOAL",
+        action: "UPDATE_USER_GOAL",
         status_code: 200,
         user_id: id,
         metadata: JSON.stringify(result),
@@ -324,7 +324,7 @@ const updateGoalsById = async (req, res) => {
   } catch (err) {
     createLog({
       method: "GET",
-      action: "UPDATA_USER_GOAL",
+      action: "UPDATE_USER_GOAL",
       status_code: 500,
       user_id: id,
       metadata: err,
@@ -444,7 +444,7 @@ const updateWorkoutById = async (req, res) => {
     ) {
       createLog({
         method: "POST",
-        action: "UPDATA_USER_WORKOUT",
+        action: "UPDATE_USER_WORKOUT",
         status_code: 400,
         user_id: id,
         metadata: { message: "bad data" },
@@ -457,7 +457,7 @@ const updateWorkoutById = async (req, res) => {
     if (!userWorkoutData) {
       createLog({
         method: "POST",
-        action: "UPDATA_USER_WORKOUT",
+        action: "UPDATE_USER_WORKOUT",
         status_code: 400,
         user_id: id,
         metadata: { message: "goal does not exist" },
@@ -483,7 +483,7 @@ const updateWorkoutById = async (req, res) => {
     if (result) {
       createLog({
         method: "POST",
-        action: "UPDATA_USER_WORKOUT",
+        action: "UPDATE_USER_WORKOUT",
         status_code: 200,
         user_id: id,
         metadata: JSON.stringify(result),
@@ -492,8 +492,8 @@ const updateWorkoutById = async (req, res) => {
     res.status(200).send(result[0]);
   } catch (err) {
     createLog({
-      method: "GET",
-      action: "UPDATA_USER_GOAL",
+      method: "POST",
+      action: "UPDATE_USER_WORKOUT",
       status_code: 500,
       user_id: id,
       metadata: err,
