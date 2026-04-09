@@ -45,16 +45,28 @@ const getById = async (req, res) => {
 
 const updateById = async (req, res) => {
   const { id } = req.params;
-  const { is_admin, first_name, last_name, email, rank, age, xp } = req.body;
+  const {
+    is_admin,
+    first_name,
+    username,
+    last_name,
+    email,
+    rank,
+    age,
+    xp,
+    is_active,
+  } = req.body;
   try {
     if (
       !is_admin &&
       !first_name &&
       !last_name &&
+      !username &&
       !email &&
       !rank &&
       !age &&
-      !xp
+      !xp &&
+      !is_active
     ) {
       createLog({
         method: "POST",
@@ -73,10 +85,12 @@ const updateById = async (req, res) => {
         is_admin: is_admin ? is_admin : userData.is_admin,
         first_name: first_name ? first_name : userData.first_name,
         last_name: last_name ? last_name : userData.last_name,
+        username: username ? username : userData.username,
         email: email ? email : userData.email,
         rank: rank ? rank : userData.rank,
         age: age ? age : userData.age,
         xp: xp ? xp : userData.xp,
+        is_active: is_active ? is_active : userData.is_active,
       })
       .returning("*");
     if (result) {
@@ -93,6 +107,63 @@ const updateById = async (req, res) => {
     createLog({
       method: "GET",
       action: "UPDATE_USER",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const createUser = async (req, res) => {
+  const { is_admin, first_name, username, last_name, email, rank, age, xp } =
+    req.body;
+  try {
+    if (
+      !is_admin &&
+      !first_name &&
+      !last_name &&
+      !username &&
+      !email &&
+      !rank &&
+      !age &&
+      !xp
+    ) {
+      createLog({
+        method: "POST",
+        action: "CREATE_USER",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("users")
+      .insert({
+        is_admin: is_admin ? is_admin : userData.is_admin,
+        first_name: first_name ? first_name : userData.first_name,
+        last_name: last_name ? last_name : userData.last_name,
+        username: username ? username : userData.username,
+        email: email ? email : userData.email,
+        rank: rank ? rank : userData.rank,
+        age: age ? age : userData.age,
+        xp: xp ? xp : userData.xp,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "CREATE_USER",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "CREATE_USER",
       status_code: 500,
       user_id: id,
       metadata: err,
@@ -664,6 +735,7 @@ module.exports = {
   getEventsById,
   createEvent,
   updateById,
+  createUser,
   updateRivalById,
   removeRivalById,
 };

@@ -14,6 +14,10 @@ user endpoint, you can get a specific user info from here by passing user id
 
 - http://localhost:8080/users/id/:id (GET)
 
+user endpoint, you can create new user
+
+- http://localhost:8080/create/ (POST)
+
 user endpoint, you can post a specific user info from here by passing user id and user data you want to modify(you cannot change password and rival_ids here)
 
 - http://localhost:8080/users/id/:id (POST)
