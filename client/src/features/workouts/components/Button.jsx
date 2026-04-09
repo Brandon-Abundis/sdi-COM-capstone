@@ -2,6 +2,7 @@ export default function Button({ name, func }) {
   return (
     <button
       onClick={() => {
+        console.log('omg')
         func();
       }}
       className={

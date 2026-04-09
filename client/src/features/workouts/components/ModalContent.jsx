@@ -2,7 +2,7 @@ import InputField from "./InputField";
 import Button from "./Button";
 import { useState, useRef } from "react";
 
-export default function ModalContent({ close, info }) {
+export default function ModalContent({ cancel, info }) {
   let {
     title,
     type,
@@ -117,7 +117,7 @@ export default function ModalContent({ close, info }) {
       </div>
       <div className={"w-35 flex justify-between"}>
         <Button name={"Submit"} func={() => submit()} />
-        <Button name={"Cancel"} func={() => close()} />
+        <Button name={"Cancel"} func={() => cancel()} />
       </div>
     </div>
   );
