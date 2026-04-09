@@ -43,11 +43,11 @@ export default function ProfileInfo({ userData, setUserData }) {
       console.error("Error:", error);
     }
   }
-  async function delete_account(id) {
+  async function delete_account(userData, id) {
     try {
       const response = await fetch(`http://localhost:8080/users/id/${id}`, {
         method: "POST",
-        body: JSON.stringify({ is_active: false }),
+        body: JSON.stringify({ ...userData, is_active: false }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -290,7 +290,9 @@ export default function ProfileInfo({ userData, setUserData }) {
                           <div className="flex gap-2 shrink-0">
                             <button
                               className="btn btn-error btn-outline btn-sm px-6"
-                              onClick={() => delete_account(userData.id)}
+                              onClick={() =>
+                                delete_account(userData, userData.id)
+                              }
                             >
                               Delete
                             </button>
