@@ -34,11 +34,7 @@ export default function Workouts() {
                     notes,
                     weight,
                     muscle_groups,
-<<<<<<< HEAD
                     id,
-=======
-                    id
->>>>>>> 4e7aca3 (Stylizes Modal to match other pages; Yet to do so for rest of Workout Page)
                   } = data;
 
                   let currentData = {
@@ -73,24 +69,16 @@ export default function Workouts() {
   };
 
   if (maxLen === null || allInfo.length !== maxLen) {
-<<<<<<< HEAD
     return <h2> Loading ! </h2>;
-=======
-    return <h2> Loading :3 </h2>;
->>>>>>> 4e7aca3 (Stylizes Modal to match other pages; Yet to do so for rest of Workout Page)
   }
   return (
     <div>
       <div>
-<<<<<<< HEAD
         <h1
           className={
             "text-3xl font-bold text-[#7c3aed] mb-6 ml-7 mt-6 tracking-wide"
           }
         >
-=======
-        <h1 className={"text-3xl font-bold text-[#7c3aed] mb-6 ml-7 mt-6 tracking-wide"}>
->>>>>>> 4e7aca3 (Stylizes Modal to match other pages; Yet to do so for rest of Workout Page)
           {" "}
           WORKOUTS{" "}
         </h1>
@@ -133,21 +121,13 @@ export default function Workouts() {
             />
           );
         })}
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> 4e7aca3 (Stylizes Modal to match other pages; Yet to do so for rest of Workout Page)
         <Modal
           openModal={showModal}
           closeModal={() => setShowModal(false)}
           info={editInfo}
           key={"new"}
         />
-        <WorkoutBox details={info} onClick={() => {
-          setEditInfo(info);
-          setShowModal(true);
-        }}/>
       </div>
     </div>
   );
