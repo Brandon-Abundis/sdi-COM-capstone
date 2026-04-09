@@ -21,6 +21,16 @@ exports.seed = async function(knex) {
 
     for (let i = 0; i < EVENTS_PER_USER; i++) {
       let goals, workouts;
+      const EVENT_TIMES = {
+        'Morning Session':       { min: 5,  max: 9  },
+        'PT workout':            { min: 6,  max: 11 },
+        'Evening Grind':         { min: 17, max: 20 },
+        'Personal Best Attempt': { min: 7,  max: 18 },
+        'Squad Training':        { min: 6,  max: 14 },
+        'Endurance Test':        { min: 6,  max: 16 },
+        'Official PT Assessment':{ min: 6,  max: 9  },
+      };
+
       let eventName = faker.helpers.arrayElement(['Morning Session', 'PT workout', 'Evening Grind', 'Personal Best Attempt', 'Squad Training', 'Endurance Test']);
 
       if (i % 15 === 0) {

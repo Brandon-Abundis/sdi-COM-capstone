@@ -721,6 +721,33 @@ const createEvent = async (req, res) => {
   }
 };
 
+const deleteEvent = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleted = await db("user_events").where({ id }).del().returning("*");
+    if (!deleted.length) {
+      return res.status(404).send({ message: "Event not found" });
+    }
+    createLog({
+      method: "DELETE",
+      action: "DELETE_USER_EVENT",
+      status_code: 200,
+      user_id: deleted[0].user_id,
+      metadata: JSON.stringify(deleted[0]),
+    });
+    res.status(200).send(deleted[0]);
+  } catch (err) {
+    createLog({
+      method: "DELETE",
+      action: "DELETE_USER_EVENT",
+      status_code: 500,
+      user_id: null,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
 module.exports = {
   getAll,
   getById,
@@ -734,6 +761,7 @@ module.exports = {
   getAllEvents,
   getEventsById,
   createEvent,
+  deleteEvent,
   updateById,
   createUser,
   updateRivalById,

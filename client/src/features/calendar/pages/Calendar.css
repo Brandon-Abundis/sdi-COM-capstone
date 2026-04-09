@@ -7,12 +7,10 @@
   color: #e2dff5;
 }
 
-
 .calendar-box {
   flex: 1 1 auto;
   min-width: 0;
 }
-
 
 /* ── Calendar shell ──────────────────────────────────────── */
 .calendar {
@@ -24,7 +22,6 @@
   color: #e2dff5;
 }
 
-
 .calendar header {
   display: flex;
   justify-content: space-between;
@@ -32,14 +29,12 @@
   margin-bottom: 16px;
 }
 
-
 .calendar header h2 {
   font-size: 1.1rem;
   font-weight: bold;
   color: #c084fc;
   letter-spacing: 0.03em;
 }
-
 
 .calendar header button {
   background: #2a2245;
@@ -49,9 +44,10 @@
   padding: 4px 14px;
   cursor: pointer;
   font-size: 0.85rem;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
-
 
 .calendar header button:hover {
   background: #7c3aed;
@@ -59,15 +55,13 @@
   color: #fff;
 }
 
-
 /* ── Grid ────────────────────────────────────────────────── */
 .calendarGuts {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
-  height: 70vh
+  height: 70vh;
 }
-
 
 /* Day-name header row */
 .day-names {
@@ -83,7 +77,6 @@
   border-radius: 6px;
 }
 
-
 /* Day cells + blank spacers */
 .day,
 .blank {
@@ -97,20 +90,19 @@
   align-items: flex-start;
   justify-content: flex-start;
   overflow: hidden;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
-
 
 .blank {
   cursor: default;
   opacity: 0.3;
 }
 
-
 .day {
   cursor: pointer;
 }
-
 
 /* .day.small,
 .blank.small{
@@ -138,14 +130,12 @@
   background: #16112a;
 }
 
-
 /* Selected state */
 .day.selected {
   background: #2a1a5e;
   border-color: #7c3aed;
   border-width: 2px;
 }
-
 
 /* Day number */
 .day-number {
@@ -155,11 +145,9 @@
   margin-bottom: 4px;
 }
 
-
 .day.selected .day-number {
   color: #c084fc;
 }
-
 
 /* ── Event tabs inside day cells ─────────────────────────── */
 .event-tab {
@@ -180,7 +168,6 @@
   line-height: 1.4;
 }
 
-
 .event-tab::before {
   content: "";
   display: inline-block;
@@ -191,13 +178,11 @@
   flex-shrink: 0;
 }
 
-
 .day.selected .event-tab {
   background: #3b2d6e;
   color: #e2dff5;
   border-color: #7c3aed;
 }
-
 
 .event-tab-more {
   font-size: 0.65rem;
@@ -205,7 +190,6 @@
   margin-top: 2px;
   padding-left: 4px;
 }
-
 
 /* ── Side panel ──────────────────────────────────────────── */
 .calendar-side-panel {
@@ -220,14 +204,12 @@
   top: 20px;
 }
 
-
 .calendar-side-panel .panel-empty {
   font-size: 0.85rem;
   color: #6d5aad;
   text-align: center;
   margin-top: 12px;
 }
-
 
 .panel-date-heading {
   font-size: 1rem;
@@ -237,7 +219,6 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #1e1838;
 }
-
 
 /* Event list */
 .event-list {
@@ -249,23 +230,84 @@
   gap: 8px;
 }
 
-
 .event-list li {
   background: #0f0d17;
   border: 1px solid #1e1838;
   border-radius: 10px;
   padding: 10px 12px;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
   transition: border-color 0.15s;
 }
 
+.event-list li .event-name {
+  flex: 1;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #6d5aad;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+
+.delete-btn:hover {
+  color: #f87171;
+  background: #2a1a1a;
+}
+
+.delete-confirm {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: #f87171;
+  flex-shrink: 0;
+}
+
+.delete-confirm button {
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 1px 7px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+
+.delete-confirm button:first-of-type {
+  color: #f87171;
+}
+
+.delete-confirm button:first-of-type:hover {
+  background: #f87171;
+  color: #0f0d17;
+}
+
+.delete-confirm button:last-of-type {
+  color: #a78bfa;
+}
+
+.delete-confirm button:last-of-type:hover {
+  background: #a78bfa;
+  color: #0f0d17;
+}
 
 .event-list li:hover {
   border-color: #7c3aed;
 }
-
 
 .event-name {
   font-size: 0.9rem;
@@ -273,19 +315,16 @@
   color: #e2dff5;
 }
 
-
 .event-time {
   font-size: 0.75rem;
   color: #a78bfa;
 }
-
 
 .no-events {
   font-size: 0.82rem;
   color: #6d5aad;
   margin-bottom: 16px;
 }
-
 
 /* ── Add event form ──────────────────────────────────────── */
 .add-event-form {
@@ -296,7 +335,6 @@
   border-top: 1px solid #1e1838;
 }
 
-
 .add-event-form h3 {
   font-size: 0.9rem;
   font-weight: bold;
@@ -304,7 +342,6 @@
   margin: 0;
   letter-spacing: 0.03em;
 }
-
 
 .add-event-form input {
   background: #0f0d17;
@@ -317,22 +354,18 @@
   transition: border-color 0.15s;
 }
 
-
 .add-event-form input::placeholder {
   color: #4a3d7a;
 }
-
 
 .add-event-form input:focus {
   border-color: #7c3aed;
 }
 
-
 /* Chrome time picker icon color fix for dark theme */
 .add-event-form input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(0.6) sepia(1) saturate(3) hue-rotate(220deg);
 }
-
 
 .add-event-form button {
   background: #7c3aed;
@@ -346,18 +379,15 @@
   transition: background 0.15s;
 }
 
-
 .add-event-form button:hover {
   background: #6d28d9;
 }
-
 
 .add-event-form button:disabled {
   background: #2a2245;
   color: #4a3d7a;
   cursor: not-allowed;
 }
-
 
 .save-error {
   font-size: 0.8rem;
