@@ -9,6 +9,7 @@ export default function Workouts() {
   let [allInfo, setAllInfo] = useState([]);
   let empty = "";
   let defaultString = "N/A";
+  let defaultNum = "(Default) 10 "
   let [maxLen, setMaxLen] = useState(0);
   let currentUser = JSON.parse(localStorage.getItem("user")).email;
   console.log("start... up !");
@@ -40,11 +41,11 @@ export default function Workouts() {
                     id: id,
                     title: name || defaultString,
                     type: type || defaultString,
-                    time: time || defaultString,
-                    distance: distance || defaultString,
-                    reps: reps || defaultString,
+                    time: Math.floor(time / 60 + 0.5) || defaultNum,
+                    distance: distance || defaultNum,
+                    reps: reps || defaultNum,
                     muscle_groups: muscle_groups || defaultString,
-                    weight: weight || defaultString,
+                    weight: weight || defaultNum,
                     notes: notes || defaultString,
                   };
                   setAllInfo((prev) => [...prev, currentData]);
