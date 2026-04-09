@@ -112,6 +112,20 @@ account login endpoint, you can login to a user using email and password post he
 
 - http://localhost:8080/auth/login (POST)
 
+## Global_Events
+
+global endpoint, you can get all global event info
+
+- http://localhost:8080/global (GET)
+
+global endpoint, you can update global evnet info by passing in global_events id to the endpoint and new info as in the body
+
+- http://localhost:8080/global/update/id/:id (POST)
+
+global endpoint, you can create new global event by passing in new info in the body (this endpoint requires user_id to be passed in in the body)
+
+- http://localhost:8080/global/create (POST)
+
 ## Logs
 
 security log endpoint, you can get all logs from here
