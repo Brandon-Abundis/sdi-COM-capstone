@@ -96,6 +96,14 @@ export default function Workouts() {
               muscle_groups: empty,
               weight: empty,
               notes: empty,
+              title: empty,
+              type: empty,
+              time: empty,
+              distance: empty,
+              reps: empty,
+              muscle_groups: empty,
+              weight: empty,
+              notes: empty,
             });
             setShowModal(true);
           }}
