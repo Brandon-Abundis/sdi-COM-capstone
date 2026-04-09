@@ -1,0 +1,50 @@
+import Trophy from "../Components/Trophy";
+import WorkoutHeatmap from "../Components/HeatMap";
+import Table from "../Components/Table";
+import { useAuth } from "../../../app/AuthProvider";
+import RestrictedProfileInfo from "../Components/RestrictedProfileInfo";
+
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+export default function RestrictedProfile() {
+  const { user, logout } = useAuth();
+
+  const { id } = useParams();
+  const [userData, setUserData] = useState();
+
+  const navigate = useNavigate();
+
+  const handleSignOut = () => {
+    logout();
+    navigate("/login");
+  };
+
+  // This will be the useEffect to fetch user data from express API.
+  useEffect(() => {
+    fetch(`http://localhost:8080/users/id/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUserData(data);
+      });
+  }, [user]);
+
+  if (!userData) return <h1>Loading...</h1>;
+  return (
+    <>
+      <div className="relative min-h-screen w-full bg-base-300">
+        <div className="grid grid-cols-2 grid-rows-2 h-screen w-full bg-base-300 p-6 pt-16">
+          <div className="row-span-2 h-full flex flex-col gap-6 overflow-y-auto pr-4 scrollbar-hide ">
+            <RestrictedProfileInfo
+              userData={userData}
+              setUserData={setUserData}
+            ></RestrictedProfileInfo>
+            <Trophy userData={userData} setUserData={setUserData}></Trophy>
+          </div>
+          <WorkoutHeatmap userData={userData}></WorkoutHeatmap>
+          <Table userData={userData}></Table>
+        </div>
+      </div>
+    </>
+  );
+}
