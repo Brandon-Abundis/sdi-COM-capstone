@@ -32,6 +32,9 @@ export default function Calendar() {
   const selectedDate =
     selectedDay != null ? new Date(Date.UTC(year, month, selectedDay)) : null;
 
+  const upcomingDate =
+    selectedDay != null ? new Date(Date.UTC(year, month, selectedDay + 1)) : null;
+
   const dayEvents = selectedDate
     ? events.filter((e) => {
         const d = new Date(e.date);
@@ -83,8 +86,36 @@ export default function Calendar() {
       })
     : null;
 
+  const upcomingSelectedLabel = upcomingDate
+    ? upcomingDate.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC",
+      })
+    : null;
+
   return (
     <div className="calendar-page">
+       {selectedDay === null ? (<></>) : (
+        <aside className="calendar-side-panel">
+          <div className="panel-date-heading">Upcoming Events Tomorrow</div>
+
+            {dayEvents.length === 0 ? (
+                <p className="no-events">No events yet.</p>
+            ) : (
+              <ul className="event-list">
+                {dayEvents.map((ev) => (
+                  <li key={ev.id}>
+                    <span className="event-name">{ev.name}</span>
+                    {ev.time && <span className="event-time">{ev.time}</span>}
+                  </li>
+                ))}
+              </ul>
+            )}
+        </aside>
+        )}
+      
       <div className="calendar-box">
         <CalendarApp
           currentDate={currentDate}
