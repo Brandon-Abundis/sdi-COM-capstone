@@ -262,6 +262,145 @@ const getGoalsById = async (req, res) => {
   }
 };
 
+const updateGoalsById = async (req, res) => {
+  const { id } = req.params;
+  const { name, type, time, distance, reps, muscle_group, weight, notes } =
+    req.body;
+  try {
+    if (
+      !name &&
+      !type &&
+      !time &&
+      !distance &&
+      !reps &&
+      !muscle_group &&
+      !weight &&
+      !notes
+    ) {
+      createLog({
+        method: "POST",
+        action: "UPDATA_USER_GOAL",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const userGoalData = await db("user_goals").select("*").where("id", id);
+    if (!userGoalData) {
+      createLog({
+        method: "POST",
+        action: "UPDATA_USER_GOAL",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "goal does not exist" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("user_goals")
+      .select("*")
+      .where("id", id)
+      .update({
+        name: name ? name : userGoalData.name,
+        type: type ? type : userGoalData.type,
+        time: time ? time : userGoalData.time,
+        distance: distance ? distance : userGoalData.distance,
+        reps: reps ? reps : userGoalData.reps,
+        muscle_group: muscle_group ? muscle_group : userGoalData.muscle_group,
+        weight: weight ? weight : userGoalData.weight,
+        notes: notes ? notes : userGoalData.notes,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATA_USER_GOAL",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "GET",
+      action: "UPDATA_USER_GOAL",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const createGoal = async (req, res) => {
+  const {
+    name,
+    type,
+    time,
+    distance,
+    reps,
+    muscle_group,
+    weight,
+    notes,
+    user_id,
+  } = req.body;
+  try {
+    if (
+      (!name &&
+        !type &&
+        !time &&
+        !distance &&
+        !reps &&
+        !muscle_group &&
+        !weight &&
+        !notes) ||
+      !user_id
+    ) {
+      createLog({
+        method: "POST",
+        action: "CREATE_USER_GOAL",
+        status_code: 400,
+        user_id: user_id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("user_goals")
+      .insert({
+        name: name,
+        type: type,
+        time: time,
+        distance: distance,
+        reps: reps,
+        muscle_group: muscle_group,
+        weight: weight,
+        notes: notes,
+        user_id: user_id,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "CREATE_USER_GOAL",
+        status_code: 200,
+        user_id: user_id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "GET",
+      action: "CREATE_USER_GOAL",
+      status_code: 500,
+      user_id: user_id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
 const getWorkoutsById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -282,6 +421,149 @@ const getWorkoutsById = async (req, res) => {
       action: "FETCH_USER_WORKOUTS",
       status_code: 500,
       user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const updateWorkoutById = async (req, res) => {
+  const { id } = req.params;
+  const { name, type, time, distance, reps, muscle_group, weight, notes } =
+    req.body;
+  try {
+    if (
+      !name &&
+      !type &&
+      !time &&
+      !distance &&
+      !reps &&
+      !muscle_group &&
+      !weight &&
+      !notes
+    ) {
+      createLog({
+        method: "POST",
+        action: "UPDATA_USER_WORKOUT",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const userWorkoutData = await db("user_workouts")
+      .select("*")
+      .where("id", id);
+    if (!userWorkoutData) {
+      createLog({
+        method: "POST",
+        action: "UPDATA_USER_WORKOUT",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "goal does not exist" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("user_workouts")
+      .select("*")
+      .where("id", id)
+      .update({
+        name: name ? name : userWorkoutData.name,
+        type: type ? type : userWorkoutData.type,
+        time: time ? time : userWorkoutData.time,
+        distance: distance ? distance : userWorkoutData.distance,
+        reps: reps ? reps : userWorkoutData.reps,
+        muscle_group: muscle_group
+          ? muscle_group
+          : userWorkoutData.muscle_group,
+        weight: weight ? weight : userWorkoutData.weight,
+        notes: notes ? notes : userWorkoutData.notes,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATA_USER_WORKOUT",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "GET",
+      action: "UPDATA_USER_GOAL",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const createWorkout = async (req, res) => {
+  const {
+    name,
+    type,
+    time,
+    distance,
+    reps,
+    muscle_group,
+    weight,
+    notes,
+    user_id,
+  } = req.body;
+  try {
+    if (
+      (!name &&
+        !type &&
+        !time &&
+        !distance &&
+        !reps &&
+        !muscle_group &&
+        !weight &&
+        !notes) ||
+      !user_id
+    ) {
+      createLog({
+        method: "POST",
+        action: "CREATE_USER_WORKOUT",
+        status_code: 400,
+        user_id: user_id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("user_workouts")
+      .insert({
+        name: name,
+        type: type,
+        time: time,
+        distance: distance,
+        reps: reps,
+        muscle_group: muscle_group,
+        weight: weight,
+        notes: notes,
+        user_id: user_id,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "CREATE_USER_WORKOUT",
+        status_code: 200,
+        user_id: user_id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "GET",
+      action: "CREATE_USER_WORKOUT",
+      status_code: 500,
+      user_id: user_id,
       metadata: err,
     });
     res.status(500).send({ message: err });
@@ -373,7 +655,11 @@ module.exports = {
   getById,
   getGroupsById,
   getGoalsById,
+  updateGoalsById,
+  createGoal,
   getWorkoutsById,
+  updateWorkoutById,
+  createWorkout,
   getAllEvents,
   getEventsById,
   createEvent,
