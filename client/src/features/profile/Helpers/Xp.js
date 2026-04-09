@@ -12,7 +12,6 @@ function xp_to_level_up(level) {
 function current_level(xp) {
   if (xp < base) return 0;
 
-  // Inverse of the geometric sum formula using Logarithms
   const level = Math.log((xp * (ratio - 1)) / base + 1) / Math.log(ratio);
   return Math.floor(level);
 }
