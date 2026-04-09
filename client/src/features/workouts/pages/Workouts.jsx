@@ -8,7 +8,6 @@ export default function Workouts() {
   let [editInfo, setEditInfo] = useState(null);
   let [allInfo, setAllInfo] = useState([]);
   let empty = "";
-  let empty = "";
   let defaultString = "N/A";
   let [maxLen, setMaxLen] = useState(0);
   let currentUser = JSON.parse(localStorage.getItem("user")).email;
