@@ -216,7 +216,7 @@ export default function Table({ userData }) {
           </p>
         </div>
 
-        <div className="flex-grow flex flex-col gap-5 justify-center">
+        <div className="flex-grow overflow-y-auto pr-2 scrollbar-hide space-y-5">
           {Object.entries(muscleGroupHits(workouts)).map(([group, count]) => {
             const maxHits = Math.max(
               ...Object.values(muscleGroupHits(workouts)),
