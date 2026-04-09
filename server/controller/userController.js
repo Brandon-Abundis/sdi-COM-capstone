@@ -90,7 +90,7 @@ const updateById = async (req, res) => {
         rank: rank ? rank : userData.rank,
         age: age ? age : userData.age,
         xp: xp ? xp : userData.xp,
-        is_active: is_active ? is_active : userData.is_active,
+        is_active: is_active !== undefined ? is_active : userData.is_active,
       })
       .returning("*");
     if (result) {

@@ -47,7 +47,7 @@ export default function ProfileInfo({ userData, setUserData }) {
     try {
       const response = await fetch(`http://localhost:8080/users/id/${id}`, {
         method: "POST",
-        body: JSON.stringify({ is_active: false }),
+        body: JSON.stringify({ ...userData, is_active: false }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -63,7 +63,7 @@ export default function ProfileInfo({ userData, setUserData }) {
         setIsEditing(false);
       }
 
-      console.log("Account edited successfully");
+      console.log("Account deleted successfully");
     } catch (error) {
       console.error("Error:", error);
     }
