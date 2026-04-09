@@ -23,7 +23,7 @@ export default function Workouts() {
             fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
               .then((data) => data.json())
               .then((dataArray) => {
-                setMaxLen(dataArray.length)
+                setMaxLen(dataArray.length);
                 dataArray.forEach((data, index) => {
                   let {
                     name,
@@ -34,21 +34,25 @@ export default function Workouts() {
                     notes,
                     weight,
                     muscle_groups,
+<<<<<<< HEAD
                     id,
+=======
+                    id
+>>>>>>> 4e7aca3 (Stylizes Modal to match other pages; Yet to do so for rest of Workout Page)
                   } = data;
 
                   let currentData = {
-                  id: index,
-                  title: name || defaultString,
-                  type: type || defaultString,
-                  time: time || defaultString,
-                  distance: distance || defaultString,
-                  reps: reps || defaultString,
-                  muscle_groups: muscle_groups || defaultString,
-                  weight: weight || defaultString,
-                  notes: notes || defaultString,
-                }
-                setAllInfo(prev => [...prev, currentData])
+                    id: id,
+                    title: name || defaultString,
+                    type: type || defaultString,
+                    time: time || defaultString,
+                    distance: distance || defaultString,
+                    reps: reps || defaultString,
+                    muscle_groups: muscle_groups || defaultString,
+                    weight: weight || defaultString,
+                    notes: notes || defaultString,
+                  };
+                  setAllInfo((prev) => [...prev, currentData]);
                 });
               });
           }
@@ -69,16 +73,24 @@ export default function Workouts() {
   };
 
   if (maxLen === null || allInfo.length !== maxLen) {
+<<<<<<< HEAD
     return <h2> Loading ! </h2>;
+=======
+    return <h2> Loading :3 </h2>;
+>>>>>>> 4e7aca3 (Stylizes Modal to match other pages; Yet to do so for rest of Workout Page)
   }
   return (
     <div>
       <div>
+<<<<<<< HEAD
         <h1
           className={
             "text-3xl font-bold text-[#7c3aed] mb-6 ml-7 mt-6 tracking-wide"
           }
         >
+=======
+        <h1 className={"text-3xl font-bold text-[#7c3aed] mb-6 ml-7 mt-6 tracking-wide"}>
+>>>>>>> 4e7aca3 (Stylizes Modal to match other pages; Yet to do so for rest of Workout Page)
           {" "}
           WORKOUTS{" "}
         </h1>
@@ -108,23 +120,34 @@ export default function Workouts() {
           }}
         />
 
-        {allInfo.map((elem) => {
-          return <WorkoutBox
-          details={elem}
-          onClick={() => {
-            console.log(elem)
-            setEditInfo(allInfo[elem.id])
-            setShowModal(true);
-          }}
-        />
+        {allInfo.map((elem, index) => {
+          return (
+            <WorkoutBox
+              details={elem}
+              onClick={() => {
+                console.log(elem);
+                setEditInfo(allInfo[index]);
+                setShowModal(true);
+              }}
+              key={index}
+            />
+          );
         })}
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> 4e7aca3 (Stylizes Modal to match other pages; Yet to do so for rest of Workout Page)
         <Modal
           openModal={showModal}
           closeModal={() => setShowModal(false)}
           info={editInfo}
           key={"new"}
         />
+        <WorkoutBox details={info} onClick={() => {
+          setEditInfo(info);
+          setShowModal(true);
+        }}/>
       </div>
     </div>
   );
