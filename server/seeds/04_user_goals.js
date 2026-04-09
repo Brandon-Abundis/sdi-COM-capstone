@@ -42,6 +42,7 @@ exports.seed = async function(knex) {
 
       let reps = null, time = null, weight = 0;
 
+
       if (isRun) {
         let baseMin = 780 + (ageFactor * 540) + (isFemale ? 150 : 0);
         let baseMax = 1020 + (ageFactor * 540) + (isFemale ? 180 : 0);
