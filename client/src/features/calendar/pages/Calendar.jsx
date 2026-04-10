@@ -49,19 +49,24 @@ export default function Calendar() {
   
   function getDaysAway(eventStartDate) {
     const eventDate = new Date(eventStartDate)
+    const transferSelectedDate = new Date(selectedDate)
 
-    const d1 = date.UTC(eventDate.getUTCFullYear(), eventDate.getUTCMonth, eventDate.getUTCDate());
-    const d2 = date.UTC(selectedDate.getUTCFullYear, selectedDate.getUTCMonth, selectedDate.getUTCDate())
+    const d1 = Date.UTC(eventDate.getUTCFullYear(), eventDate.getUTCMonth(), eventDate.getUTCDate());
+    const d2 = Date.UTC(transferSelectedDate.getUTCFullYear(), transferSelectedDate.getUTCMonth(), transferSelectedDate.getUTCDate())
 
     const dayDiff = d1 - d2;
-    const daysAway = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const daysAway = Math.ceil(dayDiff / (1000 * 60 * 60 * 24));
+    // console.log("test of the getDaysAway running")
+    // console.log("in order: eventStartDate, eventDate, d1, d2, dayDiff, daysAway")
+    // console.log(eventStartDate, eventDate, d1, d2, dayDiff, daysAway)
+    // console.log("eventStartDate:" + eventStartDate)
+    // console.log("transferSelectedDate:" + transferSelectedDate)
 
-    if (daysAway === 1) return "Tomorrow";
-    if (daysAway > 1  && daysAway <=7 ) return `${daysAway} days away`
+    if (daysAway === 1) {
+      return (<span className="event-time">Tomorrow</span>);
+    }
+    if (daysAway > 1  && daysAway <=7 ) return (<span className="event-time">{daysAway} days away</span>)
     return ""
-
-    // let daysAway = startDate - selectedDay
-    // daysAway === 1 ? "Tomorrow" : ((daysAway > 1 && daysAway <= 7) ? `${daysAway} days away` : "ERROR")
   }
   
   const selectedDate =
@@ -93,6 +98,7 @@ export default function Calendar() {
   ? events
   .filter((e) => {
     const d = new Date(e.start_date);
+      
     return (
       d.getUTCFullYear() >= upcomingDateWindowStart.getUTCFullYear() &&
       d.getUTCMonth() >= upcomingDateWindowStart.getUTCMonth() &&
@@ -191,8 +197,7 @@ export default function Calendar() {
                 <li key={ev.id}>
                   <span className="event-name">{ev.name}</span>
                   {ev.time && <span className="event-time">{ev.time}</span>}
-                  <span className="event-name">{ev.start_date}</span>
-                  {/* <span className="event-name">{UpcomingDayCounter(ev.start_date)}</span> will resolve issue eventually */}
+                  <span className="event-name">{getDaysAway(ev.start_date, selectedDate)}</span> {/*will resolve issue eventually*/}
                 </li>
               ))}
             </ul>
