@@ -13,6 +13,8 @@ import PublicRoute from "./routes/PublicRoute.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import PublicLayout from "./layouts/PublicLayout.jsx";
 import ProtectedLayout from "./layouts/ProtectedLayout.jsx";
+import RestrictedProfile from "../features/profile/pages/RestrictedProfile.jsx";
+import Settings from "../features/settings/pages/Settings.jsx";
 
 function App() {
   return (
@@ -42,9 +44,10 @@ function App() {
         <Route path="events" element={<Events />} />
         <Route path="leaderboard" element={<Leaderboard />} />
         <Route path="profile" element={<Profile />} />
-        <Route path="profile/:id" element={<Profile />} />
+        <Route path="profile/:id" element={<RestrictedProfile />} />
         <Route path="workouts" element={<Workouts />} />
         <Route path="chatandgroups" element={<ChatAndGroup />} />
+        <Route path="settings" element={<Settings />} />
       </Route>
 
       {/* Catch-all for paths that do not match any listed above */}

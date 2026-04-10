@@ -1,9 +1,17 @@
 <!doctype html>
-<html lang="en" data-theme="synthwave">
+<html lang="en" data-theme="nightshade">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>COM</title>
+    <script>
+      (function () {
+        var theme = localStorage.getItem("setting_theme") || "nightshade";
+        var compact = localStorage.getItem("setting_compact_cards") === "true";
+        document.documentElement.setAttribute("data-theme", theme);
+        if (compact) document.documentElement.setAttribute("data-compact", "true");
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

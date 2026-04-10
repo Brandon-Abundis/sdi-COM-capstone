@@ -134,6 +134,7 @@ const login = async (req, res) => {
       rank: user.rank,
       age: user.age,
       xp: user.xp,
+      is_admin: user.is_admin,
       rival_ids: user.rival_ids,
       created_at: user.created_at,
       badges_ids: user.badges_ids,

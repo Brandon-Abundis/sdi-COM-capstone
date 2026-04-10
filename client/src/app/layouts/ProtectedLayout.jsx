@@ -1,12 +1,35 @@
-import { useState } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { useRef, useState } from "react";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar.jsx";
 import OpenIcon from "../components/OpenIcon.jsx";
+import { useAuth } from "../AuthProvider.jsx";
 
 export default function ProtectedLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const closeTimer = useRef(null);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  function openProfile() {
+    clearTimeout(closeTimer.current);
+    setProfileOpen(true);
+  }
+
+  function scheduleClose() {
+    closeTimer.current = setTimeout(() => setProfileOpen(false), 100);
+  }
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  function handleLogout() {
+    logout();
+    navigate("/login");
+  }
+
+  const initials = user
+    ? `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase()
+    : "?";
 
   return (
     <div className="min-h-screen">
@@ -21,19 +44,62 @@ export default function ProtectedLayout() {
           <OpenIcon />
         </button>
 
-        {/* Profile icon */}
-        <Link
-          to="/profile"
-          className="btn btn-ghost btn-circle avatar outline-1 outline-accent hover:outline-base-300"
-        >
-          <div className="w-10 rounded-full">
-            <img
-              alt="Profile"
-              src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
-            />
+        {/* PFP hover dropdown */}
+        <div className="relative">
+          <div
+            role="button"
+            onMouseEnter={openProfile}
+            onMouseLeave={scheduleClose}
+            className="btn btn-ghost btn-circle avatar outline-1 outline-accent hover:outline-[#7c3aed] bg-[#2a2245] select-none"
+          >
+            <span className="text-sm font-bold text-[#c084fc]">{initials}</span>
           </div>
-        </Link>
+
+          <ul
+            onMouseEnter={openProfile}
+            onMouseLeave={scheduleClose}
+            className={`absolute right-0 z-50 mt-2 w-52 rounded-xl border border-[#1e1838] bg-[#16112a] p-2 shadow-xl flex flex-col gap-0.5 ${
+              profileOpen ? "block" : "hidden"
+            }`}
+          >
+            {/* User info header */}
+            <li className="px-3 py-2 border-b border-[#1e1838] mb-1">
+              <p className="text-sm font-semibold text-[#e2dff5]">
+                {user?.first_name} {user?.last_name}
+              </p>
+              <p className="text-xs text-[#a78bfa]">{user?.rank}</p>
+            </li>
+
+            <li>
+              <Link
+                to="/profile"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#e2dff5] hover:bg-[#2a2245] hover:text-[#c084fc] transition-colors"
+              >
+                <span>👤</span> My Profile
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to="/settings"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#e2dff5] hover:bg-[#2a2245] hover:text-[#c084fc] transition-colors"
+              >
+                <span>⚙️</span> Settings
+              </Link>
+            </li>
+
+            <li className="border-t border-[#1e1838] mt-1 pt-1">
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#f87171] hover:bg-[#2a1a1a] transition-colors"
+              >
+                <span>🚪</span> Log Out
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
+
 
       <div
         className={`transition-all duration-300 ${

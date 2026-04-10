@@ -1,13 +1,13 @@
-import ProfileInfo from "../Components/ProfileInfo";
 import Trophy from "../Components/Trophy";
 import WorkoutHeatmap from "../Components/HeatMap";
 import Table from "../Components/Table";
 import { useAuth } from "../../../app/AuthProvider";
+import RestrictedProfileInfo from "../Components/RestrictedProfileInfo";
 
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-export default function Profile() {
+export default function RestrictedProfile() {
   const { user, logout } = useAuth();
 
   const { id } = useParams();
@@ -22,7 +22,7 @@ export default function Profile() {
 
   // This will be the useEffect to fetch user data from express API.
   useEffect(() => {
-    fetch(`http://localhost:8080/users/id/${user.id}`)
+    fetch(`http://localhost:8080/users/id/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setUserData(data);
@@ -33,18 +33,12 @@ export default function Profile() {
   return (
     <>
       <div className="relative min-h-screen w-full bg-base-300">
-        <button
-          onClick={handleSignOut}
-          className="absolute top-4 right-4 z-50 px-4 py-2 bg-red-500/10 hover:bg-red-500 hover:text-white text-red-500 text-xs font-black uppercase tracking-widest border border-red-500/20 rounded-lg transition-all duration-300 backdrop-blur-sm"
-        >
-          Sign Out
-        </button>
-        <div className="grid grid-cols-2 grid-rows-2 h-screen w-full bg-base-300 p-6 pt-16 gap-6">
+        <div className="grid grid-cols-2 grid-rows-2 h-screen w-full bg-base-300 p-6 pt-16">
           <div className="row-span-2 h-full flex flex-col gap-6 overflow-y-auto pr-4 scrollbar-hide ">
-            <ProfileInfo
+            <RestrictedProfileInfo
               userData={userData}
               setUserData={setUserData}
-            ></ProfileInfo>
+            ></RestrictedProfileInfo>
             <Trophy userData={userData} setUserData={setUserData}></Trophy>
           </div>
           <WorkoutHeatmap userData={userData}></WorkoutHeatmap>

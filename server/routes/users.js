@@ -12,12 +12,13 @@ const {
   getAllEvents,
   getEventsById,
   createEvent,
+  deleteEvent,
   updateById,
   updatePasswordById,
   updateRivalById,
   removeRivalById,
 } = require("../controller/userController");
-const router = express.Router();
+const router = express();
 
 router.get("/", getAll);
 router.get("/id/:id", getById);
@@ -35,5 +36,6 @@ router.post("/user_workouts/create/", createWorkout);
 router.get("/user_events/", getAllEvents);
 router.get("/user_events/id/:id", getEventsById);
 router.post("/user_events", createEvent);
+router.delete("/user_events/id/:id", deleteEvent);
 
 module.exports = router;
