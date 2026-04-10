@@ -2,6 +2,7 @@ const express = require("express");
 const {
   getAll,
   getById,
+  updateById,
   getGoalsById,
   updateGoalsById,
   createGoal,
@@ -18,6 +19,7 @@ const router = express();
 
 router.get("/", getAll);
 router.get("/id/:id", getById);
+router.post("/id/:id", updateById);
 router.get("/group_goals/id/:id", getGoalsById);
 router.post("/group_goals/update/id/:id", updateGoalsById);
 router.post("/group_goals/create", createGoal);
