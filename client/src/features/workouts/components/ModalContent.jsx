@@ -3,6 +3,8 @@ import Button from "./Button";
 import { useState, useRef } from "react";
 
 export default function ModalContent({ cancel, info }) {
+  let id = JSON.parse(localStorage.getItem("user")).id;
+
   let {
     title,
     type,
@@ -10,7 +12,7 @@ export default function ModalContent({ cancel, info }) {
     distance,
     notes,
     reps,
-    muscle_groups,
+    muscle_group,
     weight,
     storedId,
   } = info
@@ -25,16 +27,18 @@ export default function ModalContent({ cancel, info }) {
         weight: "",
       };
 
-  let [data, setData] = useState({
+  let empty = {
     title: title || "",
     type: type || "",
     time: time || "",
     distance: distance || "",
     reps: reps || "",
-    muscle_groups: muscle_groups || "",
+    muscle_group: muscle_group || "",
     weight: weight || "",
     notes: notes || "",
-  });
+  };
+
+  let [data, setData] = useState(empty);
   // data is going to be used dont delete yet pwease :3
 
   let titleRef = useRef();
@@ -46,27 +50,59 @@ export default function ModalContent({ cancel, info }) {
   let weightRef = useRef();
   let noteRef = useRef();
 
+
   const submit = () => {
-    // implement a check that certain required fields are filled out
     if (titleRef.current?.value == "" || titleRef.current?.value == undefined) {
       titleRef.current.value = "SET A TITLE";
       return;
     }
 
-    setTimeout(
-      setData({
-        ...data,
-        title: titleRef.current?.value,
-        type: typeRef.current?.value,
-        time: timeRef.current?.value,
-        distance: distRef.current?.value,
-        reps: repRef.current?.value,
-        muscle_groups: muscRef.current?.value,
-        weight: weightRef.current?.value,
-        notes: noteRef.current?.value,
-      }),
-      2000,
-    );
+    const payload = {
+      ...data,
+      name: titleRef.current?.value,
+      type: typeRef.current?.value,
+      time: timeRef.current?.value * 60,
+      distance: distRef.current?.value,
+      reps: repRef.current?.value,
+      muscle_group: muscRef.current?.value,
+      weight: weightRef.current?.value,
+      notes: noteRef.current?.value,
+      user_id: Number(id),
+    };
+
+    // setData(payload); // potentially do not want this line
+
+    if (storedId) {
+      // editing
+
+      fetch(`http://localhost:8080/users/user_workouts/update/id/${storedId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => res.json())
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
+
+      return;
+    } else {
+      // creating
+
+      fetch("http://localhost:8080/users/user_workouts/create/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => res.json())
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
+
+      return;
+    }
   };
 
   return (
@@ -108,8 +144,8 @@ export default function ModalContent({ cancel, info }) {
         <InputField ref={distRef} style={"Distance"} def={distance} />
         <h2> Reps </h2>
         <InputField ref={repRef} style={"Reps"} def={reps} />
-        <h2> Muscle Groups </h2>
-        <InputField ref={muscRef} style={"Muscle Groups"} def={muscle_groups} />
+        <h2> Muscle Group </h2>
+        <InputField ref={muscRef} style={"Muscle Group"} def={muscle_group} />
         <h2> Weight </h2>
         <InputField ref={weightRef} style={"Weight"} def={weight} />
         <h2> Notes </h2>
@@ -117,7 +153,14 @@ export default function ModalContent({ cancel, info }) {
       </div>
       <div className={"w-35 flex justify-between"}>
         <Button name={"Submit"} func={() => submit()} />
-        <Button name={"Cancel"} func={() => cancel()} />
+        <Button
+          name={"Close"}
+          func={() => {
+            // setData(empty);
+
+            cancel();
+          }}
+        />
       </div>
     </div>
   );
