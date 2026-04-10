@@ -18,6 +18,10 @@ user endpoint, you can post a specific user info from here by passing user id an
 
 - http://localhost:8080/users/id/:id (POST)
 
+user endpoint, you can change a specific user password from here by passing user id and user new password you want
+
+- http://localhost:8080/users/password/id/:id (POST)
+
 user endpoint, you can add a specific user rival from here by passing user id and rival_id you want to add
 
 - http://localhost:8080/users/rival/id/:id (POST)
@@ -82,6 +86,10 @@ groups endpoint, you can get all groups info from here
 group endpoint, you can get a specific group info from here by passing group id
 
 - http://localhost:8080/groups/id/:id (GET)
+
+group endpoint, you can update group info by passing in group id to the endpoint and new info in the body
+
+- http://localhost:8080/groups/id/:id (POST)
 
 group endpoint, you can get specific group goals from here by passing group id
 

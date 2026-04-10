@@ -13,6 +13,7 @@ const {
   getEventsById,
   createEvent,
   updateById,
+  updatePasswordById,
   updateRivalById,
   removeRivalById,
 } = require("../controller/userController");
@@ -21,6 +22,7 @@ const router = express.Router();
 router.get("/", getAll);
 router.get("/id/:id", getById);
 router.post("/id/:id", updateById);
+router.post("/password/id/:id", updatePasswordById);
 router.post("/rival/id/:id", updateRivalById);
 router.post("/rival/remove/id/:id", removeRivalById);
 router.get("/groups/id/:id", getGroupsById);

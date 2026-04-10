@@ -1,4 +1,7 @@
 const db = require("../db/db");
+const bcrypt = require("bcrypt");
+
+const SALT_ROUNDS = 10;
 const { createLog } = require("../support/createLog");
 
 const getAll = async (req, res) => {
@@ -55,6 +58,9 @@ const updateById = async (req, res) => {
     age,
     xp,
     is_active,
+    badges_ids,
+    titles_ids,
+    cosmetic_ids,
   } = req.body;
   try {
     if (
@@ -66,7 +72,10 @@ const updateById = async (req, res) => {
       !rank &&
       !age &&
       !xp &&
-      !is_active
+      !is_active &&
+      !badges_ids &&
+      !titles_ids &&
+      !cosmetic_ids
     ) {
       createLog({
         method: "POST",
@@ -91,6 +100,9 @@ const updateById = async (req, res) => {
         age: age ? age : userData.age,
         xp: xp ? xp : userData.xp,
         is_active: is_active ? is_active : userData.is_active,
+        badges_ids: badges_ids ? badges_ids : userData.badges_ids,
+        titles_ids: titles_ids ? titles_ids : userData.titles_ids,
+        cosmetic_ids: cosmetic_ids ? cosmetic_ids : userData.cosmetic_ids,
       })
       .returning("*");
     if (result) {
@@ -107,6 +119,49 @@ const updateById = async (req, res) => {
     createLog({
       method: "GET",
       action: "UPDATE_USER",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const updatePasswordById = async (req, res) => {
+  const { id } = req.params;
+  const { password } = req.body;
+  try {
+    if (!password) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER_PASSWORD",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const userData = await db("users").select("*").where("id", id);
+    const newHashWord = await bcrypt.hash(password, SALT_ROUNDS);
+    const result = await db("users")
+      .select("*")
+      .where("id", id)
+      .update({ password: newHashWord ? newHashWord : userData.password })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER_PASSWORD",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "GET",
+      action: "UPDATE_USER_PASSWORD",
       status_code: 500,
       user_id: id,
       metadata: err,
@@ -249,10 +304,7 @@ const getGroupsById = async (req, res) => {
 const getGoalsById = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db("user_goals")
-      .select("*")
-      .where("user_id", id)
-      .first();
+    const result = await db("user_goals").select("*").where("user_id", id);
 
     if (result) {
       createLog({
@@ -678,6 +730,7 @@ module.exports = {
   getEventsById,
   createEvent,
   updateById,
+  updatePasswordById,
   updateRivalById,
   removeRivalById,
 };

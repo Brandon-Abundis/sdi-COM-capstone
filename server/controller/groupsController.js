@@ -43,6 +43,62 @@ const getById = async (req, res) => {
   }
 };
 
+const updateById = async (req, res) => {
+  const { id } = req.params;
+  const { name, admin_ids, user_ids } = req.body;
+  try {
+    if (!name && !admin_ids && !user_ids) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP_GOAL",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const groupData = await db("groups").select("*").where("id", id);
+    if (!groupData) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "group does not exist" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("groups")
+      .select("*")
+      .where("id", id)
+      .update({
+        name: name ? name : groupData.name,
+        admin_ids: admin_ids ? admin_ids : groupData.admin_ids,
+        user_ids: user_ids ? user_ids : groupData.user_ids,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "UPDATE_GROUP",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
 const getGoalsById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -133,7 +189,7 @@ const updateGoalsById = async (req, res) => {
     res.status(200).send(result[0]);
   } catch (err) {
     createLog({
-      method: "GET",
+      method: "POST",
       action: "UPDATE_GROUP_GOAL",
       status_code: 500,
       user_id: id,
@@ -201,7 +257,7 @@ const createGoal = async (req, res) => {
     res.status(200).send(result[0]);
   } catch (err) {
     createLog({
-      method: "GET",
+      method: "POST",
       action: "CREATE_GROUP_GOAL",
       status_code: 500,
       user_id: group_id,
@@ -531,6 +587,7 @@ const getEventsById = async (req, res) => {
 module.exports = {
   getAll,
   getById,
+  updateById,
   getGoalsById,
   updateGoalsById,
   createGoal,
