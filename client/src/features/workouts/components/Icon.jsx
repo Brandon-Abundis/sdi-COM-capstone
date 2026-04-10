@@ -28,8 +28,8 @@ export default function Icon({ type }) {
   }
 
   return (
-    <div className={"bg-white/25 rounded-lg m-2 mb-1"}>
-      <img className={"w-20"} src={src} alt="strength ! :3" />
+    <div className={"bg-[#080610]/30 rounded-lg m-2 mb-1 "}>
+      <img className={"w-20 "} src={src} alt="strength ! :3" />
     </div>
   );
 }
