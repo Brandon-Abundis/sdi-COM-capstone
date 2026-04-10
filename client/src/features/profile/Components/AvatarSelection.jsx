@@ -16,36 +16,58 @@ export default function AvatarSelection() {
     "/Avatar/chain.png",
   ];
 
-  const [base, setBase] = useState([base_pic[0]]);
+  const [base, setBase] = useState(base_pic[0]);
   const [head, setHead] = useState();
   const [chosenGloves, setChosenGloves] = useState();
   const [chosenMisc, setChosenMisc] = useState([]);
 
   return (
     <>
+      <div className="relative w-64 h-64 border-2 border-gray-500 rounded-lg overflow-hidden bg-slate-200 mb-8">
+        <img src={base} className="absolute inset-0 w-full h-full z-10" />
+
+        {chosenGloves && (
+          <img
+            src={chosenGloves}
+            className="absolute inset-0 w-full h-full z-20"
+          />
+        )}
+
+        {head && (
+          <img src={head} className="absolute inset-0 w-full h-full z-30" />
+        )}
+
+        {chosenMisc.map((item, index) => (
+          <img
+            key={index}
+            src={item}
+            className="absolute inset-0 w-full h-full z-40"
+          />
+        ))}
+      </div>
       <div>
         Base
-        {base_pic.map((pic, id) => (
-          <img key={id} src={pic} onClick={() => setBase(pic)}></img>
+        {base_pic.map((pic, index) => (
+          <img key={index} src={pic} onClick={() => setBase(pic)}></img>
         ))}
       </div>
       <div>
         Head
-        {head_wear.map((pic, id) => (
-          <img key={id} src={pic} onClick={() => setHead(pic)}></img>
+        {head_wear.map((pic, index) => (
+          <img key={index} src={pic} onClick={() => setHead(pic)}></img>
         ))}
       </div>
       <div>
         Gloves
-        {gloves.map((pic, id) => (
-          <img key={id} src={pic} onClick={() => setChosenGloves(pic)}></img>
+        {gloves.map((pic, index) => (
+          <img key={index} src={pic} onClick={() => setChosenGloves(pic)}></img>
         ))}
       </div>
       <div>
         Misc
-        {misc.map((pic, id) => (
+        {misc.map((pic, index) => (
           <img
-            key={id}
+            key={index}
             src={pic}
             onClick={() => setChosenMisc([...chosenMisc, pic])}
           ></img>
