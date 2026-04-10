@@ -50,9 +50,13 @@ export default function ModalContent({ cancel, info }) {
   let weightRef = useRef();
   let noteRef = useRef();
 
-
   const submit = () => {
-    if (titleRef.current?.value == "" || titleRef.current?.value == undefined) {
+    let ress = document.querySelector("#listen");
+    if (
+      titleRef.current?.value == "" ||
+      titleRef.current?.value == undefined ||
+      titleRef.current?.value == "SET A TITLE"
+    ) {
       titleRef.current.value = "SET A TITLE";
       return;
     }
@@ -61,12 +65,12 @@ export default function ModalContent({ cancel, info }) {
       ...data,
       name: titleRef.current?.value,
       type: typeRef.current?.value,
-      time: timeRef.current?.value * 60,
-      distance: distRef.current?.value,
-      reps: repRef.current?.value,
-      muscle_group: muscRef.current?.value,
-      weight: weightRef.current?.value,
-      notes: noteRef.current?.value,
+      time: timeRef.current?.value * 60 || 600,
+      distance: distRef.current?.value || "N/A",
+      reps: repRef.current?.value || 10,
+      muscle_group: muscRef.current?.value || "N/A",
+      weight: weightRef.current?.value || 10,
+      notes: noteRef.current?.value || "N/A",
       user_id: Number(id),
     };
 
@@ -83,7 +87,10 @@ export default function ModalContent({ cancel, info }) {
         body: JSON.stringify(payload),
       })
         .then((res) => res.json())
-        .then((res) => console.log(res))
+        .then(() => {
+          setTimeout(() => window.location.reload(), 2000);
+          ress.innerHTML = "Saved ! Reloading the page...";
+        })
         .catch((err) => console.error(err));
 
       return;
@@ -98,7 +105,7 @@ export default function ModalContent({ cancel, info }) {
         body: JSON.stringify(payload),
       })
         .then((res) => res.json())
-        .then((res) => console.log(res))
+        .then(() => setTimeout(() => window.location.reload(), 2000))
         .catch((err) => console.error(err));
 
       return;
@@ -111,10 +118,14 @@ export default function ModalContent({ cancel, info }) {
         "bg-[#6045cd]/0 w-3xl h-200 flex flex-col rounded-lg items-center"
       }
     >
-      <h2 className={"text-3xl font-bold text-[#7c3aed] mb-5 tracking-wide"}>
+      <h2
+        id={"listen"}
+        className={"text-3xl font-bold text-[#7c3aed] mb-5 tracking-wide"}
+      >
         {" "}
         {title != "" ? "Edit Workout" : "Create Workout"}{" "}
       </h2>
+
       <div
         id="inputList"
         className={
@@ -122,6 +133,7 @@ export default function ModalContent({ cancel, info }) {
         }
       >
         {storedId ? <h3> workoutID: {storedId} </h3> : <h3>- No ID yet -</h3>}
+
         <h2> Title </h2>
         <InputField ref={titleRef} style={"Title"} def={title} />
         <h2> Type </h2>
@@ -150,17 +162,17 @@ export default function ModalContent({ cancel, info }) {
         <InputField ref={weightRef} style={"Weight"} def={weight} />
         <h2> Notes </h2>
         <InputField ref={noteRef} style={"Notes"} def={notes} />
-      </div>
-      <div className={"w-35 flex justify-between"}>
-        <Button name={"Submit"} func={() => submit()} />
-        <Button
-          name={"Close"}
-          func={() => {
-            // setData(empty);
+        <div className={"w-35 flex justify-between"}>
+          <Button name={"Submit"} func={() => submit()} />
+          <Button
+            name={"Close"}
+            func={() => {
+              // setData(empty);
 
-            cancel();
-          }}
-        />
+              cancel();
+            }}
+          />
+        </div>
       </div>
     </div>
   );
