@@ -64,7 +64,7 @@ const updateById = async (req, res) => {
   } = req.body;
   try {
     if (
-      !is_admin &&
+      is_admin === undefined &&
       !first_name &&
       !last_name &&
       !username &&
@@ -72,7 +72,7 @@ const updateById = async (req, res) => {
       !rank &&
       !age &&
       !xp &&
-      !is_active &&
+      is_active === undefined &&
       !badges_ids &&
       !titles_ids &&
       !cosmetic_ids
@@ -91,7 +91,7 @@ const updateById = async (req, res) => {
       .select("*")
       .where("id", id)
       .update({
-        is_admin: is_admin ? is_admin : userData.is_admin,
+        is_admin: is_admin !== undefined ? is_admin : userData.is_admin,
         first_name: first_name ? first_name : userData.first_name,
         last_name: last_name ? last_name : userData.last_name,
         username: username ? username : userData.username,
@@ -99,7 +99,7 @@ const updateById = async (req, res) => {
         rank: rank ? rank : userData.rank,
         age: age ? age : userData.age,
         xp: xp ? xp : userData.xp,
-        is_active: is_active ? is_active : userData.is_active,
+        is_active: is_active !== undefined ? is_active : userData.is_active,
         badges_ids: badges_ids ? badges_ids : userData.badges_ids,
         titles_ids: titles_ids ? titles_ids : userData.titles_ids,
         cosmetic_ids: cosmetic_ids ? cosmetic_ids : userData.cosmetic_ids,

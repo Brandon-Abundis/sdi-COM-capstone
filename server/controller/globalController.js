@@ -32,7 +32,7 @@ const updateGlobalEventById = async (req, res) => {
       !end_date &&
       !start_time &&
       !end_time &&
-      !completed &&
+      completed === undefined &&
       !workout_list &&
       !goal_list &&
       !participant_ids
@@ -69,7 +69,8 @@ const updateGlobalEventById = async (req, res) => {
         end_date: end_date ? end_date : globalEventData.end_date,
         start_time: start_time ? start_time : globalEventData.start_time,
         end_time: end_time ? end_time : globalEventData.end_time,
-        completed: completed ? completed : globalEventData.completed,
+        completed:
+          completed !== undefined ? completed : globalEventData.completed,
         workout_list: workout_list
           ? workout_list
           : globalEventData.workout_list,
