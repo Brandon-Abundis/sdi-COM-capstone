@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function AvatarSelection() {
   const base_pic = ["/Avatar/male.png", "/Avatar/female.png"];
@@ -21,58 +21,153 @@ export default function AvatarSelection() {
   const [chosenGloves, setChosenGloves] = useState();
   const [chosenMisc, setChosenMisc] = useState([]);
 
+  const navigate = useNavigate();
+
+  const handleSave = () => {
+    const avatarSelection = {
+      base,
+      head,
+      chosenGloves,
+      chosenMisc,
+    };
+
+    localStorage.setItem(`user_avatar`, JSON.stringify(avatarSelection));
+
+    navigate("/profile");
+  };
+
   return (
-    <>
-      <div className="relative w-64 h-64 border-2 border-gray-500 rounded-lg overflow-hidden bg-slate-200 mb-8">
-        <img src={base} className="absolute inset-0 w-full h-full z-10" />
-
-        {chosenGloves && (
+    <div className="flex flex-col md:flex-row gap-8 p-6 bg-base-100 rounded-xl shadow-xl">
+      <div className="flex flex-col items-center gap-4">
+        <h2 className="text-xl font-bold uppercase tracking-wider text-accent">
+          Preview
+        </h2>
+        <div className="relative w-64 h-64 border-4 border-accent rounded-2xl overflow-hidden bg-[#2a2245] shadow-2xl">
           <img
-            src={chosenGloves}
-            className="absolute inset-0 w-full h-full z-20"
+            src={base}
+            className="absolute inset-0 w-full h-full z-10 object-contain"
           />
-        )}
 
-        {head && (
-          <img src={head} className="absolute inset-0 w-full h-full z-30" />
-        )}
+          {chosenGloves && (
+            <img
+              src={chosenGloves}
+              className="absolute inset-0 w-full h-full z-20 object-contain"
+            />
+          )}
 
-        {chosenMisc.map((item, index) => (
-          <img
-            key={index}
-            src={item}
-            className="absolute inset-0 w-full h-full z-40"
-          />
-        ))}
+          {head && (
+            <img
+              src={head}
+              className="absolute inset-0 w-full h-full z-30 object-contain"
+            />
+          )}
+
+          {chosenMisc.map((item, index) => (
+            <img
+              key={index}
+              src={item}
+              className="absolute inset-0 w-full h-full z-40 object-contain"
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={handleSave}
+          className="btn btn-accent btn-wide shadow-lg hover:scale-105 transition-transform"
+        >
+          Save Gear Loadout
+        </button>
       </div>
-      <div>
-        Base
-        {base_pic.map((pic, index) => (
-          <img key={index} src={pic} onClick={() => setBase(pic)}></img>
-        ))}
+
+      <div className="flex-1 space-y-3">
+        <section>
+          <h3 className="text-sm font-semibold mb-2 opacity-70 uppercase tracking-wider">
+            Body Type
+          </h3>
+          <div className="grid grid-cols-8 gap-4 p-3 bg-base-200 rounded-lg min-h-[100px]">
+            {base_pic.map((pic, index) => (
+              <img
+                key={index}
+                src={pic}
+                className={`w-full aspect-square p-2 rounded-md cursor-pointer border-2 transition-all object-contain ${
+                  base === pic
+                    ? "border-accent bg-accent/20"
+                    : "border-transparent hover:bg-base-300"
+                }`}
+                onClick={() => setBase(pic)}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-sm font-semibold mb-2 opacity-70 uppercase tracking-wider">
+            Head Gear
+          </h3>
+          <div className="grid grid-cols-8 gap-4 p-3 bg-base-200 rounded-lg min-h-[100px]">
+            {head_wear.map((pic, index) => (
+              <img
+                key={index}
+                src={pic}
+                className={`w-full aspect-square p-2 rounded-md cursor-pointer border-2 transition-all object-contain ${
+                  head === pic
+                    ? "border-accent bg-accent/20"
+                    : "border-transparent hover:bg-base-300"
+                }`}
+                onClick={() => setHead(head === pic ? null : pic)}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-sm font-semibold mb-2 opacity-70 uppercase tracking-wider">
+            Gloves
+          </h3>
+          <div className="grid grid-cols-8 gap-4 p-3 bg-base-200 rounded-lg min-h-[100px]">
+            {gloves.map((pic, index) => (
+              <img
+                key={index}
+                src={pic}
+                className={`w-full aspect-square p-2 rounded-md cursor-pointer border-2 transition-all object-contain ${
+                  chosenGloves === pic
+                    ? "border-accent bg-accent/20"
+                    : "border-transparent hover:bg-base-300"
+                }`}
+                onClick={() =>
+                  setChosenGloves(chosenGloves === pic ? null : pic)
+                }
+              />
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-sm font-semibold mb-2 opacity-70 uppercase tracking-wider">
+            Miscellaneous
+          </h3>
+          <div className="grid grid-cols-8 gap-4 p-3 bg-base-200 rounded-lg min-h-[100px]">
+            {misc.map((pic, index) => (
+              <img
+                key={index}
+                src={pic}
+                className={`w-full aspect-square p-2 rounded-md cursor-pointer border-2 transition-all object-contain ${
+                  chosenMisc.includes(pic)
+                    ? "border-accent bg-accent/20"
+                    : "border-transparent hover:bg-base-300"
+                }`}
+                onClick={() => {
+                  if (chosenMisc.includes(pic)) {
+                    setChosenMisc(chosenMisc.filter((i) => i !== pic));
+                  } else {
+                    setChosenMisc([...chosenMisc, pic]);
+                  }
+                }}
+              />
+            ))}
+          </div>
+        </section>
       </div>
-      <div>
-        Head
-        {head_wear.map((pic, index) => (
-          <img key={index} src={pic} onClick={() => setHead(pic)}></img>
-        ))}
-      </div>
-      <div>
-        Gloves
-        {gloves.map((pic, index) => (
-          <img key={index} src={pic} onClick={() => setChosenGloves(pic)}></img>
-        ))}
-      </div>
-      <div>
-        Misc
-        {misc.map((pic, index) => (
-          <img
-            key={index}
-            src={pic}
-            onClick={() => setChosenMisc([...chosenMisc, pic])}
-          ></img>
-        ))}
-      </div>
-    </>
+    </div>
   );
 }
