@@ -80,7 +80,11 @@ export default function ModalContent({ cancel, info }) {
         body: JSON.stringify(payload),
       })
         .then((res) => res.json())
-        .then(() => {
+        .then((res) => {
+          if (res.status == 500) {
+            ress.innerHTML = "Internal Server Error; Check All Fields & Try Again"
+            return;
+          }
           setTimeout(() => window.location.reload(), 2000);
           ress.innerHTML = "Saved! Reloading the page...";
         })
@@ -93,7 +97,17 @@ export default function ModalContent({ cancel, info }) {
         body: JSON.stringify(payload),
       })
         .then((res) => res.json())
-        .then(() => setTimeout(() => window.location.reload(), 2000))
+        .then((res) => {
+          console.log(res.status)
+          if (res.status == 500) {
+            ress.innerHTML = "Internal Server Error; Check All Fields & Try Again"
+            return;
+          }
+
+          setTimeout(() => window.location.reload(), 2000);
+          ress.innerHTML = "Saved ! Reloading the page...";
+
+        })
         .catch((err) => console.error(err));
       return;
     }
@@ -120,7 +134,6 @@ export default function ModalContent({ cancel, info }) {
 
         <h2> Title </h2>
         <InputField ref={titleRef} style={"Title"} def={title} />
-        <h2> Type </h2>
         <InputField
           ref={typeRef}
           style={"selection"}
