@@ -56,11 +56,7 @@ export default function Calendar() {
 
     const dayDiff = d1 - d2;
     const daysAway = Math.ceil(dayDiff / (1000 * 60 * 60 * 24));
-    // console.log("test of the getDaysAway running")
-    // console.log("in order: eventStartDate, eventDate, d1, d2, dayDiff, daysAway")
-    // console.log(eventStartDate, eventDate, d1, d2, dayDiff, daysAway)
-    // console.log("eventStartDate:" + eventStartDate)
-    // console.log("transferSelectedDate:" + transferSelectedDate)
+
 
     if (daysAway === 1) {
       return (<span className="event-time">Tomorrow</span>);
@@ -98,7 +94,7 @@ export default function Calendar() {
   ? events
   .filter((e) => {
     const d = new Date(e.start_date);
-      
+
     return (
       d.getUTCFullYear() >= upcomingDateWindowStart.getUTCFullYear() &&
       d.getUTCMonth() >= upcomingDateWindowStart.getUTCMonth() &&
@@ -108,7 +104,18 @@ export default function Calendar() {
       d.getUTCDate() <= upcomingDateWindowEnd.getUTCDate()
     );
   })
-  .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
+  .sort((a, b) => {
+    const dateA = new Date(a.start_date)
+    const dateB = new Date(b.start_date)
+
+    const dateDiff = dateA - dateB;
+  
+    if (dateDiff !== 0) {
+      return dateDiff;
+    }
+
+    return timeToMinutes(a.time) - timeToMinutes(b.time)
+  })
   : [];
   
   async function handleDeleteEvent(id) {
@@ -184,15 +191,11 @@ export default function Calendar() {
         <></>
       ) : (
         <aside className="calendar-side-panel">
-          <div className="panel-date-heading">Upcoming Events Tomorrow</div>
-          {/* <CalUpcomingEvents 
-            selectedDay={selectedDay}
-            events={events}
-            /> */}
+          <div className="panel-date-heading">Upcoming Events</div>
           {upcomingWeekEvents.length === 0 ? (
             <p className="no-events">No events yet.</p>
           ) : (
-            <ul className="event-list" /*POSSIBLE UPDATE TO NEW DESIGN WITH WORKOUTS GREYED OUT*/ >
+            <ul className="event-list upcoming-events" /*POSSIBLE UPDATE TO NEW DESIGN WITH WORKOUTS GREYED OUT*/ >
               {upcomingWeekEvents.map((ev) => (
                 <li key={ev.id}>
                   <span className="event-name">{ev.name}</span>
