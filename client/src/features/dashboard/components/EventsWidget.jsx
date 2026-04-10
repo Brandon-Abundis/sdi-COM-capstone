@@ -95,7 +95,7 @@ export default function EventsWidget() {
                 <strong>{event.name}</strong> - {event.start_time}{" "}
                 {`- ${event.end_time}`}
                 {event.workouts_list.length > 0 && (
-                  <div className="ml-2 text-xs text-gray-400">
+                  <div className="ml-2 text-xs text-base-content/60">
                     Workouts:{" "}
                     {event.workouts_list.map((id) => workoutMap[id]).join(", ")}
                   </div>
@@ -129,7 +129,7 @@ export default function EventsWidget() {
                   </span>
                 )}
                 {event.workouts_list.length > 0 && (
-                  <div className="ml-2 text-xs text-gray-400">
+                  <div className="ml-2 text-xs text-base-content/60">
                     Workouts:{" "}
                     {event.workouts_list.map((id) => workoutMap[id]).join(", ")}
                   </div>

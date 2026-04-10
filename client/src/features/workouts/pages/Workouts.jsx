@@ -77,7 +77,7 @@ export default function Workouts() {
       <div>
         <h1
           className={
-            "text-3xl font-bold text-[#7c3aed] mb-6 ml-7 mt-6 tracking-wide"
+            "text-3xl font-bold text-primary mb-6 ml-7 mt-6 tracking-wide"
           }
         >
           {" "}

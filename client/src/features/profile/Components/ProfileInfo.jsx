@@ -84,7 +84,7 @@ export default function ProfileInfo({ userData, setUserData }) {
             <div className="card bg-base-100 shadow-2xl border border-base-200 w-full max-w-md">
               <div className="card-body p-6">
                 <div className="avatar mb-2">
-                  <div className="w-20 h-20 flex items-center justify-center rounded-full outline outline-1 outline-accent bg-[#2a2245] select-none cursor-default">
+                  <div className="w-20 h-20 flex items-center justify-center rounded-full outline outline-1 outline-accent bg-neutral select-none cursor-default">
                     {/* <span className="text-sm font-bold text-[#c084fc] leading-none">
                       {initials}
                     </span> */}
