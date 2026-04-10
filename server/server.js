@@ -1,3 +1,4 @@
+const cookieParser = require('cookie-parser');
 const express = require("express");
 const cors = require("cors");
 
@@ -12,6 +13,7 @@ const messageRoutes = require("./routes/messages");
 const scoreRoutes = require("./routes/scores");
 const globalRoutes = require("./routes/global");
 
+app.use(cookieParser('sdi-com'));
 app.use(express.json());
 app.use(cors());
 
