@@ -87,15 +87,15 @@ export default function EventsWidget() {
     <div className="card bg-base-200 p-4">
       <h3 className="text-2xl font-semibold text-primary mb-4">Events</h3>
       {todayEvents.length > 0 && (
-        <div className="pb-4 border-b border-secondary">
-          <h4 className="text-md font-medium text-secondary pb-2">Today</h4>
+        <div className="pb-4 border-b-2 border-primary">
+          <h4 className="text-lg font-bold text-secondary pb-2">Today:</h4>
           <ul className="space-y-1">
             {todayEvents.map((event) => (
               <li key={event.id} className="text-sm">
                 <strong>{event.name}</strong> - {event.start_time}{" "}
                 {`- ${event.end_time}`}
                 {event.workouts_list.length > 0 && (
-                  <div className="ml-2 text-xs text-gray-400">
+                  <div className="ml-2 text-xs text-base-content/60">
                     Workouts:{" "}
                     {event.workouts_list.map((id) => workoutMap[id]).join(", ")}
                   </div>
@@ -107,7 +107,7 @@ export default function EventsWidget() {
       )}
       {upcomingEvents.length > 0 && (
         <div>
-          <h4 className="text-md font-extrabold text-secondary pb-2 pt-2">
+          <h4 className="text-lg font-bold text-secondary pb-2 pt-2">
             Upcoming:
           </h4>
           <ul className="space-y-1">
@@ -129,7 +129,7 @@ export default function EventsWidget() {
                   </span>
                 )}
                 {event.workouts_list.length > 0 && (
-                  <div className="ml-2 text-xs text-gray-400">
+                  <div className="ml-2 text-xs text-base-content/60">
                     Workouts:{" "}
                     {event.workouts_list.map((id) => workoutMap[id]).join(", ")}
                   </div>

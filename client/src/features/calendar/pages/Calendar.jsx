@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Calendar.css";
 import CalendarApp from "../components/CalendarApp.jsx";
+// import CalUpcomingEvents  from "../components/CalUpcomingEvents.jsx";
 import { useAuth } from "../../../app/AuthProvider.jsx";
 
 function formatTime(timeStr) {
@@ -11,6 +12,7 @@ function formatTime(timeStr) {
   const mins = (m || 0) > 0 ? `:${String(m).padStart(2, "0")}` : "";
   return `${hour}${mins} ${ampm}`;
 }
+
 
 function timeToMinutes(timeStr) {
   if (!timeStr) return Infinity;
@@ -27,45 +29,88 @@ export default function Calendar() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
-
+  
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-
+  
   useEffect(() => {
     if (!user?.id) return;
     fetch(`http://localhost:8080/users/user_events/id/${user.id}`)
-      .then((r) => r.json())
-      .then((data) => setEvents(Array.isArray(data) ? data : []))
-      .catch(() => setEvents([]));
+    .then((r) => r.json())
+    .then((data) => setEvents(Array.isArray(data) ? data : []))
+    .catch(() => setEvents([]));
   }, [user?.id]);
-
+  
   // Clear selected day when month changes so the side panel doesn't show stale data
   function handleMonthChange(newDate) {
     setCurrentDate(newDate);
     setSelectedDay(null);
   }
+  
+  function getDaysAway(eventStartDate) {
+    const eventDate = new Date(eventStartDate)
+    const transferSelectedDate = new Date(selectedDate)
 
+    const d1 = Date.UTC(eventDate.getUTCFullYear(), eventDate.getUTCMonth(), eventDate.getUTCDate());
+    const d2 = Date.UTC(transferSelectedDate.getUTCFullYear(), transferSelectedDate.getUTCMonth(), transferSelectedDate.getUTCDate())
+
+    const dayDiff = d1 - d2;
+    const daysAway = Math.ceil(dayDiff / (1000 * 60 * 60 * 24));
+    // console.log("test of the getDaysAway running")
+    // console.log("in order: eventStartDate, eventDate, d1, d2, dayDiff, daysAway")
+    // console.log(eventStartDate, eventDate, d1, d2, dayDiff, daysAway)
+    // console.log("eventStartDate:" + eventStartDate)
+    // console.log("transferSelectedDate:" + transferSelectedDate)
+
+    if (daysAway === 1) {
+      return (<span className="event-time">Tomorrow</span>);
+    }
+    if (daysAway > 1  && daysAway <=7 ) return (<span className="event-time">{daysAway} days away</span>)
+    return ""
+  }
+  
   const selectedDate =
-    selectedDay != null ? new Date(Date.UTC(year, month, selectedDay)) : null;
-
-  const upcomingDate =
-    selectedDay != null
-      ? new Date(Date.UTC(year, month, selectedDay + 1))
-      : null;
-
+  selectedDay != null ? new Date(Date.UTC(year, month, selectedDay)) : null;
+  
+  const upcomingDateWindowStart =
+  selectedDay != null
+  ? new Date(Date.UTC(year, month, selectedDay + 1))
+  : null;
+  const upcomingDateWindowEnd =
+  selectedDay != null
+  ? new Date(Date.UTC(year, month, selectedDay + 7))
+  : null;
+  
   const dayEvents = selectedDate
-    ? events
-        .filter((e) => {
-          const d = new Date(e.date);
-          return (
-            d.getUTCFullYear() === selectedDate.getUTCFullYear() &&
-            d.getUTCMonth() === selectedDate.getUTCMonth() &&
-            d.getUTCDate() === selectedDate.getUTCDate()
-          );
-        })
-        .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
-    : [];
-
+  ? events
+  .filter((e) => {
+    const d = new Date(e.start_date);
+    return (
+      d.getUTCFullYear() === selectedDate.getUTCFullYear() &&
+      d.getUTCMonth() === selectedDate.getUTCMonth() &&
+      d.getUTCDate() === selectedDate.getUTCDate()
+    );
+  })
+  .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
+  : [];
+  
+  const upcomingWeekEvents = upcomingDateWindowStart && upcomingDateWindowEnd
+  ? events
+  .filter((e) => {
+    const d = new Date(e.start_date);
+      
+    return (
+      d.getUTCFullYear() >= upcomingDateWindowStart.getUTCFullYear() &&
+      d.getUTCMonth() >= upcomingDateWindowStart.getUTCMonth() &&
+      d.getUTCDate() >= upcomingDateWindowStart.getUTCDate() &&
+      d.getUTCFullYear() <= upcomingDateWindowEnd.getUTCFullYear() &&
+      d.getUTCMonth() <= upcomingDateWindowEnd.getUTCMonth() &&
+      d.getUTCDate() <= upcomingDateWindowEnd.getUTCDate()
+    );
+  })
+  .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
+  : [];
+  
   async function handleDeleteEvent(id) {
     try {
       const res = await fetch(
@@ -83,7 +128,7 @@ export default function Calendar() {
       setConfirmDeleteId(null);
     }
   }
-
+  
   async function handleAddEvent(e) {
     e.preventDefault();
     setSaveError("");
@@ -114,25 +159,25 @@ export default function Calendar() {
       setSaving(false);
     }
   }
-
+  
   const selectedLabel = selectedDate
-    ? selectedDate.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        timeZone: "UTC",
-      })
-    : null;
-
-  const upcomingSelectedLabel = upcomingDate
-    ? upcomingDate.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        timeZone: "UTC",
-      })
-    : null;
-
+  ? selectedDate.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  })
+  : null;
+  
+  const upcomingSelectedLabel = upcomingDateWindowStart
+  ? upcomingDateWindowStart.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  })
+  : null;
+  
   return (
     <div className="calendar-page">
       {selectedDay === null ? (
@@ -140,15 +185,19 @@ export default function Calendar() {
       ) : (
         <aside className="calendar-side-panel">
           <div className="panel-date-heading">Upcoming Events Tomorrow</div>
-
-          {dayEvents.length === 0 ? (
+          {/* <CalUpcomingEvents 
+            selectedDay={selectedDay}
+            events={events}
+            /> */}
+          {upcomingWeekEvents.length === 0 ? (
             <p className="no-events">No events yet.</p>
           ) : (
-            <ul className="event-list">
-              {dayEvents.map((ev) => (
+            <ul className="event-list" /*POSSIBLE UPDATE TO NEW DESIGN WITH WORKOUTS GREYED OUT*/ >
+              {upcomingWeekEvents.map((ev) => (
                 <li key={ev.id}>
                   <span className="event-name">{ev.name}</span>
                   {ev.time && <span className="event-time">{ev.time}</span>}
+                  <span className="event-name">{getDaysAway(ev.start_date, selectedDate)}</span> {/*will resolve issue eventually*/}
                 </li>
               ))}
             </ul>
@@ -163,6 +212,7 @@ export default function Calendar() {
           selectedDay={selectedDay}
           onDaySelect={setSelectedDay}
           events={events}
+          dayEvents={dayEvents}
         />
       </div>
 

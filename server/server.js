@@ -15,7 +15,11 @@ const globalRoutes = require("./routes/global");
 
 app.use(cookieParser('sdi-com'));
 app.use(express.json());
-app.use(cors());
+// for the cookie
+app.use(cors({
+  origin: 'http://localhost:5173', //specify origin
+  credentials: true
+}));
 
 app.use("/users", userRoutes);
 app.use("/groups", groupRoutes);

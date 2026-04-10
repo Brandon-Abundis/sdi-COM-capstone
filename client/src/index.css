@@ -2,6 +2,22 @@
 @plugin "daisyui";
 
 /* ══════════════════════════════════════════════
+   SELECTION HIGHLIGHT
+   Browser default blue selection is unreadable
+   against dark text in light mode.
+══════════════════════════════════════════════ */
+
+[data-theme="nightshade"] ::selection {
+  background-color: rgba(124, 58, 237, 0.4);
+  color: #ffffff;
+}
+
+[data-theme="nightshade-light"] ::selection {
+  background-color: rgba(124, 58, 237, 0.2);
+  color: #1a0842;
+}
+
+/* ══════════════════════════════════════════════
    DAISYUI THEMES
 ══════════════════════════════════════════════ */
 
@@ -212,6 +228,36 @@
 /* ── Misc ────────────────────────────────────────────────── */
 [data-theme="nightshade-light"] .bg-white      { background-color: var(--app-bg-400); }
 [data-theme="nightshade-light"] .text-gray-900 { color: var(--app-text-main); }
+[data-theme="nightshade-light"] .text-gray-400 { color: #5b4a8a; }
+
+/* ── white/opacity backgrounds & borders (any remaining hardcoded uses) ─ */
+[data-theme="nightshade-light"] .bg-white\/5          { background-color: rgb(26 8 66 / 5%); }
+[data-theme="nightshade-light"] .bg-white\/10         { background-color: rgb(26 8 66 / 8%); }
+[data-theme="nightshade-light"] .border-white\/5      { border-color: rgb(26 8 66 / 15%); }
+[data-theme="nightshade-light"] .divide-white\/5 > * + * { border-color: rgb(26 8 66 / 15%); }
+
+/* ── HeatMap: SVG day labels & cell colors ────────────────── */
+/* The component injects an inline <style> with white fills;
+   these rules override it with !important for light mode.     */
+[data-theme="nightshade-light"] .yearly-heatmap-container text {
+  fill: rgba(26, 8, 66, 0.45) !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-empty {
+  fill: rgba(26, 8, 66, 0.07) !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-scale-1 {
+  fill: #ddd8f5 !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-scale-2 {
+  fill: #a78bfa !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-scale-3 {
+  fill: #7c3aed !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-scale-4 {
+  fill: #4c1d95 !important;
+  filter: drop-shadow(0 0 3px rgba(124, 58, 237, 0.4)) !important;
+}
 
 /* ══════════════════════════════════════════════
    COMPACT CARDS
