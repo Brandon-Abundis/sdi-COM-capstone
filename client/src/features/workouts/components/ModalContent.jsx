@@ -39,7 +39,6 @@ export default function ModalContent({ cancel, info }) {
   };
 
   let [data, setData] = useState(empty);
-  // data is going to be used dont delete yet pwease :3
 
   let titleRef = useRef();
   let typeRef = useRef();
@@ -74,80 +73,71 @@ export default function ModalContent({ cancel, info }) {
       user_id: Number(id),
     };
 
-    // setData(payload); // potentially do not want this line
-
     if (storedId) {
-      // editing
-
       fetch(`http://localhost:8080/users/user_workouts/update/id/${storedId}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
         .then((res) => res.json())
-        .then(() => {
+        .then((res) => {
+          if (res.status == 500) {
+            ress.innerHTML = "Internal Server Error; Check All Fields & Try Again"
+            return;
+          }
           setTimeout(() => window.location.reload(), 2000);
-          ress.innerHTML = "Saved ! Reloading the page...";
+          ress.innerHTML = "Saved! Reloading the page...";
         })
         .catch((err) => console.error(err));
-
       return;
     } else {
-      // creating
-
       fetch("http://localhost:8080/users/user_workouts/create/", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       })
         .then((res) => res.json())
-        .then(() => setTimeout(() => window.location.reload(), 2000))
-        .catch((err) => console.error(err));
+        .then((res) => {
+          console.log(res.status)
+          if (res.status == 500) {
+            ress.innerHTML = "Internal Server Error; Check All Fields & Try Again"
+            return;
+          }
 
+          setTimeout(() => window.location.reload(), 2000);
+          ress.innerHTML = "Saved ! Reloading the page...";
+
+        })
+        .catch((err) => console.error(err));
       return;
     }
   };
 
   return (
-    <div
-      className={
-        "bg-[#6045cd]/0 w-3xl h-200 flex flex-col rounded-lg items-center"
-      }
-    >
+    <div className="bg-transparent w-3xl h-200 flex flex-col rounded-lg items-center">
       <h2
-        id={"listen"}
-        className={"text-3xl font-bold text-[#7c3aed] mb-5 tracking-wide"}
+        id="listen"
+        className="text-3xl font-bold text-primary mb-5 tracking-wide"
       >
-        {" "}
-        {title != "" ? "Edit Workout" : "Create Workout"}{" "}
+        {title != "" ? "Edit Workout" : "Create Workout"}
       </h2>
 
       <div
         id="inputList"
-        className={
-          "border-2 border-[#1e1838] rounded-lg gap-2 bg-[#16112a] w-160 h-200 flex flex-col items-center justify-center text-[#a78bfa] font-bold "
-        }
+        className="border-2 border-base-300 rounded-lg gap-2 bg-base-200 w-160 h-200 flex flex-col items-center justify-center text-secondary font-bold"
       >
-        {storedId ? <h3> workoutID: {storedId} </h3> : <h3>- No ID yet -</h3>}
+        {storedId ? (
+          <h3 className="text-base-content/50 text-xs"> Workout ID: {storedId} </h3>
+        ) : (
+          <h3 className="text-base-content/30 text-xs">— New Workout —</h3>
+        )}
 
         <h2> Title </h2>
         <InputField ref={titleRef} style={"Title"} def={title} />
-        <h2> Type </h2>
         <InputField
           ref={typeRef}
           style={"selection"}
-          choices={[
-            "strength",
-            "hypertrophy",
-            "power",
-            "cardio",
-            "core",
-            "other",
-          ]}
+          choices={["strength", "hypertrophy", "power", "cardio", "core", "other"]}
           chosen={type}
         />
         <h2> Time Estimate (Min.)</h2>
@@ -162,16 +152,9 @@ export default function ModalContent({ cancel, info }) {
         <InputField ref={weightRef} style={"Weight"} def={weight} />
         <h2> Notes </h2>
         <InputField ref={noteRef} style={"Notes"} def={notes} />
-        <div className={"w-35 flex justify-between"}>
+        <div className="w-35 flex justify-between">
           <Button name={"Submit"} func={() => submit()} />
-          <Button
-            name={"Close"}
-            func={() => {
-              // setData(empty);
-
-              cancel();
-            }}
-          />
+          <Button name={"Close"} func={() => cancel()} />
         </div>
       </div>
     </div>

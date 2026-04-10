@@ -7,7 +7,7 @@ function timeToMinutes(timeStr) {
   return h * 60 + (m || 0);
 }
 
-export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events }) {
+export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events, dayEvents}) {
   const year = currentDate.getUTCFullYear();
   const month = currentDate.getUTCMonth();
   const firstDayOfMonth = new Date(year, month, 1).getUTCDay();
@@ -95,7 +95,9 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
                 <span className="event-tab-more">+{dayEvents.length - 3} more</span>
               )}
               <div className="Workouts">
-                <CalendarPopulator/>
+                <CalendarPopulator
+                  dayEvents={dayEvents}
+                />
               </div>
             </div>
           );

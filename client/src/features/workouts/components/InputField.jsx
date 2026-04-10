@@ -7,28 +7,23 @@ export default forwardRef(function InputField(
   if (style == "selection") {
     return (
       <div>
-        <label for="types"> Workout Type: </label>
-
+        <label htmlFor="types"> Workout Type: </label>
         <select
           ref={ref}
           name="type"
           id="workoutSelection"
-          className={
-            "bg-[#0c0916] p-3 rounded-lg border-2 border-[#231d3f] mb-3"
-          }
+          className="select select-bordered bg-base-200 border-base-300 p-3 rounded-lg mb-3 text-base-content"
         >
           {choices.map((choice) => {
             let showChoice = choice.charAt(0).toUpperCase() + choice.slice(1);
-            if (choice == chosen.toLowerCase()) {
-              // if there's already a type, select it
-
+            if (choice == chosen?.toLowerCase()) {
               return (
-                <option value={choice} selected="selected">
+                <option key={choice} value={choice} defaultValue>
                   {showChoice}
                 </option>
               );
             }
-            return <option value={choice}> {showChoice} </option>;
+            return <option key={choice} value={choice}>{showChoice}</option>;
           })}
         </select>
       </div>
@@ -40,9 +35,7 @@ export default forwardRef(function InputField(
         ref={ref}
         placeholder={style}
         defaultValue={def}
-        className={
-          "rounded-md text-center bg-[#0e0b1a] text-[#a78bfa] w-80 border-3 border-[#231d3f] text-wrap focus:border-[#7300ff] mb-3 placeholder:text-[#a78bfa]/50"
-        }
+        className="input input-bordered rounded-md text-center bg-base-200 text-secondary w-80 mb-3 placeholder:text-secondary/50 focus:border-primary"
       />
     </div>
   );

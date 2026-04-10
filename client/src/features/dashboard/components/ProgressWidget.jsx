@@ -63,7 +63,7 @@ export default function ProgressWidget() {
       {userRank ? (
         <div className="space-y-4">
           <div className="bg-base-300 rounded-lg p-3">
-            <p className="text-sm text-gray-400 uppercase tracking-wide mb-1">
+            <p className="text-sm text-base-content/60 uppercase tracking-wide mb-1">
               Your Rank
             </p>
             <div className="flex items-center justify-between">
@@ -76,13 +76,13 @@ export default function ProgressWidget() {
                 </p>
               </div>
             </div>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-base-content/60">
               of {totalActiveUsers} active users
             </p>
           </div>
 
           <div>
-            <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">
+            <p className="text-xs text-base-content/60 uppercase tracking-wide mb-2">
               Nearby Users
             </p>
             <div className="space-y-2">
@@ -98,7 +98,7 @@ export default function ProgressWidget() {
                   <div className="flex items-center gap-2">
                     <span
                       className={`font-bold w-8 text-center ${
-                        u.id === user.id ? "text-primary" : "text-gray-400"
+                        u.id === user.id ? "text-primary" : "text-base-content/60"
                       }`}
                     >
                       #{u.rank}
