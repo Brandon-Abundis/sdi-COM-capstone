@@ -1,25 +1,38 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-export default function Avatar() {
-  const base_pic = ["/Avatar/male.png", "/Avatar/female.png"];
-  const head_wear = [
-    "/Avatar/beanie.png",
-    "/Avatar/hat.png",
-    "/Avatar/headband.png",
-    "/Avatar/wreath.png",
-  ];
-  const gloves = ["/Avatar/gloves.png", "/Avatar/gloves2.png"];
-  const misc = [
-    "/Avatar/outline.png",
-    "/Avatar/headphones.png",
-    "/Avatar/chain.png",
-  ];
+export default function Avatar({ userData }) {
+  const [savedAvatar, setSavedAvatar] = useState(null);
 
-  const [base, setBase] = useState(base_pic[0]);
+  const initials =
+    `${userData.first_name.slice(0, 1)}${userData.last_name.slice(0, 1)}`.toUpperCase();
+
+  useEffect(() => {
+    const data = localStorage.getItem("user_avatar");
+    if (data) {
+      setSavedAvatar(JSON.parse(data));
+    }
+  }, []);
+
+  if (!savedAvatar)
+    return (
+      <span className="text-sm font-bold text-[#c084fc] leading-none">
+        {initials}
+      </span>
+    );
   return (
-    <div>
-      <img src={base} alt="base"></img>
+    <div className="relative w-full h-full -translate-x-1">
+      <img src={savedAvatar.base} className="absolute inset-0 z-10" />
+      {savedAvatar.chosenGloves && (
+        <img src={savedAvatar.chosenGloves} className="absolute inset-0 z-20" />
+      )}
+      {savedAvatar.head && (
+        <img src={savedAvatar.head} className="absolute inset-0 z-30" />
+      )}
+      {savedAvatar.chosenMisc &&
+        savedAvatar.chosenMisc.map((path, i) => (
+          <img key={i} src={path} className="absolute inset-0 z-40" />
+        ))}
     </div>
   );
 }
