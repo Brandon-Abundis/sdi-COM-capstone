@@ -20,17 +20,14 @@ function formatTime(timeStr) {
   return `${hour}${mins} ${ampm}`;
 }
 
-function getDaysElapsed(dateStr) {
+
+function EndsInBadge({ date }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const target = new Date(dateStr);
+  const target = new Date(date);
   target.setHours(0, 0, 0, 0);
-  return Math.floor((today - target) / (1000 * 60 * 60 * 24));
-}
-
-function ElapsedBadge({ date }) {
-  const days = getDaysElapsed(date);
-  const label = days === 0 ? "Started today" : `Started ${days}d ago`;
+  const days = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+  const label = days === 0 ? "Ends today" : days > 0 ? `Ends in ${days}d` : `Ended ${Math.abs(days)}d ago`;
   return (
     <span className="badge badge-sm bg-[#2a2245] text-[#a78bfa] border border-[#7c3aed]">
       {label}
@@ -66,12 +63,12 @@ export default function EventCard({ event, isSelected, onClick, showCountdown })
         <h3 className="card-title text-sm text-[#a78bfa]">{event.name}</h3>
         <p className="text-xs text-[#e2dff5]/60 italic">{description}</p>
         <p className="text-xs text-[#e2dff5]/70">
-          📅 {formatDate(event.date)} · {formatTime(event.time)}
+          📅 {formatDate(event.start_date)} · {formatTime(event.start_time)}
         </p>
         <div className="mt-1">
           {showCountdown
-            ? <CountdownBadge date={event.date} />
-            : <ElapsedBadge date={event.date} />
+            ? <CountdownBadge date={event.start_date} />
+            : <EndsInBadge date={event.end_date} />
           }
         </div>
       </div>

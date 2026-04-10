@@ -2,21 +2,33 @@ const express = require("express");
 const {
   getAll,
   getById,
+  updateById,
   getGoalsById,
+  updateGoalsById,
+  createGoal,
   getWorkoutsById,
   getEventsById,
+  createGroupEvent,
   createGroup,
   joinGroup,
   leaveGroup,
   inviteToGroup,
+  updateWorkoutById,
+  createWorkout,
 } = require("../controller/groupsController");
 const router = express();
 
 router.get("/", getAll);
 router.get("/id/:id", getById);
+router.post("/id/:id", updateById);
 router.get("/group_goals/id/:id", getGoalsById);
+router.post("/group_goals/update/id/:id", updateGoalsById);
+router.post("/group_goals/create", createGoal);
 router.get("/group_workouts/id/:id", getWorkoutsById);
+router.post("/group_workouts/update/id/:id", updateWorkoutById);
+router.post("/group_workouts/create", createWorkout);
 router.get("/group_events/id/:id", getEventsById);
+router.post("/group_events", createGroupEvent);
 router.post("/", createGroup);
 router.patch("/:id/join", joinGroup);
 router.patch("/:id/leave", leaveGroup);

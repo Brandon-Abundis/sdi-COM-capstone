@@ -52,6 +52,62 @@ const getById = async (req, res) => {
   }
 };
 
+const updateById = async (req, res) => {
+  const { id } = req.params;
+  const { name, admin_ids, user_ids } = req.body;
+  try {
+    if (!name && !admin_ids && !user_ids) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP_GOAL",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const groupData = await db("groups").select("*").where("id", id);
+    if (!groupData) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "group does not exist" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("groups")
+      .select("*")
+      .where("id", id)
+      .update({
+        name: name ? name : groupData.name,
+        admin_ids: admin_ids ? admin_ids : groupData.admin_ids,
+        user_ids: user_ids ? user_ids : groupData.user_ids,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "UPDATE_GROUP",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
 const getGoalsById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -75,6 +131,145 @@ const getGoalsById = async (req, res) => {
       action: "FETCH_GROUPS_GOALS",
       status_code: 500,
       user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const updateGoalsById = async (req, res) => {
+  const { id } = req.params;
+  const { name, type, time, distance, reps, muscle_group, weight, notes } =
+    req.body;
+  try {
+    if (
+      !name &&
+      !type &&
+      !time &&
+      !distance &&
+      !reps &&
+      !muscle_group &&
+      !weight &&
+      !notes
+    ) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP_GOAL",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const groupGoalData = await db("group_goals").select("*").where("id", id);
+    if (!groupGoalData) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP_GOAL",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "goal does not exist" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("group_goals")
+      .select("*")
+      .where("id", id)
+      .update({
+        name: name ? name : groupGoalData.name,
+        type: type ? type : groupGoalData.type,
+        time: time ? time : groupGoalData.time,
+        distance: distance ? distance : groupGoalData.distance,
+        reps: reps ? reps : groupGoalData.reps,
+        muscle_group: muscle_group ? muscle_group : groupGoalData.muscle_group,
+        weight: weight ? weight : groupGoalData.weight,
+        notes: notes ? notes : groupGoalData.notes,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP_GOAL",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "UPDATE_GROUP_GOAL",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const createGoal = async (req, res) => {
+  const {
+    name,
+    type,
+    time,
+    distance,
+    reps,
+    muscle_group,
+    weight,
+    notes,
+    group_id,
+  } = req.body;
+  try {
+    if (
+      (!name &&
+        !type &&
+        !time &&
+        !distance &&
+        !reps &&
+        !muscle_group &&
+        !weight &&
+        !notes) ||
+      !group_id
+    ) {
+      createLog({
+        method: "POST",
+        action: "CREATE_GROUP_GOAL",
+        status_code: 400,
+        user_id: group_id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("group_goals")
+      .insert({
+        name: name,
+        type: type,
+        time: time,
+        distance: distance,
+        reps: reps,
+        muscle_group: muscle_group,
+        weight: weight,
+        notes: notes,
+        group_id: group_id,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "CREATE_GROUP_GOAL",
+        status_code: 200,
+        group_id: group_id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "CREATE_GROUP_GOAL",
+      status_code: 500,
+      user_id: group_id,
       metadata: err,
     });
     res.status(500).send({ message: err });
@@ -107,6 +302,181 @@ const getWorkoutsById = async (req, res) => {
       metadata: err,
     });
     res.status(500).send({ message: err });
+  }
+};
+
+const updateWorkoutById = async (req, res) => {
+  const { id } = req.params;
+  const { name, type, time, distance, reps, muscle_group, weight, notes } =
+    req.body;
+  try {
+    if (
+      !name &&
+      !type &&
+      !time &&
+      !distance &&
+      !reps &&
+      !muscle_group &&
+      !weight &&
+      !notes
+    ) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP_WORKOUT",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const groupWorkoutData = await db("group_workouts")
+      .select("*")
+      .where("id", id);
+    if (!groupWorkoutData) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP_WORKOUT",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "workout does not exist" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("group_workouts")
+      .select("*")
+      .where("id", id)
+      .update({
+        name: name ? name : groupWorkoutData.name,
+        type: type ? type : groupWorkoutData.type,
+        time: time ? time : groupWorkoutData.time,
+        distance: distance ? distance : groupWorkoutData.distance,
+        reps: reps ? reps : groupWorkoutData.reps,
+        muscle_group: muscle_group
+          ? muscle_group
+          : groupWorkoutData.muscle_group,
+        weight: weight ? weight : groupWorkoutData.weight,
+        notes: notes ? notes : groupWorkoutData.notes,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_GROUP_WORKOUT",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "UPDATE_GROUP_WORKOUT",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
+const createWorkout = async (req, res) => {
+  const {
+    name,
+    type,
+    time,
+    distance,
+    reps,
+    muscle_group,
+    weight,
+    notes,
+    group_id,
+  } = req.body;
+  try {
+    if (
+      (!name &&
+        !type &&
+        !time &&
+        !distance &&
+        !reps &&
+        !muscle_group &&
+        !weight &&
+        !notes) ||
+      !group_id
+    ) {
+      createLog({
+        method: "POST",
+        action: "CREATE_GROUP_WORKOUT",
+        status_code: 400,
+        user_id: group_id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("group_workouts")
+      .insert({
+        name: name,
+        type: type,
+        time: time,
+        distance: distance,
+        reps: reps,
+        muscle_group: muscle_group,
+        weight: weight,
+        notes: notes,
+        group_id: group_id,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "CREATE_GROUP_WORKOUT",
+        status_code: 200,
+        user_id: group_id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "CREATE_GROUP_WORKOUT",
+      status_code: 500,
+      user_id: group_id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+const createGroupEvent = async (req, res) => {
+  const { name, start_date, end_date, start_time, end_time, group_id } = req.body;
+  if (!name || !start_date || !group_id)
+    return res.status(400).json({ message: "name, start_date, and group_id are required" });
+  try {
+    const [event] = await db("group_events")
+      .insert({
+        name,
+        start_date,
+        end_date: end_date || start_date,
+        start_time: start_time || null,
+        end_time: end_time || null,
+        group_id,
+      })
+      .returning("*");
+    createLog({
+      method: "POST",
+      action: "CREATE_GROUP_EVENT",
+      status_code: 201,
+      user_id: null,
+      metadata: JSON.stringify(event),
+    });
+    res.status(201).json(event);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "CREATE_GROUP_EVENT",
+      status_code: 500,
+      user_id: null,
+      metadata: err,
+    });
+    res.status(500).json({ message: String(err) });
   }
 };
 
@@ -258,11 +628,17 @@ const getEventsById = async (req, res) => {
 module.exports = {
   getAll,
   getById,
+  updateById,
   getGoalsById,
+  updateGoalsById,
+  createGoal,
   getWorkoutsById,
   getEventsById,
+  createGroupEvent,
   createGroup,
   joinGroup,
   leaveGroup,
   inviteToGroup,
+  updateWorkoutById,
+  createWorkout,
 };

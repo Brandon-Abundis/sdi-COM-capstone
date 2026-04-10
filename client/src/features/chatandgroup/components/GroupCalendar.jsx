@@ -39,7 +39,7 @@ export default function GroupCalendar({ group }) {
 
       <div className="space-y-3">
         {events.map((event) => {
-          const days = getDaysUntil(event.date);
+          const days = getDaysUntil(event.start_date);
           return (
             <div
               key={event.id}
@@ -50,7 +50,7 @@ export default function GroupCalendar({ group }) {
               <div className="space-y-1">
                 <p className="font-semibold text-sm text-[#e2dff5]">{event.name}</p>
                 <p className="text-xs text-[#e2dff5]/60">
-                  📅 {event.date} &nbsp;·&nbsp; 🕐 {event.time}
+                  📅 {event.start_date} &nbsp;·&nbsp; 🕐 {event.start_time}
                 </p>
               </div>
               <div className="text-right flex-shrink-0 ml-4">

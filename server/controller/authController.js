@@ -116,6 +116,15 @@ const login = async (req, res) => {
       metadata: JSON.stringify(user),
     });
 
+    //___________cookie logic?_______________
+    res.cookie('userId', user.id, {
+      signed: true,
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
+    });
+
     res.status(200).json({
       id: user.id,
       email: email,

@@ -1,12 +1,11 @@
 import "../styles/WorkoutBox.css";
-// importing because tailwind was getting too long D:
 import Icon from "./Icon";
 
 export default function WorkoutBox({ details, onClick }) {
-
   let { title, type, time, notes } = details;
-  title = title.charAt(0).toUpperCase() + title.slice(1) || ""
-  let displayType = type.charAt(0).toUpperCase() + type.slice(1)
+  title = title.charAt(0).toUpperCase() + title.slice(1) || "";
+  let displayType = type.charAt(0).toUpperCase() + type.slice(1);
+
   return (
     <div
       onClick={onClick}
@@ -15,11 +14,7 @@ export default function WorkoutBox({ details, onClick }) {
         "border-2 border-[#240014] hover:border-[#ee80ff] hover:scale-105 cursor-pointer active:scale-90"
       }
     >
-      <div
-        className={
-          "text-lg font-bold rounded-t-lg h-[20%] flex items-center justify-between"
-        }
-      >
+      <div className="text-lg font-bold rounded-t-lg h-[20%] flex items-center justify-between">
         <h2
           className={
             "ml-2 bg-[#080610] p-2 rounded-md border-2 border-[#aa80f2] w-60 h-18 flex items-center justify-center "
