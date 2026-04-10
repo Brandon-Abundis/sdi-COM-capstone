@@ -4,7 +4,7 @@
   gap: 20px;
   padding: 20px;
   align-items: flex-start;
-  color: var(--app-text-main);
+  color: #e2dff5;
 }
 
 .calendar-box {
@@ -14,12 +14,12 @@
 
 /* ── Calendar shell ──────────────────────────────────────── */
 .calendar {
-  background: var(--app-bg-200);
-  border: 1px solid var(--app-border);
+  background: #16112a;
+  border: 1px solid #1e1838;
   border-radius: 16px;
   padding: 16px;
   font-family: sans-serif;
-  color: var(--app-text-main);
+  color: #e2dff5;
 }
 
 .calendar header {
@@ -32,19 +32,21 @@
 .calendar header h2 {
   font-size: 1.1rem;
   font-weight: bold;
-  color: var(--app-text-accent);
+  color: #c084fc;
   letter-spacing: 0.03em;
 }
 
 .calendar header button {
-  background: var(--app-bg-400);
-  color: var(--app-text-main);
-  border: 1px solid var(--app-border);
+  background: #2a2245;
+  color: #e2dff5;
+  border: 1px solid #1e1838;
   border-radius: 8px;
   padding: 4px 14px;
   cursor: pointer;
   font-size: 0.85rem;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .calendar header button:hover {
@@ -69,8 +71,8 @@
   text-align: center;
   font-size: 0.75rem;
   font-weight: bold;
-  color: var(--app-text-secondary);
-  background: var(--app-bg-sidebar);
+  color: #a78bfa;
+  background: #120e22;
   padding: 6px 0;
   border-radius: 6px;
 }
@@ -78,8 +80,8 @@
 /* Day cells + blank spacers */
 .day,
 .blank {
-  background: var(--app-bg-100);
-  border: 1px solid var(--app-border);
+  background: #0f0d17;
+  border: 1px solid #1e1838;
   border-radius: 10px;
   padding: 6px;
   height: 110px;
@@ -88,7 +90,9 @@
   align-items: flex-start;
   justify-content: flex-start;
   overflow: hidden;
-  transition: border-color 0.15s, background 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
 }
 
 .blank {
@@ -100,14 +104,35 @@
   cursor: pointer;
 }
 
+/* .day.small,
+.blank.small{
+  padding-top: 60%;
+  padding-bottom: 60%
+}
+
+
+.day.medium,
+.blank.medium{
+
+
+  padding-top: 40%;
+  padding-bottom: 40%
+}
+
+
+.day.large,
+.blank.large{
+  padding-top: 60%;
+  padding-bottom: 60%
+} */
 .day:hover {
   border-color: #7c3aed;
-  background: var(--app-bg-200);
+  background: #16112a;
 }
 
 /* Selected state */
 .day.selected {
-  background: var(--app-bg-selected);
+  background: #2a1a5e;
   border-color: #7c3aed;
   border-width: 2px;
 }
@@ -116,12 +141,12 @@
 .day-number {
   font-weight: bold;
   font-size: 0.8rem;
-  color: var(--app-text-main);
+  color: #e2dff5;
   margin-bottom: 4px;
 }
 
 .day.selected .day-number {
-  color: var(--app-text-accent);
+  color: #c084fc;
 }
 
 /* ── Event tabs inside day cells ─────────────────────────── */
@@ -130,9 +155,9 @@
   align-items: center;
   gap: 4px;
   font-size: 0.68rem;
-  background: var(--app-event-tab-bg);
-  color: var(--app-text-secondary);
-  border: 1px solid var(--app-event-tab-border);
+  background: #2a2245;
+  color: #a78bfa;
+  border: 1px solid #3b2d6e;
   border-radius: 4px;
   padding: 2px 6px;
   margin-top: 2px;
@@ -154,14 +179,14 @@
 }
 
 .day.selected .event-tab {
-  background: var(--app-bg-selected);
-  color: var(--app-text-main);
+  background: #3b2d6e;
+  color: #e2dff5;
   border-color: #7c3aed;
 }
 
 .event-tab-more {
   font-size: 0.65rem;
-  color: var(--app-text-muted);
+  color: #6d5aad;
   margin-top: 2px;
   padding-left: 4px;
 }
@@ -170,18 +195,18 @@
 .calendar-side-panel {
   width: 280px;
   flex-shrink: 0;
-  background: var(--app-bg-200);
-  border: 1px solid var(--app-border);
+  background: #16112a;
+  border: 1px solid #1e1838;
   border-radius: 16px;
   padding: 20px;
-  color: var(--app-text-main);
+  color: #e2dff5;
   position: sticky;
   top: 20px;
 }
 
 .calendar-side-panel .panel-empty {
   font-size: 0.85rem;
-  color: var(--app-text-muted);
+  color: #6d5aad;
   text-align: center;
   margin-top: 12px;
 }
@@ -189,10 +214,10 @@
 .panel-date-heading {
   font-size: 1rem;
   font-weight: bold;
-  color: var(--app-text-accent);
+  color: #c084fc;
   margin-bottom: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--app-border);
+  border-bottom: 1px solid #1e1838;
 }
 
 /* Event list */
@@ -206,8 +231,8 @@
 }
 
 .event-list li {
-  background: var(--app-bg-100);
-  border: 1px solid var(--app-border);
+  background: #0f0d17;
+  border: 1px solid #1e1838;
   border-radius: 10px;
   padding: 10px 12px;
   display: flex;
@@ -224,19 +249,21 @@
 .delete-btn {
   background: none;
   border: none;
-  color: var(--app-text-muted);
+  color: #6d5aad;
   cursor: pointer;
   font-size: 0.8rem;
   padding: 2px 6px;
   border-radius: 4px;
   line-height: 1;
   flex-shrink: 0;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
 }
 
 .delete-btn:hover {
   color: #f87171;
-  background: var(--app-bg-error);
+  background: #2a1a1a;
 }
 
 .delete-confirm {
@@ -255,37 +282,47 @@
   padding: 1px 7px;
   font-size: 0.72rem;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
-.delete-confirm button:first-of-type { color: #f87171; }
+.delete-confirm button:first-of-type {
+  color: #f87171;
+}
+
 .delete-confirm button:first-of-type:hover {
   background: #f87171;
-  color: var(--app-bg-100);
+  color: #0f0d17;
 }
 
-.delete-confirm button:last-of-type { color: var(--app-text-secondary); }
+.delete-confirm button:last-of-type {
+  color: #a78bfa;
+}
+
 .delete-confirm button:last-of-type:hover {
-  background: var(--app-text-secondary);
-  color: var(--app-bg-100);
+  background: #a78bfa;
+  color: #0f0d17;
 }
 
-.event-list li:hover { border-color: #7c3aed; }
+.event-list li:hover {
+  border-color: #7c3aed;
+}
 
 .event-name {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--app-text-main);
+  color: #e2dff5;
 }
 
 .event-time {
   font-size: 0.75rem;
-  color: var(--app-text-secondary);
+  color: #a78bfa;
 }
 
 .no-events {
   font-size: 0.82rem;
-  color: var(--app-text-muted);
+  color: #6d5aad;
   margin-bottom: 16px;
 }
 
@@ -295,36 +332,37 @@
   flex-direction: column;
   gap: 10px;
   padding-top: 16px;
-  border-top: 1px solid var(--app-border);
+  border-top: 1px solid #1e1838;
 }
 
 .add-event-form h3 {
   font-size: 0.9rem;
   font-weight: bold;
-  color: var(--app-text-secondary);
+  color: #a78bfa;
   margin: 0;
   letter-spacing: 0.03em;
 }
 
 .add-event-form input {
-  background: var(--app-bg-100);
-  border: 1px solid var(--app-border-light);
+  background: #0f0d17;
+  border: 1px solid #2a2245;
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 0.85rem;
-  color: var(--app-text-main);
+  color: #e2dff5;
   outline: none;
   transition: border-color 0.15s;
 }
 
 .add-event-form input::placeholder {
-  color: var(--app-text-muted);
+  color: #4a3d7a;
 }
 
 .add-event-form input:focus {
   border-color: #7c3aed;
 }
 
+/* Chrome time picker icon color fix for dark theme */
 .add-event-form input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(0.6) sepia(1) saturate(3) hue-rotate(220deg);
 }
@@ -341,11 +379,13 @@
   transition: background 0.15s;
 }
 
-.add-event-form button:hover { background: #6d28d9; }
+.add-event-form button:hover {
+  background: #6d28d9;
+}
 
 .add-event-form button:disabled {
-  background: var(--app-bg-400);
-  color: var(--app-text-muted);
+  background: #2a2245;
+  color: #4a3d7a;
   cursor: not-allowed;
 }
 
