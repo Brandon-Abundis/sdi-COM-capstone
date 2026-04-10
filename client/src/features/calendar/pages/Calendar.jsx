@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./Calendar.css";
 import CalendarApp from "../components/CalendarApp.jsx";
 import { useAuth } from "../../../app/AuthProvider.jsx";
+import CalUpcomingEvents from "../components/CalUpcomingEvents.jsx"
 
 
 export default function Calendar() {
@@ -85,7 +86,7 @@ export default function Calendar() {
     }
   }
 
-
+  (async () => console.log(events))
   const selectedLabel = selectedDate
     ? selectedDate.toLocaleDateString("en-US", {
         month: "long",
@@ -109,25 +110,10 @@ export default function Calendar() {
   return (
     <div className="calendar-page">
        {selectedDay === null ? (<></>) : (
-        <aside className="calendar-side-panel">
-          <div className="panel-date-heading">Upcoming Events Tomorrow</div>
-
-
-            {dayEvents.length === 0 ? (
-                <p className="no-events">No events yet.</p>
-            ) : (
-              <ul className="event-list">
-                {dayEvents.map((ev) => (
-                  <li key={ev.id}>
-                    <span className="event-name">{ev.name}</span>
-                    {ev.time && <span className="event-time">{ev.time}</span>}
-                  </li>
-                ))}
-              </ul>
-            )}
-        </aside>
-        )}
-     
+          <CalUpcomingEvents 
+            selectedDay={selectedDay} 
+            events={events}
+        />)}
       <div className="calendar-box">
         <CalendarApp
           currentDate={currentDate}
