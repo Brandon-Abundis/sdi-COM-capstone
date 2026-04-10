@@ -35,7 +35,7 @@ export default function WorkoutHeatmap({ userData }) {
     return <div className="p-10 text-white/20 font-bold">Loading...</div>;
 
   return (
-    <div className="bg-[#0f0d17] p-8 rounded-3xl border border-white/5 shadow-2xl w-full flex flex-col">
+    <div className="bg-[#0f0d17] p-8 rounded-3xl border border-white/5 shadow-2xl w-full flex flex-col mb-5">
       <div className="mb-6 flex justify-between items-end">
         <div>
           <h2 className="text-white text-xl font-black tracking-tight leading-none">
@@ -46,7 +46,7 @@ export default function WorkoutHeatmap({ userData }) {
           </p>
         </div>
         <div className="text-[10px] font-black text-white/40 uppercase bg-white/5 px-3 py-1 rounded-full border border-white/5">
-          {heatmapValues().length} Workouts This Year
+          {heatmapValues().length} Active Days This Year
         </div>
       </div>
 
@@ -78,22 +78,22 @@ export default function WorkoutHeatmap({ userData }) {
               />
 
               <div
-                className="w-3 h-3 rounded-[2px] bg-[#064e3b]"
+                className="w-3 h-3 rounded-[2px] bg-[#2a2245]"
                 title="1 workout"
               />
 
               <div
-                className="w-3 h-3 rounded-[2px] bg-[#059669]"
+                className="w-3 h-3 rounded-[2px] bg-[#a78bfa]"
                 title="2 workouts"
               />
 
               <div
-                className="w-3 h-3 rounded-[2px] bg-[#10b981]"
+                className="w-3 h-3 rounded-[2px] bg-[#c084fc]"
                 title="3 workouts"
               />
 
               <div
-                className="w-3 h-3 rounded-[2px] bg-[#34d399] shadow-[0_0_8px_rgba(52,211,153,0.3)]"
+                className="w-3 h-3 rounded-[2px] bg-[#7c3aed] shadow-[0_0_3px_rgba(rgba(192, 132, 252, 0.5))]"
                 title="4+ workouts"
               />
             </div>
@@ -123,13 +123,26 @@ export default function WorkoutHeatmap({ userData }) {
           ry: 0.8;
         }
 
-        .react-calendar-heatmap .color-empty { fill: rgba(255, 255, 255, 0.03); }
-        .react-calendar-heatmap .color-scale-1 { fill: #064e3b; }
-        .react-calendar-heatmap .color-scale-2 { fill: #059669; }
-        .react-calendar-heatmap .color-scale-3 { fill: #10b981; }
-        .react-calendar-heatmap .color-scale-4 { 
-            fill: #34d399;
-            filter: drop-shadow(0 0 2px rgba(52, 211, 153, 0.2));
+        .react-calendar-heatmap .color-empty { 
+    fill: rgba(255, 255, 255, 0.05); 
+}
+
+.react-calendar-heatmap .color-scale-1 { 
+    fill: #2a2245; 
+}
+
+.react-calendar-heatmap .color-scale-2 { 
+    fill: #a78bfa; 
+}
+
+.react-calendar-heatmap .color-scale-3 { 
+    fill: #c084fc; 
+}
+
+.react-calendar-heatmap .color-scale-4 { 
+    fill: #7c3aed; 
+    filter: drop-shadow(0 0 3px rgba(192, 132, 252, 0.5));
+
         }
       `}</style>
     </div>

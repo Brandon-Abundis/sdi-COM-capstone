@@ -9,6 +9,7 @@ export default function Workouts() {
   let [allInfo, setAllInfo] = useState([]);
   let empty = "";
   let defaultString = "N/A";
+  let defaultNum = 10
   let [maxLen, setMaxLen] = useState(0);
   let currentUser = JSON.parse(localStorage.getItem("user")).email;
   console.log("start... up !");
@@ -32,20 +33,21 @@ export default function Workouts() {
                     reps,
                     notes,
                     weight,
-                    muscle_groups,
+                    muscle_group,
                     id,
                   } = data;
 
                   let currentData = {
-                    id: id,
+                    id: index,
                     title: name || defaultString,
                     type: type || defaultString,
-                    time: time || defaultString,
-                    distance: distance || defaultString,
-                    reps: reps || defaultString,
-                    muscle_groups: muscle_groups || defaultString,
-                    weight: weight || defaultString,
+                    time: Math.floor(time / 60 + 0.5) || defaultNum,
+                    distance: distance || defaultNum,
+                    reps: reps || defaultNum,
+                    muscle_group: muscle_group || defaultString,
+                    weight: weight || defaultNum,
                     notes: notes || defaultString,
+                    storedId: id,
                   };
                   setAllInfo((prev) => [...prev, currentData]);
                 });
@@ -62,7 +64,7 @@ export default function Workouts() {
     time: "45",
     distance: "N/A",
     reps: "375",
-    muscle_groups: "Arms !",
+    muscle_group: "Arms !",
     weight: "100",
     notes: "test note !",
   };
@@ -91,9 +93,18 @@ export default function Workouts() {
               time: empty,
               distance: empty,
               reps: empty,
-              muscle_groups: empty,
+              muscle_group: empty,
               weight: empty,
               notes: empty,
+              // title: empty,
+              // type: empty,
+              // time: empty,
+              // distance: empty,
+              // reps: empty,
+              // muscle_group: empty,
+              // weight: empty,
+              // notes: empty,
+              // git is being a goobr and forcing me to have this
             });
             setShowModal(true);
           }}
@@ -117,7 +128,8 @@ export default function Workouts() {
           openModal={showModal}
           closeModal={() => setShowModal(false)}
           info={editInfo}
-          key={"new"}
+          key={editInfo?.storedId ?? "new"}
+          // need key to be dynamic, or saves to unrelated components will remain
         />
       </div>
     </div>

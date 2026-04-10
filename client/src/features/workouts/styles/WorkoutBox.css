@@ -1,5 +1,7 @@
+/* please put more css in here D: */
+
 #WorkoutBox {
-  background-color: var(--app-workout-bg);
+  background-color:#1f183b;
   margin: calc(var(--spacing) * 2);
   height: calc(var(--spacing) * 70);
   width: calc(var(--spacing) * 70);

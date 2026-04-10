@@ -7,6 +7,15 @@ const { createLog } = require("../support/createLog");
 const getAll = async (req, res) => {
   try {
     const result = await db("users").select("*");
+    if (result) {
+      createLog({
+        method: "GET",
+        action: "FETCH_USERS",
+        status_code: 200,
+        user_id: null,
+        metadata: JSON.stringify(result),
+      });
+    }
     res.status(200).send(result);
   } catch (err) {
     createLog({
