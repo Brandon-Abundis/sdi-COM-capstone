@@ -4,7 +4,7 @@ import { fetchUserGoals } from "../api/userGoals";
 
 export default function GoalsWidget() {
   const { user } = useAuth();
-  const [goal, setGoal] = useState(null);
+  const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -13,7 +13,7 @@ export default function GoalsWidget() {
       if (!user?.id) return;
       try {
         const goalsData = await fetchUserGoals(user.id);
-        setGoal(goalsData);
+        setGoals(Array.isArray(goalsData) ? goalsData : []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -51,31 +51,54 @@ export default function GoalsWidget() {
   return (
     <div className="card bg-base-200 p-4">
       <h3 className="text-2xl font-semibold text-primary mb-4">Active Goals</h3>
-      {goal ? (
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <h4 className="text-lg font-bold text-secondary">{goal.name}</h4>
-            {goal.type && (
-              <p className="text-sm text-base-content capitalize">
-                {goal.type} Goal
-              </p>
-            )}
+
+      {goals.length > 0 && (
+        <p className="text-sm text-base-content/70 mb-4">
+          {goals.length} active goal{goals.length !== 1 ? "s" : ""}
+        </p>
+      )}
+
+      {goals.length > 0 ? (
+        <>
+          <div className="space-y-4 mb-4">
+            {goals.slice(0, 3).map((goal) => (
+              <div key={goal.id} className="border-l-2 border-primary pl-4">
+                <h4 className="text-lg font-bold text-secondary">
+                  {goal.name}
+                </h4>
+                {goal.type && (
+                  <p className="text-sm text-base-content capitalize">
+                    {goal.type} Goal
+                  </p>
+                )}
+                <div className="space-y-1 mt-2">
+                  {formatGoalDetail("Target Time", formatTime(goal.time))}
+                  {formatGoalDetail(
+                    "Target Distance",
+                    goal.distance ? `${goal.distance} miles` : null,
+                  )}
+                  {formatGoalDetail("Target Reps", goal.reps)}
+                  {formatGoalDetail(
+                    "Target Weight",
+                    goal.weight ? `${goal.weight} lbs` : null,
+                  )}
+                  {formatGoalDetail("Focus Area", goal.muscle_group)}
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="space-y-1">
-            {formatGoalDetail("Target Time", formatTime(goal.time))}
-            {formatGoalDetail(
-              "Target Distance",
-              goal.distance ? `${goal.distance} miles` : null,
+          <div className="flex gap-2 pt-4 border-t border-base-300">
+            {goals.length > 3 && (
+              <button className="btn btn-sm btn-outline flex-1">
+                View All Goals ({goals.length})
+              </button>
             )}
-            {formatGoalDetail("Target Reps", goal.reps)}
-            {formatGoalDetail(
-              "Target Weight",
-              goal.weight ? `${goal.weight} lbs` : null,
-            )}
-            {formatGoalDetail("Focus Area", goal.muscle_group)}
+            <button className="btn btn-sm btn-outline flex-1">
+              Add New Goal
+            </button>
           </div>
-        </div>
+        </>
       ) : (
         <p className="text-md text-base-content">No active goals.</p>
       )}
