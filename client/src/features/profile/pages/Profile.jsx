@@ -2,6 +2,7 @@ import ProfileInfo from "../Components/ProfileInfo";
 import Trophy from "../Components/Trophy";
 import WorkoutHeatmap from "../Components/HeatMap";
 import Table from "../Components/Table";
+import AvatarSelection from "../Components/AvatarSelection";
 import { useAuth } from "../../../app/AuthProvider";
 
 import { useState, useEffect } from "react";
@@ -51,6 +52,7 @@ export default function Profile() {
             </div>
             <WorkoutHeatmap userData={userData}></WorkoutHeatmap>
             <Table userData={userData}></Table>
+            {/* <AvatarSelection></AvatarSelection> */}
           </div>
         </div>
       ) : (
