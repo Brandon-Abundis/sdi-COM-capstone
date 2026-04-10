@@ -26,12 +26,30 @@ export function AuthProvider({ children }) {
     restoreSession();
   }, []);
 
-  // Login - using local storage with fake user for now, but will call backend later
-  const login = async (fakeUser) => {
+  const BASE_URL = "http://localhost:8080";
+
+  // Login with backend authentication
+  const login = async (credentials) => {
     setLoading(true);
     try {
-      setUser(fakeUser);
-      localStorage.setItem("user", JSON.stringify(fakeUser));
+      const response = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to log in");
+      }
+
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      return data;
     } catch (err) {
       throw err;
     } finally {
@@ -45,12 +63,27 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("user");
   };
 
-  // Signup - same as login for now
-  const signup = async (fakeUser) => {
+  // Signup with backend authentication
+  const signup = async (credentials) => {
     setLoading(true);
     try {
-      setUser(fakeUser);
-      localStorage.setItem("user", JSON.stringify(fakeUser));
+      const response = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to create account");
+      }
+
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      return data;
     } catch (err) {
       throw err;
     } finally {

@@ -1,3 +1,137 @@
+import WorkoutBox from "../components/WorkoutBox";
+import AddWorkout from "../components/AddWorkout";
+import Modal from "../components/Modal";
+import { useState, useEffect } from "react";
+
 export default function Workouts() {
-  return <h1>Workouts</h1>;
+  let [showModal, setShowModal] = useState(false);
+  let [editInfo, setEditInfo] = useState(null);
+  let [allInfo, setAllInfo] = useState([]);
+  let empty = "";
+  let defaultString = "N/A";
+  let defaultNum = 10
+  let [maxLen, setMaxLen] = useState(0);
+  let currentUser = JSON.parse(localStorage.getItem("user")).email;
+  console.log("start... up !");
+
+  useEffect(() => {
+    fetch("http://localhost:8080/users/")
+      .then((data) => data.json())
+      .then((data) =>
+        data.forEach((user) => {
+          if (user.email == currentUser) {
+            fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
+              .then((data) => data.json())
+              .then((dataArray) => {
+                setMaxLen(dataArray.length);
+                dataArray.forEach((data, index) => {
+                  let {
+                    name,
+                    type,
+                    time,
+                    distance,
+                    reps,
+                    notes,
+                    weight,
+                    muscle_group,
+                    id,
+                  } = data;
+
+                  let currentData = {
+                    id: index,
+                    title: name || defaultString,
+                    type: type || defaultString,
+                    time: Math.floor(time / 60 + 0.5) || defaultNum,
+                    distance: distance || defaultNum,
+                    reps: reps || defaultNum,
+                    muscle_group: muscle_group || defaultString,
+                    weight: weight || defaultNum,
+                    notes: notes || defaultString,
+                    storedId: id,
+                  };
+                  setAllInfo((prev) => [...prev, currentData]);
+                });
+              });
+          }
+        }),
+      );
+  }, []);
+
+  let info = {
+    id: 10000,
+    title: "thisisaTest thisisaTest",
+    type: "strength",
+    time: "45",
+    distance: "N/A",
+    reps: "375",
+    muscle_group: "Arms !",
+    weight: "100",
+    notes: "test note !",
+  };
+
+  if (maxLen === null || allInfo.length !== maxLen) {
+    return <h2> Loading ! </h2>;
+  }
+  return (
+    <div>
+      <div>
+        <h1
+          className={
+            "text-3xl font-bold text-primary mb-6 ml-7 mt-6 tracking-wide"
+          }
+        >
+          {" "}
+          WORKOUTS{" "}
+        </h1>
+      </div>
+      <div id={"workoutArea"} className={"p-4 grid grid-cols-4"}>
+        <AddWorkout
+          onClick={() => {
+            setEditInfo({
+              title: empty,
+              type: empty,
+              time: empty,
+              distance: empty,
+              reps: empty,
+              muscle_group: empty,
+              weight: empty,
+              notes: empty,
+              // title: empty,
+              // type: empty,
+              // time: empty,
+              // distance: empty,
+              // reps: empty,
+              // muscle_group: empty,
+              // weight: empty,
+              // notes: empty,
+              // git is being a goobr and forcing me to have this
+            });
+            setShowModal(true);
+          }}
+        />
+
+        {allInfo.map((elem, index) => {
+          return (
+            <WorkoutBox
+              details={elem}
+              onClick={() => {
+                console.log(elem);
+                setEditInfo(allInfo[index]);
+                setShowModal(true);
+              }}
+              key={index}
+            />
+          );
+        })}
+
+        <Modal
+          openModal={showModal}
+          closeModal={() => setShowModal(false)}
+          info={editInfo}
+          key={editInfo?.storedId ?? "new"}
+          // need key to be dynamic, or saves to unrelated components will remain
+        />
+      </div>
+    </div>
+  );
 }

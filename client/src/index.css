@@ -1,4 +1,294 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: business;
+@plugin "daisyui";
+
+/* ══════════════════════════════════════════════
+   SELECTION HIGHLIGHT
+   Browser default blue selection is unreadable
+   against dark text in light mode.
+══════════════════════════════════════════════ */
+
+[data-theme="nightshade"] ::selection {
+  background-color: rgba(124, 58, 237, 0.4);
+  color: #ffffff;
 }
+
+[data-theme="nightshade-light"] ::selection {
+  background-color: rgba(124, 58, 237, 0.2);
+  color: #1a0842;
+}
+
+/* ══════════════════════════════════════════════
+   DAISYUI THEMES
+══════════════════════════════════════════════ */
+
+@plugin "daisyui/theme" {
+  name: "nightshade";
+  default: true;
+
+  --color-base-100: #0f0d17;
+  --color-base-200: #16112a;
+  --color-base-300: #1e1838;
+  --color-base-content: #e2dff5;
+
+  --color-primary: #7c3aed;
+  --color-primary-content: #ffffff;
+  --color-secondary: #a78bfa;
+  --color-secondary-content: #0f0d17;
+  --color-accent: #c084fc;
+  --color-accent-content: #0f0d17;
+  --color-neutral: #2a2245;
+  --color-neutral-content: #e2dff5;
+
+  --color-info: #818cf8;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
+
+  --radius-box: 0.75rem;
+  --radius-btn: 0.5rem;
+  --radius-badge: 1rem;
+}
+
+@plugin "daisyui/theme" {
+  name: "nightshade-light";
+
+  /* Light lavender backgrounds — noticeably lighter than before,
+     but with deep purple text so contrast pops like dark mode */
+  --color-base-100: #d4cfe8;
+  --color-base-200: #c8c2de;
+  --color-base-300: #b8b2d0;
+  --color-base-content: #1a0842;
+
+  --color-primary: #7c3aed;
+  --color-primary-content: #ffffff;
+  --color-secondary: #6d28d9;
+  --color-secondary-content: #ffffff;
+  --color-accent: #9333ea;
+  --color-accent-content: #ffffff;
+  --color-neutral: #a89ec8;
+  --color-neutral-content: #1a0842;
+
+  --color-info: #4f46e5;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+
+  --radius-box: 0.75rem;
+  --radius-btn: 0.5rem;
+  --radius-badge: 1rem;
+}
+
+/* ══════════════════════════════════════════════
+   APP CSS CUSTOM PROPERTIES
+   Defined on both themes — every CSS file that
+   uses var(--app-*) updates automatically on toggle.
+══════════════════════════════════════════════ */
+
+[data-theme="nightshade"] {
+  --app-bg-100:    #0f0d17;
+  --app-bg-200:    #16112a;
+  --app-bg-300:    #1e1838;
+  --app-bg-400:    #2a2245;
+  --app-bg-sidebar: #120e22;
+  --app-bg-error:  #2a1a1a;
+  --app-bg-selected: #2a1a5e;
+
+  --app-text-main:      #e2dff5;
+  --app-text-secondary: #a78bfa;
+  --app-text-accent:    #c084fc;
+  --app-text-muted:     #6d5aad;
+
+  --app-border:       #1e1838;
+  --app-border-light: #2a2245;
+  --app-border-event: #3b2d6e;
+
+  --app-event-tab-bg:     #2a2245;
+  --app-event-tab-border: #3b2d6e;
+
+  --app-workout-bg:    #6045cd;
+  --app-workout-title: #21003d;
+  --app-workout-body:  #220d23;
+  --app-workout-text:  #aa80f2;
+  --app-workout-border: #240014;
+  --app-workout-title-border: #9e65ff;
+}
+
+[data-theme="nightshade-light"] {
+  /* Backgrounds — light lavender that doesn't bleach, steps clearly between layers */
+  --app-bg-100:    #d4cfe8;
+  --app-bg-200:    #c8c2de;
+  --app-bg-300:    #b8b2d0;
+  --app-bg-400:    #a89ec8;
+  --app-bg-sidebar: #cdc7e2;
+  --app-bg-error:  #e8c8cc;
+  --app-bg-selected: #a78bfa30;
+
+  /* Text — deep purple on light = strong contrast, mirrors dark mode's vivid-on-dark */
+  --app-text-main:      #1a0842;
+  --app-text-secondary: #7c3aed;
+  --app-text-accent:    #9333ea;
+  --app-text-muted:     #6d5aad;
+
+  /* Borders — visible but not harsh */
+  --app-border:       #a89ec8;
+  --app-border-light: #9890c0;
+  --app-border-event: #7c3aed;
+
+  /* Event tabs — purple badge on lighter bg, stays vivid */
+  --app-event-tab-bg:     #ede9f8;
+  --app-event-tab-border: #7c3aed;
+
+  /* Workouts */
+  --app-workout-bg:    #7c3aed;
+  --app-workout-title: #ede9f8;
+  --app-workout-body:  #ddd8f4;
+  --app-workout-text:  #1a0842;
+  --app-workout-border: #7c3aed;
+  --app-workout-title-border: #9333ea;
+}
+
+/* ══════════════════════════════════════════════
+   TAILWIND ARBITRARY-VALUE OVERRIDES (light mode)
+   For inline Tailwind classes that bypass CSS variables.
+   Specificity 0,2,0 beats plain class 0,1,0.
+══════════════════════════════════════════════ */
+
+/* Backgrounds */
+[data-theme="nightshade-light"] .bg-\[\#0f0d17\] { background-color: var(--app-bg-100); }
+[data-theme="nightshade-light"] .bg-\[\#16112a\] { background-color: var(--app-bg-200); }
+[data-theme="nightshade-light"] .bg-\[\#1e1838\] { background-color: var(--app-bg-300); }
+[data-theme="nightshade-light"] .bg-\[\#2a2245\] { background-color: var(--app-bg-400); }
+[data-theme="nightshade-light"] .bg-\[\#120e22\] { background-color: var(--app-bg-sidebar); }
+[data-theme="nightshade-light"] .bg-\[\#2a1a1a\] { background-color: var(--app-bg-error); }
+
+/* WorkoutBox specific */
+[data-theme="nightshade-light"] .bg-\[\#21003d\] { background-color: var(--app-workout-title); }
+[data-theme="nightshade-light"] .bg-\[\#220d23\] { background-color: var(--app-workout-body); }
+[data-theme="nightshade-light"] .bg-black        { background-color: var(--app-bg-400); }
+
+/* ── Text: main palette ─────────────────────────────────── */
+[data-theme="nightshade-light"] .text-\[\#e2dff5\]    { color: var(--app-text-main); }
+[data-theme="nightshade-light"] .text-\[\#a78bfa\]    { color: var(--app-text-secondary); }
+[data-theme="nightshade-light"] .text-\[\#c084fc\]    { color: var(--app-text-accent); }
+[data-theme="nightshade-light"] .text-\[\#7c3aed\]    { color: #7c3aed; }
+[data-theme="nightshade-light"] .text-\[\#6d5aad\]    { color: var(--app-text-muted); }
+
+/* ── Text: opacity variants of #e2dff5 ──────────────────── */
+[data-theme="nightshade-light"] .text-\[\#e2dff5\]\/10 { color: rgb(26 8 66 / 10%); }
+[data-theme="nightshade-light"] .text-\[\#e2dff5\]\/20 { color: rgb(26 8 66 / 20%); }
+[data-theme="nightshade-light"] .text-\[\#e2dff5\]\/30 { color: rgb(26 8 66 / 30%); }
+[data-theme="nightshade-light"] .text-\[\#e2dff5\]\/40 { color: rgb(26 8 66 / 40%); }
+[data-theme="nightshade-light"] .text-\[\#e2dff5\]\/50 { color: rgb(26 8 66 / 50%); }
+[data-theme="nightshade-light"] .text-\[\#e2dff5\]\/60 { color: rgb(26 8 66 / 60%); }
+[data-theme="nightshade-light"] .text-\[\#e2dff5\]\/70 { color: rgb(26 8 66 / 70%); }
+[data-theme="nightshade-light"] .text-\[\#e2dff5\]\/80 { color: rgb(26 8 66 / 80%); }
+
+/* ── Text: white and white opacity variants ─────────────── */
+/* text-white is mainly used on bg-[#7c3aed] buttons — dark purple
+   on vivid purple still reads clearly and stays on-brand.          */
+[data-theme="nightshade-light"] .text-white      { color: var(--app-text-main); }
+[data-theme="nightshade-light"] .text-white\/10  { color: rgb(26 8 66 / 10%); }
+[data-theme="nightshade-light"] .text-white\/20  { color: rgb(26 8 66 / 20%); }
+[data-theme="nightshade-light"] .text-white\/30  { color: rgb(26 8 66 / 30%); }
+[data-theme="nightshade-light"] .text-white\/40  { color: rgb(26 8 66 / 40%); }
+[data-theme="nightshade-light"] .text-white\/50  { color: rgb(26 8 66 / 50%); }
+[data-theme="nightshade-light"] .text-white\/60  { color: rgb(26 8 66 / 60%); }
+[data-theme="nightshade-light"] .text-white\/70  { color: rgb(26 8 66 / 70%); }
+[data-theme="nightshade-light"] .text-white\/80  { color: rgb(26 8 66 / 80%); }
+
+/* ── Text: status colours — darken for light bg readability  */
+[data-theme="nightshade-light"] .text-\[\#34d399\] { color: #065f46; }  /* green → dark green */
+[data-theme="nightshade-light"] .text-\[\#f87171\] { color: #991b1b; }  /* red → dark red */
+[data-theme="nightshade-light"] .text-\[\#fbbf24\] { color: #92400e; }  /* amber → dark amber */
+
+/* ── Placeholder ─────────────────────────────────────────── */
+[data-theme="nightshade-light"] .placeholder-\[\#e2dff5\]\/30::placeholder { color: rgb(26 8 66 / 35%); }
+
+/* ── Borders ─────────────────────────────────────────────── */
+[data-theme="nightshade-light"] .border-\[\#1e1838\]  { border-color: var(--app-border); }
+[data-theme="nightshade-light"] .border-\[\#2a2245\]  { border-color: var(--app-border-light); }
+[data-theme="nightshade-light"] .border-\[\#7c3aed\]  { border-color: #7c3aed; }
+[data-theme="nightshade-light"] .border-\[\#240014\]  { border-color: var(--app-workout-border); }
+[data-theme="nightshade-light"] .border-\[\#9e65ff\]  { border-color: var(--app-workout-title-border); }
+[data-theme="nightshade-light"] .border-\[\#34d399\]  { border-color: #059669; }
+[data-theme="nightshade-light"] .border-\[\#f87171\]  { border-color: #dc2626; }
+
+/* ── Semi-transparent badge backgrounds ─────────────────── */
+[data-theme="nightshade-light"] .bg-\[\#7c3aed\]\/20  { background-color: rgb(124 58 237 / 15%); }
+[data-theme="nightshade-light"] .bg-\[\#34d399\]\/20  { background-color: rgb(6 95 70 / 15%); }
+[data-theme="nightshade-light"] .bg-\[\#f87171\]\/20  { background-color: rgb(153 27 27 / 15%); }
+[data-theme="nightshade-light"] .bg-\[\#2a2245\]\/20  { background-color: rgb(26 8 66 / 10%); }
+[data-theme="nightshade-light"] .bg-\[\#1e1838\]\/20  { background-color: rgb(26 8 66 / 8%); }
+
+/* ── Message bubble (chat) ───────────────────────────────── */
+/* Own messages use bg-[#7c3aed] — keep purple, switch text to white for contrast */
+[data-theme="nightshade-light"] .bg-\[\#7c3aed\] .text-white,
+[data-theme="nightshade-light"] .bg-\[\#7c3aed\].text-white { color: #ffffff; }
+
+/* ── Misc ────────────────────────────────────────────────── */
+[data-theme="nightshade-light"] .bg-white      { background-color: var(--app-bg-400); }
+[data-theme="nightshade-light"] .text-gray-900 { color: var(--app-text-main); }
+[data-theme="nightshade-light"] .text-gray-400 { color: #5b4a8a; }
+
+/* ── white/opacity backgrounds & borders (any remaining hardcoded uses) ─ */
+[data-theme="nightshade-light"] .bg-white\/5          { background-color: rgb(26 8 66 / 5%); }
+[data-theme="nightshade-light"] .bg-white\/10         { background-color: rgb(26 8 66 / 8%); }
+[data-theme="nightshade-light"] .border-white\/5      { border-color: rgb(26 8 66 / 15%); }
+[data-theme="nightshade-light"] .divide-white\/5 > * + * { border-color: rgb(26 8 66 / 15%); }
+
+/* ── HeatMap: SVG day labels & cell colors ────────────────── */
+/* The component injects an inline <style> with white fills;
+   these rules override it with !important for light mode.     */
+[data-theme="nightshade-light"] .yearly-heatmap-container text {
+  fill: rgba(26, 8, 66, 0.45) !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-empty {
+  fill: rgba(26, 8, 66, 0.07) !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-scale-1 {
+  fill: #ddd8f5 !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-scale-2 {
+  fill: #a78bfa !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-scale-3 {
+  fill: #7c3aed !important;
+}
+[data-theme="nightshade-light"] .react-calendar-heatmap .color-scale-4 {
+  fill: #4c1d95 !important;
+  filter: drop-shadow(0 0 3px rgba(124, 58, 237, 0.4)) !important;
+}
+
+/* ══════════════════════════════════════════════
+   COMPACT CARDS
+══════════════════════════════════════════════ */
+
+[data-compact="true"] .card-body { padding: 0.5rem; }
+
+/* ══════════════════════════════════════════════
+   SIDEBAR — dynamic via CSS vars
+══════════════════════════════════════════════ */
+
+.sidebar {
+  background-color: var(--app-bg-sidebar);
+  border-right: 1px solid var(--app-border);
+}
+
+/* ══════════════════════════════════════════════
+   LEADERBOARD — dynamic via CSS vars
+══════════════════════════════════════════════ */
+
+#PT_Scores,
+#Two_Mile,
+#Push-Ups,
+#Sit-Ups,
+#Minutes {
+  background-color: var(--app-bg-200);
+  border: 1px solid var(--app-border);
+  border-radius: 0.75rem;
+  color: var(--app-text-main);
+  padding: 1rem;
+}
+
+#LBs h1 { text-decoration: none; font-weight: bold; justify-self: center; }
+#LBs h2 { font-weight: bold; justify-self: center; }

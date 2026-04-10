@@ -1,0 +1,21 @@
+#LBs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  justify-self: center;
+}
+#PT_Scores {
+  justify-self: center;
+  grid-row: 1/1;
+  grid-column: 1/4;
+  margin: 5px;
+}
+#Small_LBs {
+  display: grid;
+  grid-row: 2/3;
+  grid-column: 1/4;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(1);
+  gap: 5em;
+  margin: 5px;
+}
