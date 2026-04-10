@@ -1,13 +1,16 @@
 import "./Leaderboard.css";
 import { useState, useEffect, useMemo } from "react";
+import { useAuth } from "../../../app/AuthProvider";
 
 export default function Leaderboard() {
   //const user = [ (user:pt score, push ups, situps, minutes, 2 mile)]
   // use .sort to organize by score asc -> desc
   //Fetch for user scores will go here
+  const [UserData, setUserData] = useState();
   const [users, setUsers] = useState();
   const [scores, setScores] = useState();
   const [merged, setMerged] = useState();
+  const { user, logout } = useAuth();
 
   // useEffect(() => {
   //   fetch(`http://localhost:8080/scores`)
@@ -23,6 +26,15 @@ export default function Leaderboard() {
   //       console.log(data);
   //     });
   // }, []);
+  useEffect(() => {
+    fetch(`http://localhost:8080/users/id/${user.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUserData(data);
+      });
+  }, [user]);
+  console.log(user);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,6 +64,12 @@ export default function Leaderboard() {
   }, []);
   console.log(merged);
 
+  // function onBoard() {
+  //   const Alert = () => {
+  //     alert("Congratulations! You made it on the Leaderboard!");
+  //   };
+  // }
+
   if (!users && !scores) return <h1>Loading Leaderboards...</h1>;
   return (
     <>
@@ -69,6 +87,8 @@ export default function Leaderboard() {
                 <li key={merge.id}>
                   {merge.rank} {merge.last_name}:{" "}
                   {((merge.score / 20) * 1.27).toFixed(0)}
+                  {UserData.id === merge.id &&
+                    alert("Congratulations! You made it on the Leaderboard!")}
                 </li>
               ))}
           </ol>
@@ -86,6 +106,8 @@ export default function Leaderboard() {
                   <li key={merge.id}>
                     {merge.rank} {merge.last_name}:{" "}
                     {(merge.score / 17.5).toFixed(2)} Minutes
+                    {UserData.id === merge.id &&
+                      alert("Congratulations! You made it on the Leaderboard!")}
                   </li>
                 ))}
             </ol>
@@ -102,6 +124,8 @@ export default function Leaderboard() {
                   <li key={merge.id}>
                     {merge.rank} {merge.last_name}:{" "}
                     {(merge.score / 22).toFixed(0)} Reps
+                    {UserData.id === merge.id &&
+                      alert("Congratulations! You made it on the Leaderboard!")}
                   </li>
                 ))}
             </ol>
@@ -118,6 +142,8 @@ export default function Leaderboard() {
                   <li key={merge.id}>
                     {merge.rank} {merge.last_name}:{" "}
                     {(merge.score / 22).toFixed(0)} Reps
+                    {UserData.id === merge.id &&
+                      alert("Congratulations! You made it on the Leaderboard!")}
                   </li>
                 ))}
             </ol>
@@ -134,12 +160,13 @@ export default function Leaderboard() {
                   <li key={merge.id}>
                     {merge.rank} {merge.last_name}:{" "}
                     {(merge.score / 7).toFixed(2)} Minutes
+                    {UserData.id === merge.id &&
+                      alert("Congratulations! You made it on the Leaderboard!")}
                   </li>
                 ))}
             </ol>
           </div>
         </div>
-        <h2>Pop up for making it on the leaderboard goes here!</h2>
       </div>
     </>
   );
