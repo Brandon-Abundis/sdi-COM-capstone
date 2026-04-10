@@ -152,4 +152,21 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, login };
+// added for cookie session!!!!!!!!!!!! (brandon)
+const logout = async (req, res) => {
+  try {
+    res.clearCookie('userId', {
+      signed: true,
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax'
+    });
+    createLog({method: "POST",action: "LOGOUT",status_code: 201,user_id: user.id,metadata: JSON.stringify(user),});
+    res.status(200).json({ message: "Logged out successfully" });
+  }catch(err){
+    createLog({method: "POST",action: "LOGOUT",status_code: 500,user_id: null,metadata: err,});
+    res.status(500).json({ message: err.message });
+  }
+}
+
+module.exports = { registerUser, login, logout };
