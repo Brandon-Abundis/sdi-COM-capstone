@@ -45,11 +45,12 @@ export default function Trophy({ userData }) {
             {userData.xp}/{level_up} XP
           </span>
         </div>
-        <progress
-          className="progress progress-primary w-full h-2 shadow-inner"
-          value={userData.xp}
-          max={level_up}
-        ></progress>
+        <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden shadow-inner">
+          <div
+            className="h-full bg-gradient-to-r from-secondary to-primary rounded-full transition-all duration-1000 ease-out"
+            style={{ width: `${(userData.xp / level_up) * 100}%` }}
+          ></div>
+        </div>
       </div>
 
       <div id="Titles" className="flex-1">

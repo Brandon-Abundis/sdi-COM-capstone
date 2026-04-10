@@ -101,7 +101,7 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
                       </div>
                       <input
                         type="number"
-                        className="input input-bordered input-xs border-primary/40 font-bold text-lg text-primary h-auto w-full focus:bg-base-300"
+                        className="input input-bordered input-xs border-primary/40 font-bold text-lg text-secondary h-auto w-full focus:bg-base-300"
                         value={formData.age}
                         onChange={(e) =>
                           setFormData({ ...formData, age: e.target.value })
@@ -133,6 +133,9 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
                       <h2 className="card-title text-2xl font-black">
                         {userData.first_name} {userData.last_name}
                       </h2>
+                      <div className="card-title text-l font-black">
+                        {userData.username}
+                      </div>
                       <div className="mt-1">
                         <span className="badge badge-primary badge-outline rounded-full px-3 font-bold text-[10px] uppercase tracking-widest">
                           {userData.rank}
@@ -154,7 +157,7 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
                       <div className="stat-title text-[10px] uppercase font-bold">
                         Age
                       </div>
-                      <div className="stat-value text-lg text-primary">
+                      <div className="stat-value text-lg text-secondary">
                         {userData.age}
                       </div>
                     </div>
@@ -162,7 +165,7 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
                       <div className="stat-title text-[10px] uppercase font-bold">
                         Gender
                       </div>
-                      <div className="stat-value text-lg text-primary">
+                      <div className="stat-value text-lg text-secondary">
                         {userData.gender}
                       </div>
                     </div>

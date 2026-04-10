@@ -168,7 +168,7 @@ export default function ProfileInfo({ userData, setUserData }) {
                         </div>
                         <input
                           type="number"
-                          className="input input-bordered input-xs border-primary/40 font-bold text-lg text-primary h-auto w-full focus:bg-base-300"
+                          className="input input-bordered input-xs border-primary/40 font-bold text-lg text-secondary h-auto w-full focus:bg-base-300"
                           value={formData.age}
                           onChange={(e) =>
                             setFormData({ ...formData, age: e.target.value })
@@ -181,7 +181,7 @@ export default function ProfileInfo({ userData, setUserData }) {
                         </div>
                         <input
                           type="text"
-                          className="input input-bordered input-xs border-primary/40 font-bold text-s h-auto w-full focus:bg-base-300"
+                          className="input input-bordered input-xs border-primary/40 font-bold text-s h-auto w-full focus:bg-base-300 text-secondary"
                           value={formData.gender}
                           onChange={(e) =>
                             setFormData({
@@ -224,7 +224,7 @@ export default function ProfileInfo({ userData, setUserData }) {
                         <div className="stat-title text-[10px] uppercase font-bold">
                           Age
                         </div>
-                        <div className="stat-value text-lg text-primary">
+                        <div className="stat-value text-lg text-secondary">
                           {userData.age}
                         </div>
                       </div>
@@ -232,7 +232,7 @@ export default function ProfileInfo({ userData, setUserData }) {
                         <div className="stat-title text-[10px] uppercase font-bold">
                           Gender
                         </div>
-                        <div className="stat-value text-lg text-primary">
+                        <div className="stat-value text-lg text-secondary">
                           {userData.gender}
                         </div>
                       </div>
