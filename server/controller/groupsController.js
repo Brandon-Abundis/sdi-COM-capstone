@@ -101,6 +101,41 @@ const getWorkoutsById = async (req, res) => {
   }
 };
 
+const createGroupEvent = async (req, res) => {
+  const { name, start_date, end_date, start_time, end_time, group_id } = req.body;
+  if (!name || !start_date || !group_id)
+    return res.status(400).json({ message: "name, start_date, and group_id are required" });
+  try {
+    const [event] = await db("group_events")
+      .insert({
+        name,
+        start_date,
+        end_date: end_date || start_date,
+        start_time: start_time || null,
+        end_time: end_time || null,
+        group_id,
+      })
+      .returning("*");
+    createLog({
+      method: "POST",
+      action: "CREATE_GROUP_EVENT",
+      status_code: 201,
+      user_id: null,
+      metadata: JSON.stringify(event),
+    });
+    res.status(201).json(event);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "CREATE_GROUP_EVENT",
+      status_code: 500,
+      user_id: null,
+      metadata: err,
+    });
+    res.status(500).json({ message: String(err) });
+  }
+};
+
 const createGroup = async (req, res) => {
   const { name, user_id } = req.body;
   if (!name?.trim())
@@ -252,6 +287,7 @@ module.exports = {
   getGoalsById,
   getWorkoutsById,
   getEventsById,
+  createGroupEvent,
   createGroup,
   joinGroup,
   leaveGroup,

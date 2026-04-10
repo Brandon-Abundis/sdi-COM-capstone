@@ -5,6 +5,7 @@ const {
   getGoalsById,
   getWorkoutsById,
   getEventsById,
+  createGroupEvent,
   createGroup,
   joinGroup,
   leaveGroup,
@@ -17,6 +18,7 @@ router.get("/id/:id", getById);
 router.get("/group_goals/id/:id", getGoalsById);
 router.get("/group_workouts/id/:id", getWorkoutsById);
 router.get("/group_events/id/:id", getEventsById);
+router.post("/group_events", createGroupEvent);
 router.post("/", createGroup);
 router.patch("/:id/join", joinGroup);
 router.patch("/:id/leave", leaveGroup);

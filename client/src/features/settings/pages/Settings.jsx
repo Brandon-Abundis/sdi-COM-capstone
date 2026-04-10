@@ -1,13 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "../../../app/AuthProvider.jsx";
-
-const ACCENT_OPTIONS = [
-  { label: "Purple",  value: "purple",  bg: "#7c3aed", text: "#c084fc" },
-  { label: "Blue",    value: "blue",    bg: "#2563eb", text: "#93c5fd" },
-  { label: "Emerald", value: "emerald", bg: "#059669", text: "#6ee7b7" },
-  { label: "Rose",    value: "rose",    bg: "#e11d48", text: "#fda4af" },
-  { label: "Amber",   value: "amber",   bg: "#d97706", text: "#fcd34d" },
-];
 
 function Section({ title, children }) {
   return (
@@ -35,30 +27,36 @@ function Row({ label, sub, children }) {
 export default function Settings() {
   const { user } = useAuth();
 
-  const [accent, setAccent] = useState(
-    () => localStorage.getItem("setting_accent") ?? "purple"
-  );
-  const [reducedMotion, setReducedMotion] = useState(
-    () => localStorage.getItem("setting_reduced_motion") === "true"
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("setting_theme") ?? "nightshade"
   );
   const [compactCards, setCompactCards] = useState(
     () => localStorage.getItem("setting_compact_cards") === "true"
   );
-  const [showXP, setShowXP] = useState(
-    () => localStorage.getItem("setting_show_xp") !== "false"
-  );
   const [saved, setSaved] = useState(false);
 
+  function applyTheme(value) {
+    setTheme(value);
+    document.documentElement.setAttribute("data-theme", value);
+  }
+
+  function applyCompact(value) {
+    setCompactCards(value);
+    if (value) {
+      document.documentElement.setAttribute("data-compact", "true");
+    } else {
+      document.documentElement.removeAttribute("data-compact");
+    }
+  }
+
   function handleSave() {
-    localStorage.setItem("setting_accent", accent);
-    localStorage.setItem("setting_reduced_motion", reducedMotion);
+    localStorage.setItem("setting_theme", theme);
     localStorage.setItem("setting_compact_cards", compactCards);
-    localStorage.setItem("setting_show_xp", showXP);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   }
 
-  const currentAccent = ACCENT_OPTIONS.find((o) => o.value === accent) ?? ACCENT_OPTIONS[0];
+  const isDark = theme === "nightshade";
 
   return (
     <div className="min-h-screen bg-[#0f0d17] p-6 max-w-2xl mx-auto flex flex-col gap-6">
@@ -95,83 +93,56 @@ export default function Settings() {
           </span>
         </Row>
         <Row label="XP">
-          <span className="text-sm text-[#a78bfa] font-bold">{user?.xp?.toLocaleString() ?? 0} XP</span>
+          <span className="text-sm text-[#a78bfa] font-bold">
+            {user?.xp?.toLocaleString() ?? 0} XP
+          </span>
         </Row>
       </Section>
 
-      {/* Graphic Settings */}
-      <Section title="Graphic Settings">
-        <Row label="Accent Color" sub="Changes highlight color across the app">
-          <div className="flex gap-2">
-            {ACCENT_OPTIONS.map((opt) => (
-              <button
-                key={opt.value}
-                title={opt.label}
-                onClick={() => setAccent(opt.value)}
-                className="w-6 h-6 rounded-full border-2 transition-transform hover:scale-110"
-                style={{
-                  backgroundColor: opt.bg,
-                  borderColor: accent === opt.value ? "#fff" : "transparent",
-                }}
-              />
-            ))}
+      {/* Display Settings */}
+      <Section title="Display">
+        <Row label="Theme" sub="Switch between dark and light mode">
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-[#e2dff5]/50">{isDark ? "🌙 Dark" : "☀️ Light"}</span>
+            <input
+              type="checkbox"
+              className="toggle toggle-sm toggle-primary"
+              checked={!isDark}
+              onChange={(e) => applyTheme(e.target.checked ? "nightshade-light" : "nightshade")}
+            />
           </div>
         </Row>
 
-        <Row
-          label="Reduced Motion"
-          sub="Disables transition animations"
-        >
+        <Row label="Compact Cards" sub="Reduces padding on cards throughout the app">
           <input
             type="checkbox"
-            className="toggle toggle-sm"
-            checked={reducedMotion}
-            onChange={(e) => setReducedMotion(e.target.checked)}
-          />
-        </Row>
-
-        <Row
-          label="Compact Cards"
-          sub="Reduces padding on event and workout cards"
-        >
-          <input
-            type="checkbox"
-            className="toggle toggle-sm"
+            className="toggle toggle-sm toggle-primary"
             checked={compactCards}
-            onChange={(e) => setCompactCards(e.target.checked)}
+            onChange={(e) => applyCompact(e.target.checked)}
           />
         </Row>
 
-        <Row
-          label="Show XP on Profile"
-          sub="Displays your XP total publicly"
-        >
-          <input
-            type="checkbox"
-            className="toggle toggle-sm"
-            checked={showXP}
-            onChange={(e) => setShowXP(e.target.checked)}
-          />
-        </Row>
-
-        {/* Preview swatch */}
-        <div
-          className="mt-2 rounded-lg p-3 text-xs font-semibold border"
-          style={{
-            backgroundColor: `${currentAccent.bg}18`,
-            borderColor: `${currentAccent.bg}55`,
-            color: currentAccent.text,
-          }}
-        >
-          Preview — {currentAccent.label} accent selected
+        {/* Live preview */}
+        <div className="mt-1 grid grid-cols-2 gap-3">
+          <div className="card bg-[#1e1838] border border-[#2a2245] rounded-xl">
+            <div className="card-body">
+              <p className="text-xs font-semibold text-[#c084fc]">Card preview</p>
+              <p className="text-xs text-[#e2dff5]/60">This is what a card looks like with current settings.</p>
+            </div>
+          </div>
+          <div className="card bg-[#1e1838] border border-[#2a2245] rounded-xl">
+            <div className="card-body">
+              <p className="text-xs font-semibold text-[#c084fc]">Another card</p>
+              <p className="text-xs text-[#e2dff5]/60">Padding shrinks when compact mode is on.</p>
+            </div>
+          </div>
         </div>
       </Section>
 
       {/* Save */}
       <button
         onClick={handleSave}
-        className="btn w-full rounded-xl font-bold text-white border-0"
-        style={{ backgroundColor: currentAccent.bg }}
+        className="btn w-full bg-[#7c3aed] hover:bg-[#6d28d9] rounded-xl font-bold text-white border-0"
       >
         {saved ? "✓ Saved!" : "Save Settings"}
       </button>

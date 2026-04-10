@@ -44,7 +44,7 @@ export default function UpcomingEvents() {
       .then((results) => {
         const future = results
           .flat()
-          .filter((e) => getDaysUntil(e.date) > 0)
+          .filter((e) => getDaysUntil(e.start_date) > 0)
           .sort((a, b) => new Date(a.date) - new Date(b.date));
         setAllEvents(future);
       })
@@ -54,7 +54,7 @@ export default function UpcomingEvents() {
 
   // Filter in render so admin check always uses the latest auth state
   const events = user?.is_admin
-    ? allEvents.filter((e) => getDaysUntil(e.date) <= 7).slice(0, 5)
+    ? allEvents.filter((e) => getDaysUntil(e.start_date) <= 7).slice(0, 5)
     : allEvents;
 
   return (
@@ -73,7 +73,7 @@ export default function UpcomingEvents() {
       )}
 
       {events.map((event) => {
-        const days = getDaysUntil(event.date);
+        const days = getDaysUntil(event.start_date);
         return (
           <div
             key={event.id}
@@ -82,7 +82,7 @@ export default function UpcomingEvents() {
             <div className="space-y-0.5">
               <p className="text-sm font-semibold text-[#e2dff5]">{event.name}</p>
               <p className="text-xs text-[#e2dff5]/50">
-                {formatDate(event.date)} · {formatTime(event.time)}
+                {formatDate(event.start_date)} · {formatTime(event.start_time)}
               </p>
             </div>
             <span className="text-xs font-bold flex-shrink-0 px-2 py-1 rounded-md bg-[#1e1838] text-[#a78bfa] border border-[#7c3aed]">

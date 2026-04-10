@@ -41,9 +41,12 @@ export default function ModalContent({ cancel, info }) {
         </h2>
         <div
           id="inputList"
-          className={
-            "border-2 border-[#1e1838] rounded-lg gap-2 bg-[#16112a] w-160 h-200 flex flex-col items-center justify-center text-[#a78bfa] font-bold "
-          }
+          style={{
+            backgroundColor: "var(--app-bg-200)",
+            borderColor: "var(--app-border)",
+            color: "var(--app-text-secondary)",
+          }}
+          className="border-2 rounded-lg gap-2 w-160 h-200 flex flex-col items-center justify-center font-bold"
         >
           <h2> Title </h2>
           <InputField style={"Title"} def={title} />
@@ -77,9 +80,12 @@ export default function ModalContent({ cancel, info }) {
           onClick={() => {
             cancel();
           }}
-          className={
-            "bg-white text-gray-900 w-15 rounded-md hover:bg-gray-500 active:scale-90 border-gray-600 border mt-3"
-          }
+          style={{
+            backgroundColor: "var(--app-bg-400)",
+            color: "var(--app-text-main)",
+            borderColor: "var(--app-border)",
+          }}
+          className="w-15 rounded-md hover:opacity-80 active:scale-90 border mt-3"
         >
           {" "}
           Cancel

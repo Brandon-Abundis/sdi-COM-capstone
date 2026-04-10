@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar.jsx";
 import OpenIcon from "../components/OpenIcon.jsx";
@@ -6,8 +6,19 @@ import { useAuth } from "../AuthProvider.jsx";
 
 export default function ProtectedLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const closeTimer = useRef(null);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  function openProfile() {
+    clearTimeout(closeTimer.current);
+    setProfileOpen(true);
+  }
+
+  function scheduleClose() {
+    closeTimer.current = setTimeout(() => setProfileOpen(false), 100);
+  }
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -34,18 +45,22 @@ export default function ProtectedLayout() {
         </button>
 
         {/* PFP hover dropdown */}
-        <div className="dropdown dropdown-end dropdown-hover">
+        <div className="relative">
           <div
-            tabIndex={0}
             role="button"
+            onMouseEnter={openProfile}
+            onMouseLeave={scheduleClose}
             className="btn btn-ghost btn-circle avatar outline-1 outline-accent hover:outline-[#7c3aed] bg-[#2a2245] select-none"
           >
             <span className="text-sm font-bold text-[#c084fc]">{initials}</span>
           </div>
 
           <ul
-            tabIndex={0}
-            className="dropdown-content z-50 mt-2 w-52 rounded-xl border border-[#1e1838] bg-[#16112a] p-2 shadow-xl flex flex-col gap-0.5"
+            onMouseEnter={openProfile}
+            onMouseLeave={scheduleClose}
+            className={`absolute right-0 z-50 mt-2 w-52 rounded-xl border border-[#1e1838] bg-[#16112a] p-2 shadow-xl flex flex-col gap-0.5 ${
+              profileOpen ? "block" : "hidden"
+            }`}
           >
             {/* User info header */}
             <li className="px-3 py-2 border-b border-[#1e1838] mb-1">
@@ -84,6 +99,7 @@ export default function ProtectedLayout() {
           </ul>
         </div>
       </div>
+
 
       <div
         className={`transition-all duration-300 ${

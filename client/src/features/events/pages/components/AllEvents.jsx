@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import EventCard from "./EventCard";
 
-function isCurrentEvent(dateStr) {
+function isCurrentEvent(startDateStr, endDateStr) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const eventDate = new Date(dateStr);
-  eventDate.setHours(0, 0, 0, 0);
-  return eventDate <= today;
+  const startDate = new Date(startDateStr);
+  startDate.setHours(0, 0, 0, 0);
+  const endDate = new Date(endDateStr || startDateStr);
+  endDate.setHours(0, 0, 0, 0);
+  return startDate <= today && today <= endDate;
 }
 
 export default function AllEvents({ selectedEvent, onSelectEvent }) {
@@ -27,7 +29,7 @@ export default function AllEvents({ selectedEvent, onSelectEvent }) {
         )
       )
       .then((results) => {
-        const current = results.flat().filter((e) => isCurrentEvent(e.date));
+        const current = results.flat().filter((e) => isCurrentEvent(e.start_date, e.end_date));
         setEvents(current);
       })
       .catch((err) => setError(err.message))
