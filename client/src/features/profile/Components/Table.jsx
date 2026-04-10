@@ -166,7 +166,7 @@ export default function Table({ userData }) {
                   className="group hover:bg-white/[0.02] transition-colors"
                 >
                   <td className="py-4">
-                    <div className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">
+                    <div className="text-sm font-bold text-white group-hover:text-secondary transition-colors">
                       {ex.name}
                     </div>
                     <div className="text-[10px] text-white/30 font-medium uppercase tracking-tighter">
@@ -178,22 +178,33 @@ export default function Table({ userData }) {
                       <span className="text-white/10 italic">---</span>
                     ) : (
                       <div className="flex flex-col items-end leading-none">
-                        <span className="text-lg">
+                        <span className="text-lg font-semibold">
                           {ex.name === "2-Mile Run"
-                            ? `${Math.floor(ex.max / 60)}:${Math.round(
-                                ex.max % 60,
+                            ? `${Math.floor((ex.max / 60) * 2)}:${Math.round(
+                                (ex.max * 2) % 60,
                               )
                                 .toString()
                                 .padStart(2, "0")}`
                             : ex.max}
 
-                          <span className="text-[10px] ml-1 text-white/40 font-bold uppercase tracking-widest">
-                            {ex.name === "2-Mile Run" ? "min/mi" : "lbs"}
+                          <span className="ml-1 text-[10px] font-bold uppercase tracking-widest text-white/40">
+                            {ex.name === "2-Mile Run" ? "Min" : "lbs"}
                           </span>
                         </span>
 
+                        {ex.name === "2-Mile Run" && (
+                          <span className="text-[11px] text-secondary font-bold uppercase mt-1 tracking-tighter">
+                            {`${Math.floor(ex.max / 60)}:${Math.round(
+                              ex.max % 60,
+                            )
+                              .toString()
+                              .padStart(2, "0")}`}{" "}
+                            min/mi
+                          </span>
+                        )}
+
                         {ex.name !== "2-Mile Run" && ex.reps > 0 && (
-                          <span className="text-[10px] text-blue-400/60 font-bold uppercase mt-1 tracking-tighter">
+                          <span className="text-[11px] text-secondary font-bold uppercase mt-1 tracking-tighter">
                             {ex.reps} Reps
                           </span>
                         )}
@@ -229,14 +240,14 @@ export default function Table({ userData }) {
                 <div className="flex justify-between text-[10px] font-black uppercase tracking-tighter">
                   <span className="text-white/40">{group}</span>
                   <span
-                    className={count > 0 ? "text-blue-400" : "text-white/10"}
+                    className={count > 0 ? "text-secondary" : "text-white/10"}
                   >
                     {count} {count === 1 ? "Hit" : "Hits"}
                   </span>
                 </div>
                 <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-1000"
+                    className="h-full bg-gradient-to-r from-secondary to-primary rounded-full transition-all duration-1000"
                     style={{ width: `${barWidth}%` }}
                   ></div>
                 </div>

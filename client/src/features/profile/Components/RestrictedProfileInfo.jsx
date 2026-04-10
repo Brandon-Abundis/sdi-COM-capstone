@@ -18,6 +18,8 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
 
   if (!userData) return <h1>Loading...</h1>;
   if (!groups) return <h1>Loading...</h1>;
+  const initials =
+    `${userData.first_name.slice(0, 1)}${userData.last_name.slice(0, 1)}`.toUpperCase();
 
   return (
     <>
@@ -26,11 +28,10 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
           <div className="card bg-base-100 shadow-2xl border border-base-200 w-full max-w-md">
             <div className="card-body p-6">
               <div className="avatar mb-2">
-                <div className="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                  <img
-                    src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp"
-                    alt="Avatar"
-                  />
+                <div className="w-12 h-12 flex items-center justify-center rounded-full outline outline-1 outline-accent bg-[#2a2245] select-none cursor-default">
+                  <span className="text-sm font-bold text-[#c084fc] leading-none">
+                    {initials}
+                  </span>
                 </div>
               </div>
 
@@ -100,7 +101,7 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
                       </div>
                       <input
                         type="number"
-                        className="input input-bordered input-xs border-primary/40 font-bold text-lg text-primary h-auto w-full focus:bg-base-300"
+                        className="input input-bordered input-xs border-primary/40 font-bold text-lg text-secondary h-auto w-full focus:bg-base-300"
                         value={formData.age}
                         onChange={(e) =>
                           setFormData({ ...formData, age: e.target.value })
@@ -132,6 +133,9 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
                       <h2 className="card-title text-2xl font-black">
                         {userData.first_name} {userData.last_name}
                       </h2>
+                      <div className="card-title text-l font-black">
+                        {userData.username}
+                      </div>
                       <div className="mt-1">
                         <span className="badge badge-primary badge-outline rounded-full px-3 font-bold text-[10px] uppercase tracking-widest">
                           {userData.rank}
@@ -153,7 +157,7 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
                       <div className="stat-title text-[10px] uppercase font-bold">
                         Age
                       </div>
-                      <div className="stat-value text-lg text-primary">
+                      <div className="stat-value text-lg text-secondary">
                         {userData.age}
                       </div>
                     </div>
@@ -161,7 +165,7 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
                       <div className="stat-title text-[10px] uppercase font-bold">
                         Gender
                       </div>
-                      <div className="stat-value text-lg text-primary">
+                      <div className="stat-value text-lg text-secondary">
                         {userData.gender}
                       </div>
                     </div>
