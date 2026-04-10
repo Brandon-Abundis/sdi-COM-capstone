@@ -7,8 +7,8 @@ export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   return (
-    <div className="min-h-screen bg-[#0f0d17] p-6">
-      <h1 className="text-3xl font-bold text-[#7c3aed] mb-6 tracking-wide">Events</h1>
+    <div className="min-h-screen bg-base-100 p-6">
+      <h1 className="text-3xl font-bold text-primary mb-6 tracking-wide">Events</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <UpcomingEvents />
         <AllEvents
