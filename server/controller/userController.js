@@ -1,4 +1,7 @@
 const db = require("../db/db");
+const bcrypt = require("bcrypt");
+
+const SALT_ROUNDS = 10;
 const { createLog } = require("../support/createLog");
 
 const getAll = async (req, res) => {
@@ -48,17 +51,20 @@ const updateById = async (req, res) => {
   const {
     is_admin,
     first_name,
-    username,
     last_name,
+    username,
     email,
     rank,
     age,
     xp,
     is_active,
+    badges_ids,
+    titles_ids,
+    cosmetic_ids,
   } = req.body;
   try {
     if (
-      !is_admin &&
+      is_admin === undefined &&
       !first_name &&
       !last_name &&
       !username &&
@@ -66,7 +72,10 @@ const updateById = async (req, res) => {
       !rank &&
       !age &&
       !xp &&
-      !is_active
+      is_active === undefined &&
+      !badges_ids &&
+      !titles_ids &&
+      !cosmetic_ids
     ) {
       createLog({
         method: "POST",
@@ -82,7 +91,7 @@ const updateById = async (req, res) => {
       .select("*")
       .where("id", id)
       .update({
-        is_admin: is_admin ? is_admin : userData.is_admin,
+        is_admin: is_admin !== undefined ? is_admin : userData.is_admin,
         first_name: first_name ? first_name : userData.first_name,
         last_name: last_name ? last_name : userData.last_name,
         username: username ? username : userData.username,
@@ -91,6 +100,9 @@ const updateById = async (req, res) => {
         age: age ? age : userData.age,
         xp: xp ? xp : userData.xp,
         is_active: is_active !== undefined ? is_active : userData.is_active,
+        badges_ids: badges_ids ? badges_ids : userData.badges_ids,
+        titles_ids: titles_ids ? titles_ids : userData.titles_ids,
+        cosmetic_ids: cosmetic_ids ? cosmetic_ids : userData.cosmetic_ids,
       })
       .returning("*");
     if (result) {
@@ -115,45 +127,31 @@ const updateById = async (req, res) => {
   }
 };
 
-const createUser = async (req, res) => {
-  const { is_admin, first_name, username, last_name, email, rank, age, xp } =
-    req.body;
+const updatePasswordById = async (req, res) => {
+  const { id } = req.params;
+  const { password } = req.body;
   try {
-    if (
-      !is_admin &&
-      !first_name &&
-      !last_name &&
-      !username &&
-      !email &&
-      !rank &&
-      !age &&
-      !xp
-    ) {
+    if (!password) {
       createLog({
         method: "POST",
-        action: "CREATE_USER",
+        action: "UPDATE_USER_PASSWORD",
         status_code: 400,
         user_id: id,
         metadata: { message: "bad data" },
       });
       return res.status(400).json({ message: "bad data" });
     }
+    const userData = await db("users").select("*").where("id", id);
+    const newHashWord = await bcrypt.hash(password, SALT_ROUNDS);
     const result = await db("users")
-      .insert({
-        is_admin: is_admin ? is_admin : userData.is_admin,
-        first_name: first_name ? first_name : userData.first_name,
-        last_name: last_name ? last_name : userData.last_name,
-        username: username ? username : userData.username,
-        email: email ? email : userData.email,
-        rank: rank ? rank : userData.rank,
-        age: age ? age : userData.age,
-        xp: xp ? xp : userData.xp,
-      })
+      .select("*")
+      .where("id", id)
+      .update({ password: newHashWord ? newHashWord : userData.password })
       .returning("*");
     if (result) {
       createLog({
         method: "POST",
-        action: "CREATE_USER",
+        action: "UPDATE_USER_PASSWORD",
         status_code: 200,
         user_id: id,
         metadata: JSON.stringify(result),
@@ -162,8 +160,8 @@ const createUser = async (req, res) => {
     res.status(200).send(result[0]);
   } catch (err) {
     createLog({
-      method: "POST",
-      action: "CREATE_USER",
+      method: "GET",
+      action: "UPDATE_USER_PASSWORD",
       status_code: 500,
       user_id: id,
       metadata: err,
@@ -306,10 +304,7 @@ const getGroupsById = async (req, res) => {
 const getGoalsById = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await db("user_goals")
-      .select("*")
-      .where("user_id", id)
-      .first();
+    const result = await db("user_goals").select("*").where("user_id", id);
 
     if (result) {
       createLog({
@@ -763,7 +758,7 @@ module.exports = {
   createEvent,
   deleteEvent,
   updateById,
-  createUser,
+  updatePasswordById,
   updateRivalById,
   removeRivalById,
 };

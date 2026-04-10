@@ -2,7 +2,6 @@ const express = require("express");
 const {
   getAll,
   getById,
-  createUser,
   getGroupsById,
   getGoalsById,
   updateGoalsById,
@@ -15,6 +14,7 @@ const {
   createEvent,
   deleteEvent,
   updateById,
+  updatePasswordById,
   updateRivalById,
   removeRivalById,
 } = require("../controller/userController");
@@ -23,7 +23,7 @@ const router = express();
 router.get("/", getAll);
 router.get("/id/:id", getById);
 router.post("/id/:id", updateById);
-router.post("/create", createUser);
+router.post("/password/id/:id", updatePasswordById);
 router.post("/rival/id/:id", updateRivalById);
 router.post("/rival/remove/id/:id", removeRivalById);
 router.get("/groups/id/:id", getGroupsById);
