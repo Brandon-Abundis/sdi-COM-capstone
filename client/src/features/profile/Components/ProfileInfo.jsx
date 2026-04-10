@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Avatar from "./Avatar";
 
 export default function ProfileInfo({ userData, setUserData }) {
@@ -8,6 +8,7 @@ export default function ProfileInfo({ userData, setUserData }) {
   const [groups, setGroups] = useState();
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(` http://localhost:8080/users/groups/id/${userData.id}`)
@@ -89,7 +90,16 @@ export default function ProfileInfo({ userData, setUserData }) {
                       {initials}
                     </span> */}
                     <Avatar></Avatar>
+                <div className="avatar mb-2 group relative w-24 h-24">
+                  <div className="w-full h-full flex items-center justify-center rounded-full outline outline-1 outline-accent bg-[#2a2245] overflow-hidden">
+                    <Avatar userData={userData}></Avatar>
                   </div>
+                  <button
+                    onClick={() => navigate("/avatar-editor")}
+                    className="absolute bottom-0 right-0 p-1.5 bg-accent rounded-full text-[10px] text-white opacity-0 group-hover:opacity-100 transition-opacity z-50 shadow-md translate-x-1 translate-y-1"
+                  >
+                    ✎
+                  </button>
                 </div>
 
                 {isEditing ? (

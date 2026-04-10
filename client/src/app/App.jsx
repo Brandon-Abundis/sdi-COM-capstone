@@ -15,6 +15,7 @@ import PublicLayout from "./layouts/PublicLayout.jsx";
 import ProtectedLayout from "./layouts/ProtectedLayout.jsx";
 import RestrictedProfile from "../features/profile/pages/RestrictedProfile.jsx";
 import Settings from "../features/settings/pages/Settings.jsx";
+import AvatarSelection from "../features/profile/Components/AvatarSelection.jsx";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         <Route path="workouts" element={<Workouts />} />
         <Route path="chatandgroups" element={<ChatAndGroup />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="avatar-editor" element={<AvatarSelection />} />
       </Route>
 
       {/* Catch-all for paths that do not match any listed above */}
