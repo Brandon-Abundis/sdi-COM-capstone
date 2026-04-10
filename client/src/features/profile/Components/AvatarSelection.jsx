@@ -62,13 +62,14 @@ export default function AvatarSelection() {
             />
           )}
 
-          {chosenMisc.map((item, index) => (
-            <img
-              key={index}
-              src={item}
-              className="absolute inset-0 w-full h-full z-40 object-contain"
-            />
-          ))}
+          {chosenMisc &&
+            chosenMisc.map((item, index) => (
+              <img
+                key={index}
+                src={item}
+                className="absolute inset-0 w-full h-full z-40 object-contain"
+              />
+            ))}
         </div>
 
         <button
