@@ -445,10 +445,16 @@ const createWorkout = async (req, res) => {
       metadata: err,
     });
     res.status(500).send({ message: err });
+  }
+};
+
 const createGroupEvent = async (req, res) => {
-  const { name, start_date, end_date, start_time, end_time, group_id } = req.body;
+  const { name, start_date, end_date, start_time, end_time, group_id } =
+    req.body;
   if (!name || !start_date || !group_id)
-    return res.status(400).json({ message: "name, start_date, and group_id are required" });
+    return res
+      .status(400)
+      .json({ message: "name, start_date, and group_id are required" });
   try {
     const [event] = await db("group_events")
       .insert({
