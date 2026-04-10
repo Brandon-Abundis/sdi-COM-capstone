@@ -6,13 +6,12 @@ export default forwardRef(function InputField(
 ) {
   if (style == "selection") {
     return (
-      <div>
-        <label for="types"> Workout Type: </label>
+      <div className={"flex flex-col items-center gap-2"}>
+        <label for="types"> Type: </label>
 
         <select
           ref={ref}
           name="type"
-          id="workoutSelection"
           className={
             "bg-[#0c0916] p-3 rounded-lg border-2 border-[#231d3f] mb-3"
           }

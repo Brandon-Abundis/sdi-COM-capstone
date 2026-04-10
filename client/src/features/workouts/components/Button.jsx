@@ -6,7 +6,7 @@ export default function Button({ name, func }) {
         func();
       }}
       className={
-        "bg-white text-gray-900 w-15 rounded-md hover:bg-gray-500 active:scale-90 border-gray-600 border mt-3"
+        "text-[#a78bfa] bg-[#0e0b1a] w-15 rounded-md hover:bg-gray-500 active:scale-90 border-[#1e1838] border-2 mt-3"
       }
     >
       {" "}
