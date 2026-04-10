@@ -55,7 +55,7 @@ export default function Leaderboard() {
   if (!users && !scores) return <h1>Loading Leaderboards...</h1>;
   return (
     <>
-      <h1 className="text-3xl font-bold text-[#7c3aed] mb-6 tracking-wide">
+      <h1 className="text-3xl font-bold underline text-[#7c3aed] mb-6 tracking-wide">
         PT LEADERBOARDS
       </h1>
       <div id="LBs">

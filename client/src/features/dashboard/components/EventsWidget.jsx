@@ -51,28 +51,49 @@ export default function EventsWidget() {
     (a, b) => new Date(a.start_date) - new Date(b.start_date),
   );
 
-  // Today's date in date-only ISO format (YYYY-MM-DD)
-  const today = new Date().toISOString().split("T")[0];
+  // Today's date in local timezone (YYYY-MM-DD)
+  const getLocalDate = () => {
+    const localDate = new Date();
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, "0");
+    const day = String(localDate.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  // Extract local date from ISO string (YYYY-MM-DD)
+  const getEventLocalDate = (isoString) => {
+    const date = new Date(isoString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const today = getLocalDate();
 
   // Get today's events and upcoming events (near-term events past today)
-  const todayEvents = sortedEvents.filter(
-    (event) => event.start_date === today,
-  );
+  const todayEvents = sortedEvents.filter((event) => {
+    const eventDate = getEventLocalDate(event.start_date);
+    return eventDate === today;
+  });
   const upcomingEvents = sortedEvents
-    .filter((event) => event.start_date > today)
+    .filter((event) => {
+      const eventDate = getEventLocalDate(event.start_date);
+      return eventDate > today;
+    })
     .slice(0, 3);
 
   return (
     <div className="card bg-base-200 p-4">
       <h3 className="text-2xl font-semibold text-primary mb-4">Events</h3>
       {todayEvents.length > 0 && (
-        <div className="pb-4 border-b">
+        <div className="pb-4 border-b border-secondary">
           <h4 className="text-md font-medium text-secondary pb-2">Today</h4>
           <ul className="space-y-1">
             {todayEvents.map((event) => (
               <li key={event.id} className="text-sm">
                 <strong>{event.name}</strong> - {event.start_time}{" "}
-                {event.end_time && `- ${event.end_time}`}
+                {`- ${event.end_time}`}
                 {event.workouts_list.length > 0 && (
                   <div className="ml-2 text-xs text-gray-400">
                     Workouts:{" "}
@@ -86,7 +107,7 @@ export default function EventsWidget() {
       )}
       {upcomingEvents.length > 0 && (
         <div>
-          <h4 className="text-md font-extrabold text-secondary pb-2">
+          <h4 className="text-md font-extrabold text-secondary pb-2 pt-2">
             Upcoming:
           </h4>
           <ul className="space-y-1">
@@ -98,7 +119,7 @@ export default function EventsWidget() {
                     {" "}
                     {new Date(event.start_date).toLocaleDateString()}{" "}
                     {event.start_time}
-                    {event.end_time && `- ${event.end_time}`}
+                    {event.end_time && ` - ${event.end_time}`}
                   </span>
                 ) : (
                   <span>
