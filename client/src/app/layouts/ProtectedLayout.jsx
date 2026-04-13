@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useRef, useState, useEffect } from "react";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar.jsx";
 import TopBar from "../components/TopBar.jsx";
 import { useAuth } from "../AuthProvider.jsx";
