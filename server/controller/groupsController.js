@@ -10,7 +10,7 @@ const getAll = async (req, res) => {
         action: "FETCH_GROUPS",
         status_code: 200,
         user_id: null,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all group" },
       });
     }
     res.status(200).send(result);
@@ -36,7 +36,7 @@ const getById = async (req, res) => {
         action: "FETCH_GROUP",
         status_code: 200,
         user_id: id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched a group" },
       });
     }
     res.status(200).send(result);
@@ -121,7 +121,7 @@ const getGoalsById = async (req, res) => {
         action: "FETCH_GROUP_GOALS",
         status_code: 200,
         user_id: id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all group goals for a group" },
       });
     }
     res.status(200).send(result);
@@ -289,7 +289,7 @@ const getWorkoutsById = async (req, res) => {
         action: "FETCH_GROUP_WORKOUTS",
         status_code: 200,
         user_id: id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all group workouts for a group" },
       });
     }
     res.status(200).send(result);
@@ -615,7 +615,7 @@ const getEventsById = async (req, res) => {
         action: "FETCH_GROUP_EVENTS",
         status_code: 200,
         user_id: id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all group events for a group" },
       });
     }
     res.status(200).send(result);
