@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import OpenIcon from "./OpenIcon.jsx";
+import Avatar from "../../features/profile/Components/Avatar.jsx";
 
 export default function TopBar({ user, onToggleSidebar, onLogout }) {
   const [profileOpen, setProfileOpen] = useState(false);
@@ -42,7 +43,7 @@ export default function TopBar({ user, onToggleSidebar, onLogout }) {
           onMouseLeave={scheduleClose}
           className="btn btn-ghost btn-circle avatar outline-1 outline-accent hover:outline-primary bg-neutral select-none"
         >
-          <span className="text-sm font-bold text-accent">{initials}</span>
+          <Avatar userData={user}> </Avatar>
         </div>
 
         <ul
