@@ -8,6 +8,7 @@ exports.up = function (knex) {
     table.boolean("is_admin").defaultTo(false);
     table.boolean("is_active").defaultTo(true);
     table.string("username");
+    table.string("profile");
     table.string("first_name");
     table.string("last_name");
     table.string("email");

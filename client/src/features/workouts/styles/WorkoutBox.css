@@ -1,12 +1,10 @@
-/* please put more css in here D: */
-
 #WorkoutBox {
-  background-color:#1f183b;
+  background-color: var(--color-base-200);
   margin: calc(var(--spacing) * 2);
   height: calc(var(--spacing) * 70);
   width: calc(var(--spacing) * 70);
   border-radius: var(--radius-lg);
-  color: var(--app-workout-text);
+  color: var(--color-base-content);
   text-wrap: wrap;
   text-align: center;
 }

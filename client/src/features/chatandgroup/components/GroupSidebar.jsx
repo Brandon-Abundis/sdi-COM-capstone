@@ -30,7 +30,7 @@ function CreateGroupModal({ userId, onClose, onCreated }) {
       <div className="bg-[#16112a] border border-[#2a2245] rounded-2xl p-6 w-80 flex flex-col gap-4 shadow-xl">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold text-[#c084fc] uppercase tracking-wide">Create a Group</h2>
-          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#e2dff5] text-lg">✕</button>
+          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#c084fc] text-lg">✕</button>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div>
@@ -48,7 +48,7 @@ function CreateGroupModal({ userId, onClose, onCreated }) {
             <button type="submit" disabled={submitting} className="flex-1 py-2 bg-[#7c3aed] hover:bg-[#6d28d9] text-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-50">
               {submitting ? "Creating..." : "Create"}
             </button>
-            <button type="button" onClick={onClose} className="flex-1 py-2 bg-[#1e1838] text-[#e2dff5]/60 rounded-lg text-sm border border-[#2a2245] hover:text-[#e2dff5] transition-colors">
+            <button type="button" onClick={onClose} className="flex-1 py-2 bg-[#1e1838] text-[#e2dff5]/60 rounded-lg text-sm border border-[#2a2245] hover:text-[#c084fc] transition-colors">
               Cancel
             </button>
           </div>
@@ -72,7 +72,7 @@ function NewDMModal({ dmUsers, onClose, onSelect }) {
       <div className="bg-[#16112a] border border-[#2a2245] rounded-2xl p-6 w-80 flex flex-col gap-4 shadow-xl">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold text-[#c084fc] uppercase tracking-wide">New Message</h2>
-          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#e2dff5] text-lg">✕</button>
+          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#c084fc] text-lg">✕</button>
         </div>
         <input
           autoFocus
@@ -93,7 +93,7 @@ function NewDMModal({ dmUsers, onClose, onSelect }) {
                 onSelect({ type: "dm", data: { user_id: u.id, full_name: `${u.first_name} ${u.last_name}`, rank: u.rank } });
                 onClose();
               }}
-              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#1e1838] transition-colors text-left"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#7c3aed]/20 transition-colors text-left"
             >
               <div className="w-8 h-8 rounded-full bg-[#2a2245] flex items-center justify-center text-sm text-[#a78bfa] font-bold flex-shrink-0">
                 {u.first_name?.[0]}
@@ -139,7 +139,7 @@ function InviteModal({ group, allUsers, onClose }) {
             <h2 className="text-sm font-bold text-[#c084fc] uppercase tracking-wide">Invite to Group</h2>
             <p className="text-xs text-[#e2dff5]/50 mt-0.5"># {group.name}</p>
           </div>
-          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#e2dff5] text-lg">✕</button>
+          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#c084fc] text-lg">✕</button>
         </div>
 
         {/* Current members */}
@@ -186,7 +186,7 @@ function InviteModal({ group, allUsers, onClose }) {
               .map((u) => {
                 const invited = invitedIds.has(u.id);
                 return (
-                  <div key={u.id} className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-[#1e1838] transition-colors">
+                  <div key={u.id} className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-[#7c3aed]/20 transition-colors">
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 rounded-full bg-[#2a2245] flex items-center justify-center text-xs text-[#a78bfa] font-bold flex-shrink-0">
                         {u.first_name?.[0]}
@@ -225,7 +225,7 @@ function LeaveConfirmModal({ group, onConfirm, onClose }) {
       <div className="bg-[#16112a] border border-[#f87171]/40 rounded-2xl p-6 w-80 flex flex-col gap-4 shadow-xl">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold text-[#f87171] uppercase tracking-wide">Leave Group?</h2>
-          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#e2dff5] text-lg">✕</button>
+          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#c084fc] text-lg">✕</button>
         </div>
 
         {!confirmed ? (
@@ -242,7 +242,7 @@ function LeaveConfirmModal({ group, onConfirm, onClose }) {
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 py-2 bg-[#1e1838] text-[#e2dff5]/60 rounded-lg text-sm border border-[#2a2245] hover:text-[#e2dff5] transition-colors"
+                className="flex-1 py-2 bg-[#1e1838] text-[#e2dff5]/60 rounded-lg text-sm border border-[#2a2245] hover:text-[#c084fc] transition-colors"
               >
                 Cancel
               </button>
@@ -265,7 +265,7 @@ function LeaveConfirmModal({ group, onConfirm, onClose }) {
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 py-2 bg-[#1e1838] text-[#e2dff5]/60 rounded-lg text-sm border border-[#2a2245] hover:text-[#e2dff5] transition-colors"
+                className="flex-1 py-2 bg-[#1e1838] text-[#e2dff5]/60 rounded-lg text-sm border border-[#2a2245] hover:text-[#c084fc] transition-colors"
               >
                 Never mind
               </button>
@@ -403,7 +403,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
                 searchResults.map((group) => {
                   const joined = joinedIds.has(group.id);
                   return (
-                    <div key={group.id} className="flex items-center justify-between px-3 py-2 hover:bg-[#1e1838] transition-colors">
+                    <div key={group.id} className="flex items-center justify-between px-3 py-2 hover:bg-[#7c3aed]/20 transition-colors">
                       <div>
                         <p className="text-xs font-semibold text-[#e2dff5]"># {group.name}</p>
                         <p className="text-[10px] text-[#e2dff5]/40">{group.user_ids?.length ?? 0} members</p>
@@ -429,7 +429,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
           <div className="p-3">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-bold text-[#e2dff5]/50 uppercase tracking-wider">My Groups</p>
-              <button onClick={() => setShowCreateGroup(true)} title="Create group" className="w-5 h-5 rounded flex items-center justify-center text-[#e2dff5]/40 hover:text-[#c084fc] hover:bg-[#1e1838] transition-colors text-base leading-none">
+              <button onClick={() => setShowCreateGroup(true)} title="Create group" className="w-5 h-5 rounded flex items-center justify-center text-[#e2dff5]/40 hover:text-[#c084fc] hover:bg-[#7c3aed]/20 transition-colors text-base leading-none">
                 +
               </button>
             </div>
@@ -446,7 +446,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
                     <button
                       onClick={() => onSelect({ type: "group", data: group })}
                       className={`flex-1 text-left px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 ${
-                        isSelected ? "bg-[#7c3aed]/30 text-[#c084fc]" : "text-[#e2dff5]/70 hover:bg-[#1e1838] hover:text-[#e2dff5]"
+                        isSelected ? "bg-[#7c3aed]/30 text-[#c084fc]" : "text-[#e2dff5]/70 hover:bg-[#7c3aed]/20 hover:text-[#c084fc]"
                       }`}
                     >
                       <span>#</span>
@@ -456,7 +456,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
                     <button
                       onClick={() => setInviteGroup(group)}
                       title="Invite people"
-                      className="opacity-0 group-hover/item:opacity-100 w-5 h-5 rounded flex items-center justify-center text-[#e2dff5]/30 hover:text-[#a78bfa] hover:bg-[#1e1838] transition-all text-xs"
+                      className="opacity-0 group-hover/item:opacity-100 w-5 h-5 rounded flex items-center justify-center text-[#e2dff5]/30 hover:text-[#a78bfa] hover:bg-[#7c3aed]/20 transition-all text-xs"
                     >
                       👤
                     </button>
@@ -464,7 +464,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
                     <button
                       onClick={() => setLeaveGroup(group)}
                       title="Leave group"
-                      className="opacity-0 group-hover/item:opacity-100 w-5 h-5 rounded flex items-center justify-center text-[#e2dff5]/30 hover:text-[#f87171] hover:bg-[#1e1838] transition-all text-xs"
+                      className="opacity-0 group-hover/item:opacity-100 w-5 h-5 rounded flex items-center justify-center text-[#e2dff5]/30 hover:text-[#f87171] hover:bg-[#7c3aed]/20 transition-all text-xs"
                     >
                       ✕
                     </button>
@@ -480,7 +480,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
           <div className="p-3">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-bold text-[#e2dff5]/50 uppercase tracking-wider">Direct Messages</p>
-              <button onClick={() => setShowNewDM(true)} title="New message" className="w-5 h-5 rounded flex items-center justify-center text-[#e2dff5]/40 hover:text-[#c084fc] hover:bg-[#1e1838] transition-colors text-base leading-none">
+              <button onClick={() => setShowNewDM(true)} title="New message" className="w-5 h-5 rounded flex items-center justify-center text-[#e2dff5]/40 hover:text-[#c084fc] hover:bg-[#7c3aed]/20 transition-colors text-base leading-none">
                 +
               </button>
             </div>
@@ -492,7 +492,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 ${
                     selectedItem?.type === "dm" && selectedItem.data.user_id === u.id
                       ? "bg-[#7c3aed]/30 text-[#c084fc]"
-                      : "text-[#e2dff5]/70 hover:bg-[#1e1838] hover:text-[#e2dff5]"
+                      : "text-[#e2dff5]/70 hover:bg-[#7c3aed]/20 hover:text-[#c084fc]"
                   }`}
                 >
                   <div className="w-5 h-5 rounded-full bg-[#2a2245] flex items-center justify-center text-[10px] text-[#a78bfa] flex-shrink-0">

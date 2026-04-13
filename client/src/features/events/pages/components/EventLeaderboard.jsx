@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 const rankColors = {
-  Gold:   "text-yellow-400",
-  Silver: "text-gray-300",
+  Gold:   "text-warning",
+  Silver: "text-base-content/60",
   Bronze: "text-orange-400",
 };
 
@@ -53,8 +53,8 @@ export default function EventLeaderboard({ selectedEvent }) {
   if (!selectedEvent) {
     return (
       <div className="flex flex-col gap-3">
-        <h2 className="text-lg font-bold text-[#c084fc]">Leaderboard</h2>
-        <div className="card bg-[#16112a] border border-[#1e1838] shadow p-4 text-[#e2dff5]/50 text-sm">
+        <h2 className="text-lg font-bold text-accent">Leaderboard</h2>
+        <div className="card bg-base-200 border border-base-300 shadow p-4 text-base-content/50 text-sm">
           Select a current event to see rankings.
         </div>
       </div>
@@ -63,27 +63,27 @@ export default function EventLeaderboard({ selectedEvent }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-bold text-[#c084fc]">Leaderboard</h2>
-      <p className="text-sm text-[#a78bfa]">{selectedEvent.name}</p>
+      <h2 className="text-lg font-bold text-accent">Leaderboard</h2>
+      <p className="text-sm text-secondary">{selectedEvent.name}</p>
 
-      {loading && <p className="text-sm text-[#e2dff5]/50">Loading...</p>}
-      {error && <p className="text-sm text-[#f87171]">{error}</p>}
+      {loading && <p className="text-sm text-base-content/50">Loading...</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
 
       {!loading && !error && entries.length === 0 && (
-        <div className="card bg-[#16112a] border border-[#1e1838] shadow p-4 text-sm text-[#e2dff5]/50">
+        <div className="card bg-base-200 border border-base-300 shadow p-4 text-sm text-base-content/50">
           No results yet.
         </div>
       )}
 
       {entries.map((entry, index) => (
-        <div key={entry.user_id} className="card bg-[#16112a] border border-[#1e1838] shadow">
+        <div key={entry.user_id} className="card bg-base-200 border border-base-300 shadow">
           <div className="card-body p-4 flex flex-row items-center gap-3">
             <span className="text-xl">{medals[index] ?? "🏅"}</span>
             <div className="flex-1">
-              <p className="font-semibold text-sm text-[#e2dff5]">{entry.full_name}</p>
-              <p className="text-xs text-[#e2dff5]/60">Score: {entry.goal_mark}</p>
+              <p className="font-semibold text-sm text-base-content">{entry.full_name}</p>
+              <p className="text-xs text-base-content/60">Score: {entry.goal_mark}</p>
             </div>
-            <span className={`text-xs font-bold ${rankColors[entry.rank] ?? "text-[#e2dff5]/50"}`}>
+            <span className={`text-xs font-bold ${rankColors[entry.rank] ?? "text-base-content/50"}`}>
               {entry.rank}
             </span>
           </div>

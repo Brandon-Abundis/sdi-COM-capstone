@@ -52,24 +52,23 @@ export default function UpcomingEvents() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Filter in render so admin check always uses the latest auth state
   const events = user?.is_admin
     ? allEvents.filter((e) => getDaysUntil(e.start_date) <= 7).slice(0, 5)
     : allEvents;
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-bold text-[#c084fc]">
+      <h2 className="text-lg font-bold text-accent">
         Upcoming Events
         {user?.is_admin && (
-          <span className="text-xs text-[#a78bfa] font-normal ml-2">(Next 7 Days)</span>
+          <span className="text-xs text-secondary font-normal ml-2">(Next 7 Days)</span>
         )}
       </h2>
 
-      {loading && <p className="text-sm text-[#e2dff5]/50">Loading...</p>}
+      {loading && <p className="text-sm text-base-content/50">Loading...</p>}
 
       {!loading && events.length === 0 && (
-        <p className="text-sm text-[#e2dff5]/50">No upcoming events.</p>
+        <p className="text-sm text-base-content/50">No upcoming events.</p>
       )}
 
       {events.map((event) => {
@@ -77,15 +76,15 @@ export default function UpcomingEvents() {
         return (
           <div
             key={event.id}
-            className="card bg-[#16112a] border border-[#1e1838] p-4 flex items-center justify-between gap-3"
+            className="card bg-base-200 border border-base-300 p-4 flex items-center justify-between gap-3"
           >
             <div className="space-y-0.5">
-              <p className="text-sm font-semibold text-[#e2dff5]">{event.name}</p>
-              <p className="text-xs text-[#e2dff5]/50">
+              <p className="text-sm font-semibold text-base-content">{event.name}</p>
+              <p className="text-xs text-base-content/50">
                 {formatDate(event.start_date)} · {formatTime(event.start_time)}
               </p>
             </div>
-            <span className="text-xs font-bold flex-shrink-0 px-2 py-1 rounded-md bg-[#1e1838] text-[#a78bfa] border border-[#7c3aed]">
+            <span className="text-xs font-bold flex-shrink-0 px-2 py-1 rounded-md bg-base-300 text-secondary border border-primary">
               In {days}d
             </span>
           </div>

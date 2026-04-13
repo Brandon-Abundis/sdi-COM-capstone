@@ -65,7 +65,7 @@ export default function Profile() {
           </p>
           <button
             onClick={handleSignOut}
-            className=" mt-4 z-50 px-4 py-2 bg-red-500/10 hover:bg-red-500 hover:text-white text-red-500 text-xs font-black uppercase tracking-widest border border-red-500/20 rounded-lg transition-all duration-300 backdrop-blur-sm"
+            className=" mt-4 z-50 px-4 py-2 bg-error/10 hover:bg-error hover:text-white text-error text-xs font-black uppercase tracking-widest border border-error/20 rounded-lg transition-all duration-300 backdrop-blur-sm"
           >
             Sign Out
           </button>

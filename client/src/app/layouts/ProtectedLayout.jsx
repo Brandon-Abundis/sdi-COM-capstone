@@ -37,10 +37,10 @@ export default function ProtectedLayout() {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       {/* Top Bar */}
-      <div className="flex items-center justify-between p-4 border-b border-[#1e1838]">
+      <div className="flex items-center justify-between p-4 border-b border-base-300">
         <button
           onClick={toggleSidebar}
-          className="text-[#e2dff5] hover:text-primary text-2xl hover:cursor-pointer"
+          className="text-base-content hover:text-primary text-2xl hover:cursor-pointer"
         >
           <OpenIcon />
         </button>
@@ -51,7 +51,7 @@ export default function ProtectedLayout() {
             role="button"
             onMouseEnter={openProfile}
             onMouseLeave={scheduleClose}
-            className="btn btn-ghost btn-circle avatar outline-1 outline-accent hover:outline-[#7c3aed] bg-[#2a2245] select-none"
+            className="btn btn-ghost btn-circle avatar outline-1 outline-accent hover:outline-primary bg-neutral select-none"
           >
             <Avatar userData={user}> </Avatar>
           </div>
@@ -59,22 +59,22 @@ export default function ProtectedLayout() {
           <ul
             onMouseEnter={openProfile}
             onMouseLeave={scheduleClose}
-            className={`absolute right-0 z-50 mt-2 w-52 rounded-xl border border-[#1e1838] bg-[#16112a] p-2 shadow-xl flex flex-col gap-0.5 ${
+            className={`absolute right-0 z-50 mt-2 w-52 rounded-xl border border-base-300 bg-base-200 p-2 shadow-xl flex flex-col gap-0.5 ${
               profileOpen ? "block" : "hidden"
             }`}
           >
             {/* User info header */}
-            <li className="px-3 py-2 border-b border-[#1e1838] mb-1">
-              <p className="text-sm font-semibold text-[#e2dff5]">
+            <li className="px-3 py-2 border-b border-base-300 mb-1">
+              <p className="text-sm font-semibold text-base-content">
                 {user?.first_name} {user?.last_name}
               </p>
-              <p className="text-xs text-[#a78bfa]">{user?.rank}</p>
+              <p className="text-xs text-secondary">{user?.rank}</p>
             </li>
 
             <li>
               <Link
                 to="/profile"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#e2dff5] hover:bg-[#2a2245] hover:text-[#c084fc] transition-colors"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-base-content hover:bg-neutral hover:text-accent transition-colors"
               >
                 <span>👤</span> My Profile
               </Link>
@@ -83,16 +83,16 @@ export default function ProtectedLayout() {
             <li>
               <Link
                 to="/settings"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#e2dff5] hover:bg-[#2a2245] hover:text-[#c084fc] transition-colors"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-base-content hover:bg-neutral hover:text-accent transition-colors"
               >
                 <span>⚙️</span> Settings
               </Link>
             </li>
 
-            <li className="border-t border-[#1e1838] mt-1 pt-1">
+            <li className="border-t border-base-300 mt-1 pt-1">
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-[#f87171] hover:bg-[#2a1a1a] transition-colors"
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-error hover:bg-error/10 transition-colors"
               >
                 <span>🚪</span> Log Out
               </button>

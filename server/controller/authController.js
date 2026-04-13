@@ -14,6 +14,7 @@ const createUser = async (user) => {
       "last_name",
       "gender",
       "rank",
+      "profile",
       "age",
       "xp",
       "rival_ids",
@@ -62,6 +63,14 @@ const registerUser = async (req, res) => {
         metadata: JSON.stringify(newUser[0]),
       });
     }
+
+    res.cookie("userId", newUser[0].id, {
+      signed: true,
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
 
     res.status(201).json(newUser[0]);
   } catch (err) {
@@ -117,12 +126,12 @@ const login = async (req, res) => {
     });
 
     //___________cookie logic?_______________
-    res.cookie('userId', user.id, {
+    res.cookie("userId", user.id, {
       signed: true,
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax'
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
     });
 
     res.status(200).json({
@@ -130,6 +139,7 @@ const login = async (req, res) => {
       email: email,
       first_name: user.first_name,
       last_name: user.last_name,
+      profile: user.profile,
       gender: user.gender,
       rank: user.rank,
       age: user.age,
@@ -153,4 +163,33 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, login };
+// added for cookie session!!!!!!!!!!!! (brandon)
+const logout = async (req, res) => {
+  try {
+    res.clearCookie("userId", {
+      signed: true,
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+    createLog({
+      method: "POST",
+      action: "LOGOUT",
+      status_code: 201,
+      user_id: user.id,
+      metadata: JSON.stringify(user),
+    });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "LOGOUT",
+      status_code: 500,
+      user_id: null,
+      metadata: err,
+    });
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = { registerUser, login, logout };
