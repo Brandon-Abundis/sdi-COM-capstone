@@ -17,13 +17,9 @@ export default function AvatarSelection() {
     "/Avatar/chain.png",
   ];
 
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
 
-  const savedProfile = user?.profile
-    ? typeof user.profile === "string"
-      ? JSON.parse(user.profile)
-      : user.profile
-    : null;
+  const savedProfile = user?.profile ? JSON.parse(user.profile) : null;
 
   const [base, setBase] = useState(savedProfile?.base || base_pic[0]);
   const [head, setHead] = useState(savedProfile?.head || null);
@@ -32,6 +28,21 @@ export default function AvatarSelection() {
   );
   const [chosenMisc, setChosenMisc] = useState(savedProfile?.chosenMisc || []);
   const [profileInfo, setProfileInfo] = useState({ ...user });
+
+  useEffect(() => {
+    if (user?.profile) {
+      try {
+        const parsed = JSON.parse(user.profile);
+
+        setBase(parsed.base || base_pic[0]);
+        setHead(parsed.head || null);
+        setChosenGloves(parsed.chosenGloves || null);
+        setChosenMisc(parsed.chosenMisc || []);
+      } catch (err) {
+        console.error("Failed to parse user profile", err);
+      }
+    }
+  }, [user?.profile]);
 
   const navigate = useNavigate();
 
@@ -48,11 +59,10 @@ export default function AvatarSelection() {
         },
       );
       if (!response.ok) throw new Error("Failed to save");
+      await refreshUser();
       console.log("Account edited successfully");
 
       navigate("/profile");
-
-      console.log("Account edited successfully");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -68,7 +78,7 @@ export default function AvatarSelection() {
 
     const updatedProfile = {
       ...profileInfo,
-      profile: JSON.stringify(avatarSelection),
+      profile: avatarSelection,
     };
 
     setProfileInfo(updatedProfile);
