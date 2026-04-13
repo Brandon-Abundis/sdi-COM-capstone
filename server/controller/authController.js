@@ -14,6 +14,7 @@ const createUser = async (user) => {
       "last_name",
       "gender",
       "rank",
+      "profile",
       "age",
       "xp",
       "rival_ids",
@@ -63,7 +64,7 @@ const registerUser = async (req, res) => {
       });
     }
 
-    res.cookie("userId", newUser.id, {
+    res.cookie("userId", newUser[0].id, {
       signed: true,
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -138,6 +139,7 @@ const login = async (req, res) => {
       email: email,
       first_name: user.first_name,
       last_name: user.last_name,
+      profile: user.profile,
       gender: user.gender,
       rank: user.rank,
       age: user.age,

@@ -2,9 +2,9 @@ Have Upcoming display the data between the week,
  in approaching data (1 day - 7 day away), and allow the 
  format to differ in design from existing events. 
 
- display for upcoming week
+ display for upcoming week  ---- DONE ----
 
- approach from close to far
+ approach from close to far ---- DONE ----
 
  (Name of workout -- # days away)
  1 day away = Tomorrow
