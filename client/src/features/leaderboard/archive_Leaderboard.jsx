@@ -26,13 +26,6 @@ export default function Leaderboard() {
   if( !runs && !sitUps && !pushUps) { return <h1>Loading Leaderboard data...</h1> }
   /*_____________________________________________________________________________________*/
 
-  const formatTime = (totalSeconds) => {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-
-    // padStart ensures that 14:4 becomes 14:04
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-};
 
   // useEffect(() => {
   //   fetch(`http://localhost:8080/scores`)
@@ -121,11 +114,17 @@ export default function Leaderboard() {
               Top 10 Fastest 2-Mile Runs
             </h1>
             <ol>
-              {runs.map(entry => (
-                <li key={entry.id}>
-                  {entry.rank} {entry.first_name} {entry.last_name} : {formatTime(entry.time)}
-                </li>
-              )).slice(0, 10) }
+              {merged
+                .sort((a, b) => a.score - b.score)
+                .slice(0, 10)
+                .map((merge) => (
+                  <li key={merge.id}>
+                    {merge.rank} {merge.last_name}:{" "}
+                    {(merge.score / 17.5).toFixed(2)} Minutes
+                    {UserData.id === merge.id &&
+                      alert("Congratulations! You made it on the Leaderboard!")}
+                  </li>
+                ))}
             </ol>
           </div>
           <div id="Push-Ups">

@@ -13,6 +13,9 @@ const messageRoutes = require("./routes/messages");
 const scoreRoutes = require("./routes/scores");
 const globalRoutes = require("./routes/global");
 
+// brandons edits lol... (:
+const learderBoardRoutes = require('./routes/leaderBoard');
+
 app.use(cookieParser('sdi-com'));
 app.use(express.json());
 // for the cookie
@@ -28,6 +31,9 @@ app.use("/logs", logRoutes);
 app.use("/messages", messageRoutes);
 app.use("/scores", scoreRoutes);
 app.use("/global", globalRoutes);
+
+//brandon's frunk editsd
+app.use('/leaderboard', learderBoardRoutes);
 
 app.get("/", (req, res) => {
   return res
