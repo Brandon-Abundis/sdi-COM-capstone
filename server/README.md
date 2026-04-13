@@ -65,7 +65,7 @@ user endpoint, you can get all user event info associated to a user by passing u
 user endpoint, you can create a specific user events from here by passing
 {name, date, time, user_id}
 
-- http://localhost:8080/users/id/:id (POST)
+- http://localhost:8080/users/user_evetns (POST)
 
 ## Scores
 
