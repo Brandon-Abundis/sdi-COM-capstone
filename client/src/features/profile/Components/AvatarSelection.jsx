@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../app/AuthProvider";
 
 export default function AvatarSelection() {
   const base_pic = ["/Avatar/male.png", "/Avatar/female.png"];
@@ -16,12 +17,46 @@ export default function AvatarSelection() {
     "/Avatar/chain.png",
   ];
 
-  const [base, setBase] = useState(base_pic[0]);
-  const [head, setHead] = useState();
-  const [chosenGloves, setChosenGloves] = useState();
-  const [chosenMisc, setChosenMisc] = useState([]);
+  const { user } = useAuth();
+
+  const savedProfile = user?.profile
+    ? typeof user.profile === "string"
+      ? JSON.parse(user.profile)
+      : user.profile
+    : null;
+
+  const [base, setBase] = useState(savedProfile?.base || base_pic[0]);
+  const [head, setHead] = useState(savedProfile?.head || null);
+  const [chosenGloves, setChosenGloves] = useState(
+    savedProfile?.gloves || null,
+  );
+  const [chosenMisc, setChosenMisc] = useState(savedProfile?.chosenMisc || []);
+  const [profileInfo, setProfileInfo] = useState({ ...user });
 
   const navigate = useNavigate();
+
+  async function edit(data) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/users/id/${user.id}`,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (!response.ok) throw new Error("Failed to save");
+      console.log("Account edited successfully");
+
+      navigate("/profile");
+
+      console.log("Account edited successfully");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 
   const handleSave = () => {
     const avatarSelection = {
@@ -31,9 +66,14 @@ export default function AvatarSelection() {
       chosenMisc,
     };
 
-    localStorage.setItem(`user_avatar`, JSON.stringify(avatarSelection));
+    const updatedProfile = {
+      ...profileInfo,
+      profile: JSON.stringify(avatarSelection),
+    };
 
-    navigate("/profile");
+    setProfileInfo(updatedProfile);
+
+    edit(updatedProfile);
   };
 
   return (

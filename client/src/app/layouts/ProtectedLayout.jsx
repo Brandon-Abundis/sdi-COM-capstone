@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar.jsx";
 import OpenIcon from "../components/OpenIcon.jsx";
