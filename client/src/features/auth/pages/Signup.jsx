@@ -27,7 +27,7 @@ export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [gender, setGender] = useState("Other");
+  const [gender, setGender] = useState("");
   const [rank, setRank] = useState("Spc1");
   const [age, setAge] = useState("");
   const [error, setError] = useState("");
@@ -121,7 +121,7 @@ export default function Signup() {
             >
               <option value="Male">Male</option>
               <option value="Female">Female</option>
-              <option value="Other">Other</option>
+              <option value=""></option>
             </select>
             <input
               className="input input-bordered w-full"
