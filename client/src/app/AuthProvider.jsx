@@ -91,12 +91,23 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/users/id/${user.id}/`)
+        .then((res) => res.json())
+        .then((data) => setUser(data));
+    } catch (err) {
+      console.error("Failed to refresh user data", err);
+    }
+  };
+
   const value = {
     user,
     loading,
     login,
     logout,
     signup,
+    refreshUser,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
