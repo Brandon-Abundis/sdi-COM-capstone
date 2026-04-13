@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 export default function useFetchBestSitUps() {
-  const [sitUps, setSitUps] = useEffect([]);
+  const [sitUps, setSitUps] = useState([]);
 
   useEffect(() => {
     async function fetchAllSitUps(){
