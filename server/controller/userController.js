@@ -62,6 +62,7 @@ const updateById = async (req, res) => {
     first_name,
     last_name,
     username,
+    profile,
     email,
     rank,
     age,
@@ -77,6 +78,7 @@ const updateById = async (req, res) => {
       !first_name &&
       !last_name &&
       !username &&
+      !profile &&
       !email &&
       !rank &&
       !age &&
@@ -104,6 +106,7 @@ const updateById = async (req, res) => {
         first_name: first_name ? first_name : userData.first_name,
         last_name: last_name ? last_name : userData.last_name,
         username: username ? username : userData.username,
+        profile: profile ? profile : userData.profile,
         email: email ? email : userData.email,
         rank: rank ? rank : userData.rank,
         age: age ? age : userData.age,

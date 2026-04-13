@@ -1,0 +1,29 @@
+Have Upcoming display the data between the week,
+ in approaching data (1 day - 7 day away), and allow the 
+ format to differ in design from existing events. 
+
+ display for upcoming week  ---- DONE ----
+
+ approach from close to far ---- DONE ----
+
+ (Name of workout -- # days away)
+ 1 day away = Tomorrow
+ 2 -7 days away = # days away
+
+format difference:
+Possible Color code events to change workout colors
+    group = green
+    personal = blue
+
+gray out or italicize boxes to make known not clickable. 
+
+TO ADDRESS:
+
+Add event repair (redirect to workout create?)
+
+add Jimmy's code for calendar populate
+
+possible look to see if redirects to corresponding workout? (Modem?)
+
+
+clean up commented code before push

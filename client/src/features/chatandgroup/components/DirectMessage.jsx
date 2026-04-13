@@ -78,7 +78,7 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
       <div className="bg-[#16112a] border border-[#2a2245] rounded-2xl p-6 w-96 flex flex-col gap-4 shadow-xl">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold text-[#c084fc] uppercase tracking-wide">⚔️ Issue a Challenge</h2>
-          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#e2dff5] text-lg">✕</button>
+          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#c084fc] text-lg">✕</button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
@@ -259,7 +259,7 @@ export default function DirectMessage({ dmUser }) {
           type="button"
           onClick={() => setShowChallenge(true)}
           title="Issue a challenge"
-          className="px-3 py-2 bg-[#1e1838] hover:bg-[#2a2245] border border-[#2a2245] hover:border-[#7c3aed] text-[#a78bfa] rounded-lg text-sm transition-colors flex-shrink-0"
+          className="px-3 py-2 bg-[#1e1838] hover:bg-[#7c3aed]/20 border border-[#2a2245] hover:border-[#7c3aed] text-[#a78bfa] rounded-lg text-sm transition-colors flex-shrink-0"
         >
           ⚔️
         </button>

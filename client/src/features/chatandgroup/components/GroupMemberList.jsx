@@ -29,7 +29,7 @@ export default function GroupMemberList({ group }) {
         {members.map((member) => (
           <div
             key={member.id}
-            className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-[#1e1838] transition-colors"
+            className="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-[#7c3aed]/20 transition-colors"
             onClick={() => navigate(`/profile/${member.id}`)}
           >
             <div className="w-8 h-8 rounded-full bg-[#2a2245] flex items-center justify-center text-sm text-[#a78bfa] font-bold flex-shrink-0 border-2 border-[#1e1838]">

@@ -38,13 +38,13 @@ export default function AllEvents({ selectedEvent, onSelectEvent }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-bold text-[#c084fc]">Current Events</h2>
+      <h2 className="text-lg font-bold text-accent">Current Events</h2>
 
-      {loading && <p className="text-sm text-[#e2dff5]/50">Loading...</p>}
-      {error && <p className="text-sm text-[#f87171]">{error}</p>}
+      {loading && <p className="text-sm text-base-content/50">Loading...</p>}
+      {error && <p className="text-sm text-error">{error}</p>}
 
       {!loading && !error && events.length === 0 && (
-        <p className="text-sm text-[#e2dff5]/50">No current events.</p>
+        <p className="text-sm text-base-content/50">No current events.</p>
       )}
 
       {events.map((event) => (

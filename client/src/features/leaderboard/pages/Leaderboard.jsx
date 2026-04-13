@@ -73,12 +73,12 @@ export default function Leaderboard() {
   if (!users && !scores) return <h1>Loading Leaderboards...</h1>;
   return (
     <>
-      <h1 className="text-3xl font-bold underline text-[#7c3aed] mb-6 tracking-wide">
+      <h1 className="text-3xl font-bold underline text-primary mb-6 tracking-wide">
         PT LEADERBOARDS
       </h1>
       <div id="LBs">
         <div id="PT_Scores">
-          <h1 className="text-lg font-bold text-[#c084fc]">Top 10 PT Scores</h1>
+          <h1 className="text-lg font-bold text-accent">Top 10 PT Scores</h1>
           <ol>
             {merged
               .sort((a, b) => b.score - a.score)
@@ -95,7 +95,7 @@ export default function Leaderboard() {
         </div>
         <div id="Small_LBs">
           <div id="Two_Mile">
-            <h1 className="text-lg font-bold text-[#c084fc]">
+            <h1 className="text-lg font-bold text-accent">
               Top 10 Fastest 2-Mile Runs
             </h1>
             <ol>
@@ -113,7 +113,7 @@ export default function Leaderboard() {
             </ol>
           </div>
           <div id="Push-Ups">
-            <h1 className="text-lg font-bold text-[#c084fc]">
+            <h1 className="text-lg font-bold text-accent">
               Top 10 Most Push Ups (M/F)
             </h1>
             <ol>
@@ -131,7 +131,7 @@ export default function Leaderboard() {
             </ol>
           </div>
           <div id="Sit-Ups">
-            <h1 className="text-lg font-bold text-[#c084fc]">
+            <h1 className="text-lg font-bold text-accent">
               Top 10 Most Sit Ups (M/F)
             </h1>
             <ol>
@@ -149,7 +149,7 @@ export default function Leaderboard() {
             </ol>
           </div>
           <div id="Minutes">
-            <h1 className="text-lg font-bold text-[#c084fc]">
+            <h1 className="text-lg font-bold text-accent">
               Top 10 Most PT Minutes
             </h1>
             <ol>
