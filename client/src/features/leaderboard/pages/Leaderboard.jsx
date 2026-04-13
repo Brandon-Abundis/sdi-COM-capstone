@@ -115,7 +115,7 @@ export default function Leaderboard() {
 
   if (!users && !scores) return <h1>Loading Leaderboards...</h1>;
   return (
-    <div className="min-h-screen bg-base-100 p-6">
+    <div className="min-h-screen bg-base-100 p-4">
       <div className="flex justify-between mb-8">
         <h1 className="text-3xl font-bold text-primary tracking-wide">
           LEADERBOARDS
@@ -161,30 +161,60 @@ export default function Leaderboard() {
       </div>
 
       <div className="flex flex-col items-center">
-        <div className="w-72 bg-base-200 rounded-lg shadow-md p-6 mb-8">
-          <h1 className="text-lg font-bold text-accent">Top 10 PT Scores</h1>
-          <ol>
-            {merged
+        <div className="w-full bg-base-200 rounded-xl shadow-2xl p-4 mb-6 text-white">
+          <h1 className="text-xl text-secondary font-bold text-center mb-1 pb-2 uppercase tracking-tight">
+            Top 10 PT Scores
+          </h1>
+          <div className="grid grid-cols-5 gap-4">
+            {applyFilters(merged)
               .sort((a, b) => b.score - a.score)
               .slice(0, 10)
-              .map((merge) => (
-                <li key={merge.id}>
-                  {merge.rank} {merge.last_name}:{" "}
-                  {((merge.score / 20) * 1.27).toFixed(0)}
-                  {UserData.id === merge.id &&
-                    alert("Congratulations! You made it on the Leaderboard!")}
-                </li>
-              ))}
-          </ol>
+              .map((merge, index) => {
+                const rank = index + 1;
+                const trophy =
+                  rank === 1
+                    ? "🏆"
+                    : rank === 2
+                      ? "🥈"
+                      : rank === 3
+                        ? "🥉"
+                        : "";
+
+                return (
+                  <div
+                    key={merge.id}
+                    className="flex items-center justify-between bg-base-300 p-3 rounded-lg border border-base-content"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg font-bold w-5 text-yellow-400">
+                        {rank}.
+                      </span>
+                      <span className="font-semibold text-sm">
+                        {merge.rank} {merge.first_name} {merge.last_name}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>{trophy}</span>
+                      <span className="text-yellow-400 font-mono font-bold">
+                        {((merge.score / 20) * 1.27).toFixed(0)}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
         </div>
         <div className="flex flex-wrap justify-center gap-6">
-
-              {/* 2 mile component */}
-          <div className="w-96 bg-[#1a1f2e] rounded-xl shadow-2xl p-6 text-white border border-gray-800">
-            <h1 className="text-xl font-bold text-center mb-1 uppercase tracking-tight">
+          {/* 2 mile component */}
+          <div className="w-96 bg-base-200 rounded-xl shadow-2xl p-4 text-white">
+            <h1 className="text-xl text-secondary font-bold text-center mb-1 pb-2 uppercase tracking-tight">
               Fastest 2-Mile Runs
             </h1>
-            <p className="text-gray-400 text-xs text-center mb-6">(Lower is Better)</p>
+            {/* {
+              <p className="text-gray-400 text-xs text-center mb-6">
+                (Lower is Better)
+              </p>
+            } */}
 
             <div className="space-y-3">
               {applyFilters(runs)
@@ -192,16 +222,25 @@ export default function Leaderboard() {
                 .map((entry, index) => {
                   const rank = index + 1;
                   // Logic for top 3 emojis
-                  const trophy = rank === 1 ? "🏆" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : "";
+                  const trophy =
+                    rank === 1
+                      ? "🏆"
+                      : rank === 2
+                        ? "🥈"
+                        : rank === 3
+                          ? "🥉"
+                          : "";
 
                   return (
                     <div
                       key={entry.workout_id}
-                      className="flex items-center justify-between bg-[#252a3a] p-3 rounded-lg border border-gray-700/50"
+                      className="flex items-center justify-between bg-base-300 p-3 rounded-lg border border-base-content"
                     >
                       <div className="flex items-center gap-3">
                         {/* Rank Number */}
-                        <span className={`text-lg font-bold w-5 ${rank <= 3 ? 'text-yellow-400' : 'text-gray-400'}`}>
+                        <span
+                          className={`text-lg font-bold w-5 text-yellow-400`}
+                        >
                           {rank}.
                         </span>
 
@@ -222,10 +261,10 @@ export default function Leaderboard() {
 
                       {/* Time & Trophy */}
                       <div className="flex items-center gap-2">
+                        <span>{trophy}</span>
                         <span className="text-yellow-400 font-mono font-bold">
                           {formatTime(entry.time)}
                         </span>
-                        <span>{trophy}</span>
                       </div>
                     </div>
                   );
@@ -233,60 +272,132 @@ export default function Leaderboard() {
             </div>
           </div>
 
+          <div className="w-96 bg-base-200 rounded-xl shadow-2xl p-4 text-white">
+            <h1 className="text-xl text-secondary font-bold text-center mb-1 pb-2 uppercase tracking-tight">
+              Most Push Ups
+            </h1>
+            <div className="space-y-3">
+              {applyFilters(pushUps)
+                .slice(0, 10)
+                .map((entry, index) => {
+                  const rank = index + 1;
+                  const trophy =
+                    rank === 1
+                      ? "🏆"
+                      : rank === 2
+                        ? "🥈"
+                        : rank === 3
+                          ? "🥉"
+                          : "";
 
-          <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
-            <h1 className="text-lg font-bold text-accent">
-              Top 10 Most Push Ups (M/F)
-            </h1>
-            <ol>
-              {merged
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 10)
-                .map((merge) => (
-                  <li key={merge.id}>
-                    {merge.rank} {merge.last_name}:{" "}
-                    {(merge.score / 22).toFixed(0)} Reps
-                    {UserData.id === merge.id &&
-                      alert("Congratulations! You made it on the Leaderboard!")}
-                  </li>
-                ))}
-            </ol>
+                  return (
+                    <div
+                      key={entry.workout_id}
+                      className="flex items-center justify-between bg-base-300 p-3 rounded-lg border border-base-content"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg font-bold w-5 text-yellow-400">
+                          {rank}.
+                        </span>
+                        <span className="font-semibold text-sm">
+                          {entry.rank} {entry.first_name} {entry.last_name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span>{trophy}</span>
+                        <span className="text-yellow-400 font-mono font-bold">
+                          {entry.reps} Reps
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
-          <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
-            <h1 className="text-lg font-bold text-accent">
-              Top 10 Most Sit Ups (M/F)
+          <div className="w-96 bg-base-200 rounded-xl shadow-2xl p-4 text-white">
+            <h1 className="text-xl text-secondary font-bold text-center mb-1 pb-2 uppercase tracking-tight">
+              Most Sit Ups
             </h1>
-            <ol>
-              {merged
-                .sort((a, b) => b.score - a.score)
+            <div className="space-y-3">
+              {applyFilters(sitUps)
                 .slice(0, 10)
-                .map((merge) => (
-                  <li key={merge.id}>
-                    {merge.rank} {merge.last_name}:{" "}
-                    {(merge.score / 22).toFixed(0)} Reps
-                    {UserData.id === merge.id &&
-                      alert("Congratulations! You made it on the Leaderboard!")}
-                  </li>
-                ))}
-            </ol>
+                .map((entry, index) => {
+                  const rank = index + 1;
+                  const trophy =
+                    rank === 1
+                      ? "🏆"
+                      : rank === 2
+                        ? "🥈"
+                        : rank === 3
+                          ? "🥉"
+                          : "";
+
+                  return (
+                    <div
+                      key={entry.workout_id}
+                      className="flex items-center justify-between bg-base-300 p-3 rounded-lg border border-base-content"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg font-bold w-5 text-yellow-400">
+                          {rank}.
+                        </span>
+                        <span className="font-semibold text-sm">
+                          {entry.rank} {entry.first_name} {entry.last_name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span>{trophy}</span>
+                        <span className="text-yellow-400 font-mono font-bold">
+                          {entry.reps} Reps
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
-          <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
-            <h1 className="text-lg font-bold text-accent">
-              Top 10 Most PT Minutes
+          <div className="w-96 bg-base-200 rounded-xl shadow-2xl p-4 text-white">
+            <h1 className="text-xl text-secondary font-bold text-center mb-1 pb-2 uppercase tracking-tight">
+              Most PT Minutes
             </h1>
-            <ol>
-              {merged
-                .sort((a, b) => b.score - a.score)
+            <div className="space-y-3">
+              {applyFilters(merged)
+                .sort((a, b) => b.score / 7 - a.score / 7)
                 .slice(0, 10)
-                .map((merge) => (
-                  <li key={merge.id}>
-                    {merge.rank} {merge.last_name}:{" "}
-                    {(merge.score / 7).toFixed(2)} Minutes
-                    {UserData.id === merge.id &&
-                      alert("Congratulations! You made it on the Leaderboard!")}
-                  </li>
-                ))}
-            </ol>
+                .map((entry, index) => {
+                  const rank = index + 1;
+                  const trophy =
+                    rank === 1
+                      ? "🏆"
+                      : rank === 2
+                        ? "🥈"
+                        : rank === 3
+                          ? "🥉"
+                          : "";
+
+                  return (
+                    <div
+                      key={entry.id}
+                      className="flex items-center justify-between bg-base-300 p-3 rounded-lg border border-base-content"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-lg font-bold w-5 text-yellow-400">
+                          {rank}.
+                        </span>
+                        <span className="font-semibold text-sm">
+                          {entry.rank} {entry.first_name} {entry.last_name}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span>{trophy}</span>
+                        <span className="text-yellow-400 font-mono font-bold">
+                          {(entry.score / 7).toFixed(2)} min
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </div>
       </div>
