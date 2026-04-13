@@ -63,7 +63,7 @@ const registerUser = async (req, res) => {
       });
     }
 
-    res.cookie("userId", newUser.id, {
+    res.cookie("userId", newUser[0].id, {
       signed: true,
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
