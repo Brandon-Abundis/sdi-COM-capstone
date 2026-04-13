@@ -1,4 +1,3 @@
-import "./Leaderboard.css";
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../../app/AuthProvider";
 
@@ -27,7 +26,9 @@ export default function Leaderboard() {
   const { sitUps } = useFetchBestSitUps();
   const { pushUps } = useFetchBestPushUps();
 
-  if( !runs && !sitUps && !pushUps) { return <h1>Loading Leaderboard data...</h1> }
+  if (!runs && !sitUps && !pushUps) {
+    return <h1>Loading Leaderboard data...</h1>;
+  }
   /*_____________________________________________________________________________________*/
 
   const formatTime = (totalSeconds) => {
@@ -108,8 +109,8 @@ export default function Leaderboard() {
 
   if (!users && !scores) return <h1>Loading Leaderboards...</h1>;
   return (
-    <>
-      <h1 className="text-3xl font-bold underline text-primary mb-6 tracking-wide">
+    <div className="min-h-screen bg-base-100 p-6">
+      <h1 className="text-3xl font-bold text-primary mb-6 tracking-wide">
         PT LEADERBOARDS
       </h1>
 
@@ -168,8 +169,8 @@ export default function Leaderboard() {
               ))}
           </ol>
         </div>
-        <div id="Small_LBs">
-          <div id="Two_Mile">
+        <div className="flex flex-wrap justify-center gap-6">
+          <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
             <h1 className="text-lg font-bold text-accent">
               Top 10 Fastest 2-Mile Runs
             </h1>
@@ -181,7 +182,7 @@ export default function Leaderboard() {
               )).slice(0, 10) }
             </ol>
           </div>
-          <div id="Push-Ups">
+          <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
             <h1 className="text-lg font-bold text-accent">
               Top 10 Most Push Ups (M/F)
             </h1>
@@ -199,7 +200,7 @@ export default function Leaderboard() {
                 ))}
             </ol>
           </div>
-          <div id="Sit-Ups">
+          <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
             <h1 className="text-lg font-bold text-accent">
               Top 10 Most Sit Ups (M/F)
             </h1>
@@ -217,7 +218,7 @@ export default function Leaderboard() {
                 ))}
             </ol>
           </div>
-          <div id="Minutes">
+          <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
             <h1 className="text-lg font-bold text-accent">
               Top 10 Most PT Minutes
             </h1>
@@ -237,6 +238,6 @@ export default function Leaderboard() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
