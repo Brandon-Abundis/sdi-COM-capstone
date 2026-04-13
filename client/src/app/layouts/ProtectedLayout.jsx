@@ -3,6 +3,7 @@ import { Outlet, Link, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar.jsx";
 import OpenIcon from "../components/OpenIcon.jsx";
 import { useAuth } from "../AuthProvider.jsx";
+import Avatar from "../../features/profile/Components/Avatar.jsx";
 
 export default function ProtectedLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -52,7 +53,7 @@ export default function ProtectedLayout() {
             onMouseLeave={scheduleClose}
             className="btn btn-ghost btn-circle avatar outline-1 outline-accent hover:outline-[#7c3aed] bg-[#2a2245] select-none"
           >
-            <span className="text-sm font-bold text-[#c084fc]">{initials}</span>
+            <Avatar userData={user}> </Avatar>
           </div>
 
           <ul
@@ -99,7 +100,6 @@ export default function ProtectedLayout() {
           </ul>
         </div>
       </div>
-
 
       <div
         className={`transition-all duration-300 ${
