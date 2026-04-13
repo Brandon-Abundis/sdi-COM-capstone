@@ -1,15 +1,23 @@
 import WorkoutBox from "../components/WorkoutBox";
 import AddWorkout from "../components/AddWorkout";
 import Modal from "../components/Modal";
+import Tab from "../components/Tab";
 import { useState, useEffect } from "react";
 
 export default function Workouts() {
   let [showModal, setShowModal] = useState(false);
   let [editInfo, setEditInfo] = useState(null);
   let [allInfo, setAllInfo] = useState([]);
+  let [tab, setTab] = useState(null);
+  let tabClicked =
+    "font-bold hover:bg-gray-500 bg-purple-500 cursor-pointer p-4  border-2 rounded-md";
+  let def = "font-bold hover:bg-gray-500 bg-purple-500 cursor-pointer p-4  border-2 rounded-md"
+  let dateWeekAgo = new Date(); // right flippin now
+  dateWeekAgo.setDate(dateWeekAgo.getDate() - 7); // right flippin a week ago
+  console.log(dateWeekAgo);
   let empty = "";
   let defaultString = "N/A";
-  let defaultNum = 10
+  let defaultNum = 10;
   let [maxLen, setMaxLen] = useState(0);
   let currentUser = JSON.parse(localStorage.getItem("user")).email;
   console.log("start... up !");
@@ -35,6 +43,7 @@ export default function Workouts() {
                     weight,
                     muscle_group,
                     id,
+                    created_at,
                   } = data;
 
                   let currentData = {
@@ -47,9 +56,13 @@ export default function Workouts() {
                     muscle_group: muscle_group || defaultString,
                     weight: weight || defaultNum,
                     notes: notes || defaultString,
+                    created_at: new Date(created_at),
                     storedId: id,
                   };
                   setAllInfo((prev) => [...prev, currentData]);
+                  // put all in all table anyway
+
+
                 });
               });
           }
@@ -57,21 +70,19 @@ export default function Workouts() {
       );
   }, []);
 
-  let info = {
-    id: 10000,
-    title: "thisisaTest thisisaTest",
-    type: "strength",
-    time: "45",
-    distance: "N/A",
-    reps: "375",
-    muscle_group: "Arms !",
-    weight: "100",
-    notes: "test note !",
-  };
-
   if (maxLen === null || allInfo.length !== maxLen) {
     return <h2> Loading ! </h2>;
   }
+
+  let filtered =
+    tab == "Completed"
+      ? allInfo.filter((elem) => elem.created_at < dateWeekAgo)
+      : tab == "In Progress"
+        ? allInfo.filter((elem) => elem.created_at >= dateWeekAgo)
+        : allInfo;
+
+  filtered = filtered.sort((a, b) => b.created_at - a.created_at)
+
   return (
     <div>
       <div>
@@ -83,6 +94,26 @@ export default function Workouts() {
           {" "}
           WORKOUTS{" "}
         </h1>
+      </div>
+      <div className={"flex justify-center gap-2"}>
+        {/*--------------------------------- TABS RIGHT HERE ---------------------------------*/}
+        <Tab
+          name={"In Progress"}
+          classOver={tabClicked}
+          func={() => {
+            let currentTab = tab
+            setTab(currentTab != "In Progress" ? "In Progress" : null);
+          }}
+        />
+        <Tab
+          name={"Completed"}
+          classOver={tab == "Completed" ? def : tab == "In Progress" ? def : tabClicked}
+          func={() => {
+            let currentTab = tab
+            setTab(currentTab != "Completed" ? "Completed" : null);
+          }}
+        />
+        {/*--------------------------------- TABS STILL RIGHT HERE ---------------------------------*/}
       </div>
       <div id={"workoutArea"} className={"p-4 grid grid-cols-4"}>
         <AddWorkout
@@ -110,13 +141,13 @@ export default function Workouts() {
           }}
         />
 
-        {allInfo.map((elem, index) => {
+        {filtered.map((elem, index) => {
           return (
             <WorkoutBox
               details={elem}
               onClick={() => {
                 console.log(elem);
-                setEditInfo(allInfo[index]);
+                setEditInfo(filtered[index]);
                 setShowModal(true);
               }}
               key={index}

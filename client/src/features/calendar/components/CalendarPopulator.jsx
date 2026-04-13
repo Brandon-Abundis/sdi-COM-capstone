@@ -6,18 +6,20 @@
 //Special Workout Events: -Workout events app-wide(?) (e.g Pushups x2 XP or other)
 
 
-export default function CalendarPopulator({dayEvents}) {
+export default function CalendarPopulator({day, dayEvents, dayWorkouts, events, selectedDay}) {
+
+    if (!dayWorkouts || dayWorkouts.length === 0) return null
+
+    if (day !== selectedDay) return null
 
     return (
-        <>
-            <ul className="event-list">
-                {dayEvents.map((ev) => (
+            <ul className="cal-block-event">
+                {dayWorkouts.map((ev) => (
                     <li key={ev.id}>
-                    <span className="event-name">{ev.name}</span>
+                    <p className="cal-block-event">{ev.name}</p>
                     {ev.time && <span className="event-time">{ev.time}</span>}
                     </li>
                 ))}
             </ul>
-        </>
     )
 }
