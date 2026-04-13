@@ -24,7 +24,7 @@ export default function AvatarSelection() {
   const [base, setBase] = useState(savedProfile?.base || base_pic[0]);
   const [head, setHead] = useState(savedProfile?.head || null);
   const [chosenGloves, setChosenGloves] = useState(
-    savedProfile?.gloves || null,
+    savedProfile?.chosenGloves || null,
   );
   const [chosenMisc, setChosenMisc] = useState(savedProfile?.chosenMisc || []);
   const [profileInfo, setProfileInfo] = useState({ ...user });

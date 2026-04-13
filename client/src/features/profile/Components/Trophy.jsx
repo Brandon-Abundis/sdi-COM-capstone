@@ -1,7 +1,14 @@
 import { xp_to_level_up, current_level } from "../Helpers/Xp";
+import { useState, useEffect } from "react";
 
 export default function Trophy({ userData }) {
+  const titles = {};
+  for (let i = 1; i <= 15; i++) {
+    titles[i] = `/Titles/${i}.png`;
+  }
+
   if (!userData) return <h1>Loading...</h1>;
+
   const curr_level = current_level(userData.xp);
   const level_up = xp_to_level_up(curr_level + 1);
   return (
@@ -53,18 +60,26 @@ export default function Trophy({ userData }) {
         </div>
       </div>
 
-      <div id="Titles" className="flex-1">
-        <h3 className="text-[10px] uppercase font-black opacity-40 mb-2 tracking-widest">
+      <div id="Titles" className="flex-1 mt-6">
+        <h3 className="text-[10px] uppercase font-black opacity-40 tracking-widest italic">
           Earned Titles
         </h3>
-        <div className="flex flex-wrap gap-1">
-          {userData.titles_ids.map((title, index) => (
-            <span
+        <div className="flex overflow-x-auto gap-4 pb-6 no-scrollbar snap-x snap-mandatory">
+          {userData.titles_ids.map((id, index) => (
+            <div
               key={index}
-              className="badge badge-ghost badge-lg font-medium whitespace-nowrap"
+              className="flex-none w-64 snap-center relative group overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-[1px] transition-all duration-300 hover:scale-105"
             >
-              Title ID (to be replaced with title): {title}
-            </span>
+              <div className="bg-[#121212] rounded-xl overflow-hidden shadow-2xl">
+                <img
+                  src={titles[id]}
+                  alt={`Title ${id}`}
+                  className="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity"
+                />
+              </div>
+
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent pointer-events-none" />
+            </div>
           ))}
         </div>
       </div>
