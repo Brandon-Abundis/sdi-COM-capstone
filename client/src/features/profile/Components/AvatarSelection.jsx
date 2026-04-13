@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../app/AuthProvider";
 
 export default function AvatarSelection() {
   const base_pic = ["/Avatar/male.png", "/Avatar/female.png"];
@@ -16,12 +17,56 @@ export default function AvatarSelection() {
     "/Avatar/chain.png",
   ];
 
-  const [base, setBase] = useState(base_pic[0]);
-  const [head, setHead] = useState();
-  const [chosenGloves, setChosenGloves] = useState();
-  const [chosenMisc, setChosenMisc] = useState([]);
+  const { user, refreshUser } = useAuth();
+
+  const savedProfile = user?.profile ? JSON.parse(user.profile) : null;
+
+  const [base, setBase] = useState(savedProfile?.base || base_pic[0]);
+  const [head, setHead] = useState(savedProfile?.head || null);
+  const [chosenGloves, setChosenGloves] = useState(
+    savedProfile?.gloves || null,
+  );
+  const [chosenMisc, setChosenMisc] = useState(savedProfile?.chosenMisc || []);
+  const [profileInfo, setProfileInfo] = useState({ ...user });
+
+  useEffect(() => {
+    if (user?.profile) {
+      try {
+        const parsed = JSON.parse(user.profile);
+
+        setBase(parsed.base || base_pic[0]);
+        setHead(parsed.head || null);
+        setChosenGloves(parsed.chosenGloves || null);
+        setChosenMisc(parsed.chosenMisc || []);
+      } catch (err) {
+        console.error("Failed to parse user profile", err);
+      }
+    }
+  }, [user?.profile]);
 
   const navigate = useNavigate();
+
+  async function edit(data) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/users/id/${user.id}`,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      if (!response.ok) throw new Error("Failed to save");
+      await refreshUser();
+      console.log("Account edited successfully");
+
+      navigate("/profile");
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 
   const handleSave = () => {
     const avatarSelection = {
@@ -31,9 +76,14 @@ export default function AvatarSelection() {
       chosenMisc,
     };
 
-    localStorage.setItem(`user_avatar`, JSON.stringify(avatarSelection));
+    const updatedProfile = {
+      ...profileInfo,
+      profile: avatarSelection,
+    };
 
-    navigate("/profile");
+    setProfileInfo(updatedProfile);
+
+    edit(updatedProfile);
   };
 
   return (
@@ -62,13 +112,14 @@ export default function AvatarSelection() {
             />
           )}
 
-          {chosenMisc.map((item, index) => (
-            <img
-              key={index}
-              src={item}
-              className="absolute inset-0 w-full h-full z-40 object-contain"
-            />
-          ))}
+          {chosenMisc &&
+            chosenMisc.map((item, index) => (
+              <img
+                key={index}
+                src={item}
+                className="absolute inset-0 w-full h-full z-40 object-contain"
+              />
+            ))}
         </div>
 
         <button

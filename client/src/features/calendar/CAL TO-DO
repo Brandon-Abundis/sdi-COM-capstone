@@ -2,9 +2,9 @@ Have Upcoming display the data between the week,
  in approaching data (1 day - 7 day away), and allow the 
  format to differ in design from existing events. 
 
- display for upcoming week
+ display for upcoming week  ---- DONE ----
 
- approach from close to far
+ approach from close to far ---- DONE ----
 
  (Name of workout -- # days away)
  1 day away = Tomorrow
@@ -27,3 +27,31 @@ possible look to see if redirects to corresponding workout? (Modem?)
 
 
 clean up commented code before push
+
+------------ PRIORITY LIST --------
+
+Populate calendar with workouts and base on what event, give different design / color.
+
+Make Events clickable to route to corresponding workout page / display in modal?
+
+Popualte user information? show completion? Display decals corresponding with?
+
+Toggleable switch between showing Group data, showing Personal Data, and showing both?
+
+Pair programming discussion- ---------
+
+get an understanding of what is it that needs to be done, passed in
+
+what are events? how do they work? do they contain only personal workouts? are they tied to all workouts including group workouts?
+
+for add event, make it a dropdown to add group or personal events. \
+
+pass in user ID and then go through all the groups, and inside groups go through events. 
+
+another tab called global events, not mapped but prepare for it to be existing.
+
+---- Calendar possible assistance ----
+
+- grid filling
+
+- 

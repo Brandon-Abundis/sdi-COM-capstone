@@ -11,7 +11,7 @@ const getAllScores = async (req, res) => {
         action: "FETCH_SCORES",
         status_code: 200,
         user_id: null,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all scores" },
       });
     }
     res.status(200).send(result);
@@ -37,7 +37,7 @@ const getScoresById = async (req, res) => {
         action: "FETCH_USER_SCORES",
         status_code: 200,
         user_id: result.id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all scores user score" },
       });
     }
     res.status(200).send(result);

@@ -1,6 +1,6 @@
 // const { faker } = require("@faker-js/faker");
 // const bcrypt = require("bcrypt");
-const getUsers = require('../support/usersObject');
+const getUsers = require("../support/usersObject");
 // const SALT_ROUNDS = 10;
 /**
  * @param { import("knex").Knex } knex
@@ -67,4 +67,5 @@ exports.seed = async function (knex) {
   // });
 
   await knex("users").insert(usersData);
+  await knex.raw("SELECT setval('users_id_seq', (SELECT MAX(id) FROM users))");
 };

@@ -7,7 +7,7 @@ function timeToMinutes(timeStr) {
   return h * 60 + (m || 0);
 }
 
-export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events, dayEvents}) {
+export default function CalendarApp({ currentDate, onMonthChange, selectedDay, onDaySelect, events, dayEvents, dayWorkouts}) {
   const year = currentDate.getUTCFullYear();
   const month = currentDate.getUTCMonth();
   const firstDayOfMonth = new Date(year, month, 1).getUTCDay();
@@ -19,7 +19,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
   function eventsForDay(day) {
     return events
       .filter((e) => {
-        const d = new Date(e.date);
+        const d = new Date(e.start_date);
         return (
           d.getUTCFullYear() === year &&
           d.getUTCMonth() === month &&
@@ -33,9 +33,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
   function handleDayClick(day) {
     onDaySelect(selectedDay === day ? null : day);
   }
-
-
-
+//  console.log(dayEvents)
 
   return (
     <div className="calendar">
@@ -97,6 +95,8 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
               <div className="Workouts">
                 <CalendarPopulator
                   dayEvents={dayEvents}
+                  dayWorkouts={dayWorkouts}
+                  events={events}
                 />
               </div>
             </div>

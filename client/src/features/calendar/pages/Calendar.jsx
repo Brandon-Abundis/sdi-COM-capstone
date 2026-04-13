@@ -29,6 +29,8 @@ export default function Calendar() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  // const [dayWorkouts, setDayWorkouts] = useState(null)
+  const [userWorkouts, setUserWorkouts] = useState([]);
   
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -39,8 +41,13 @@ export default function Calendar() {
     .then((r) => r.json())
     .then((data) => setEvents(Array.isArray(data) ? data : []))
     .catch(() => setEvents([]));
+
+    fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
+  .then((r) => r.json())
+  .then((data) => setUserWorkouts(Array.isArray(data) ? data : []))
+  .catch(() => setUserWorkouts([]));
   }, [user?.id]);
-  
+
   // Clear selected day when month changes so the side panel doesn't show stale data
   function handleMonthChange(newDate) {
     setCurrentDate(newDate);
@@ -56,11 +63,7 @@ export default function Calendar() {
 
     const dayDiff = d1 - d2;
     const daysAway = Math.ceil(dayDiff / (1000 * 60 * 60 * 24));
-    // console.log("test of the getDaysAway running")
-    // console.log("in order: eventStartDate, eventDate, d1, d2, dayDiff, daysAway")
-    // console.log(eventStartDate, eventDate, d1, d2, dayDiff, daysAway)
-    // console.log("eventStartDate:" + eventStartDate)
-    // console.log("transferSelectedDate:" + transferSelectedDate)
+
 
     if (daysAway === 1) {
       return (<span className="event-time">Tomorrow</span>);
@@ -81,34 +84,60 @@ export default function Calendar() {
   ? new Date(Date.UTC(year, month, selectedDay + 7))
   : null;
   
+  
+  
   const dayEvents = selectedDate
   ? events
-  .filter((e) => {
-    const d = new Date(e.start_date);
-    return (
-      d.getUTCFullYear() === selectedDate.getUTCFullYear() &&
-      d.getUTCMonth() === selectedDate.getUTCMonth() &&
-      d.getUTCDate() === selectedDate.getUTCDate()
-    );
+    .filter((e) => {
+      // const d = new Date(e.start_date);
+      // return (
+      //   d.getUTCFullYear() === selectedDate.getUTCFullYear() &&
+      //   d.getUTCMonth() === selectedDate.getUTCMonth() &&
+      //   d.getUTCDate() === selectedDate.getUTCDate()
+      // );
+      const eventDateStr = new Date(e.start_date)
+        .toISOString()
+        .split("T")[0]
+      const selectedDateStr = selectedDate
+        .toISOString()
+        .split("T")[0];
+
+      return eventDateStr === selectedDateStr
   })
   .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
   : [];
   
+  const dayWorkouts = dayEvents.length > 0
+    ? dayEvents.flatMap((event) => 
+    (event.workouts_list || [])
+      .map((workoutId) => userWorkouts.find((w) => w.id === workoutId))
+      .filter(Boolean)
+) : [];
+
   const upcomingWeekEvents = upcomingDateWindowStart && upcomingDateWindowEnd
   ? events
   .filter((e) => {
-    const d = new Date(e.start_date);
-      
+    const d = new Date(e.start_date).getTime();
+
     return (
-      d.getUTCFullYear() >= upcomingDateWindowStart.getUTCFullYear() &&
-      d.getUTCMonth() >= upcomingDateWindowStart.getUTCMonth() &&
-      d.getUTCDate() >= upcomingDateWindowStart.getUTCDate() &&
-      d.getUTCFullYear() <= upcomingDateWindowEnd.getUTCFullYear() &&
-      d.getUTCMonth() <= upcomingDateWindowEnd.getUTCMonth() &&
-      d.getUTCDate() <= upcomingDateWindowEnd.getUTCDate()
+      // d.getUTCFullYear() >= upcomingDateWindowStart.getUTCFullYear() &&
+      // d.getUTCMonth() >= upcomingDateWindowStart.getUTCMonth() &&
+      // d.getUTCDate() >= upcomingDateWindowStart.getUTCDate() &&
+      // d.getUTCFullYear() <= upcomingDateWindowEnd.getUTCFullYear() &&
+      // d.getUTCMonth() <= upcomingDateWindowEnd.getUTCMonth() &&
+      // d.getUTCDate() <= upcomingDateWindowEnd.getUTCDate()
+      d >= upcomingDateWindowStart.getTime() &&
+      d <= upcomingDateWindowEnd.getTime()
     );
   })
-  .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
+  .sort((a, b) => {
+    const dateA = new Date(a.start_date)
+    const dateB = new Date(b.start_date)
+    const dateDiff = dateA - dateB;
+    if (dateDiff !== 0) return dateDiff;
+
+    return timeToMinutes(a.time) - timeToMinutes(b.time)
+  })
   : [];
   
   async function handleDeleteEvent(id) {
@@ -184,15 +213,11 @@ export default function Calendar() {
         <></>
       ) : (
         <aside className="calendar-side-panel">
-          <div className="panel-date-heading">Upcoming Events Tomorrow</div>
-          {/* <CalUpcomingEvents 
-            selectedDay={selectedDay}
-            events={events}
-            /> */}
+          <div className="panel-date-heading">Upcoming Events</div>
           {upcomingWeekEvents.length === 0 ? (
             <p className="no-events">No events yet.</p>
           ) : (
-            <ul className="event-list" /*POSSIBLE UPDATE TO NEW DESIGN WITH WORKOUTS GREYED OUT*/ >
+            <ul className="event-list upcoming-events" /*POSSIBLE UPDATE TO NEW DESIGN WITH WORKOUTS GREYED OUT*/ >
               {upcomingWeekEvents.map((ev) => (
                 <li key={ev.id}>
                   <span className="event-name">{ev.name}</span>
@@ -213,6 +238,7 @@ export default function Calendar() {
           onDaySelect={setSelectedDay}
           events={events}
           dayEvents={dayEvents}
+          dayWorkouts={dayWorkouts}
         />
       </div>
 
