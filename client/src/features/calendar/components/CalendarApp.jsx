@@ -93,10 +93,13 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
                 <span className="event-tab-more">+{dayEvents.length - 3} more</span>
               )}
               <div className="Workouts">
+                
                 <CalendarPopulator
+                  day={day}
                   dayEvents={dayEvents}
                   dayWorkouts={dayWorkouts}
                   events={events}
+                  selectedDay={selectedDay}
                 />
               </div>
             </div>
