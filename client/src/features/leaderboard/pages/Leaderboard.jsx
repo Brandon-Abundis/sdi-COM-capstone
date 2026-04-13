@@ -16,8 +16,8 @@ export default function Leaderboard() {
   const [scores, setScores] = useState();
   const [merged, setMerged] = useState();
 
-  const [gender, setGender] = useState('all');
-  const [ageGroup, setAgeGroup] = useState('all');
+  const [gender, setGender] = useState("all");
+  const [ageGroup, setAgeGroup] = useState("all");
 
   const { user, logout } = useAuth();
 
@@ -36,8 +36,8 @@ export default function Leaderboard() {
     const seconds = totalSeconds % 60;
 
     // padStart ensures that 14:4 becomes 14:04
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-};
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
   // const filteredGenderedRuns = gender === 'all' ? runs : runs?.filter(entry => entry.gender === gender);
   // const filteredGenderedSitups = gender === 'all' ? sitUps : sitUps?.filter(entry => entry.gender === gender);
   // const filteredGenderedPushups = gender === 'all' ? pushUps : pushUps?.filter(entry = entry.gender === gender);
@@ -48,20 +48,26 @@ export default function Leaderboard() {
     if (!data) return [];
 
     //runs through gender first
-    const genderFilter = gender === 'all' ? data : data.filter(entry => entry.gender === gender);
+    const genderFilter =
+      gender === "all" ? data : data.filter((entry) => entry.gender === gender);
 
     //runs though age second
-    if(ageGroup === 'all') return genderFilter;
-    if(ageGroup === '< 25') return genderFilter.filter(e => e.age < 25);
-    if(ageGroup === '25-29') return genderFilter.filter(e => e.age >= 25 && e.age <= 29);
-    if(ageGroup === '30-34') return genderFilter.filter(e => e.age >= 30 && e.age <= 34);
-    if(ageGroup === '35-39') return genderFilter.filter(e => e.age >= 35 && e.age <= 39);
-    if(ageGroup === '40-44') return genderFilter.filter(e => e.age >= 40 && e.age <= 44);
-    if(ageGroup === '45-49') return genderFilter.filter(e => e.age >= 45 && e.age <= 49);
+    if (ageGroup === "all") return genderFilter;
+    if (ageGroup === "< 25") return genderFilter.filter((e) => e.age < 25);
+    if (ageGroup === "25-29")
+      return genderFilter.filter((e) => e.age >= 25 && e.age <= 29);
+    if (ageGroup === "30-34")
+      return genderFilter.filter((e) => e.age >= 30 && e.age <= 34);
+    if (ageGroup === "35-39")
+      return genderFilter.filter((e) => e.age >= 35 && e.age <= 39);
+    if (ageGroup === "40-44")
+      return genderFilter.filter((e) => e.age >= 40 && e.age <= 44);
+    if (ageGroup === "45-49")
+      return genderFilter.filter((e) => e.age >= 45 && e.age <= 49);
 
     //just incase something really bad happens...
     return genderFilter;
-  }
+  };
 
   useEffect(() => {
     fetch(`http://localhost:8080/users/id/${user.id}`)
@@ -110,50 +116,52 @@ export default function Leaderboard() {
   if (!users && !scores) return <h1>Loading Leaderboards...</h1>;
   return (
     <div className="min-h-screen bg-base-100 p-6">
-      <h1 className="text-3xl font-bold text-primary mb-6 tracking-wide">
-        PT LEADERBOARDS
-      </h1>
+      <div className="flex justify-between mb-8">
+        <h1 className="text-3xl font-bold text-primary tracking-wide">
+          LEADERBOARDS
+        </h1>
 
-      <div className="flex flex-wrap gap-4 mb-8 bg-gray-800 p-4 rounded-xl border border-gray-700">
-  {/* Gender Dropdown */}
-  <div className="flex flex-col flex-1 min-w-[150px]">
-      <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
-        Gender
-      </label>
-      <select
-        value={gender}
-        onChange={(e) => setGender(e.target.value)}
-        className="bg-gray-900 text-white p-3 rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none"
-      >
-        <option value="all">All Genders</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-      </select>
-    </div>
+        <div className="flex flex-wrap gap-4 bg-base-300 p-4 rounded-xl border border-accent">
+          {/* Gender Dropdown */}
+          <div className="flex flex-col flex-1 min-w-[150px]">
+            <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
+              Gender
+            </label>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="bg-base-100 text-white px-3 py-1 rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none"
+            >
+              <option value="all">All Genders</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
 
-    {/* Age Dropdown */}
-    <div className="flex flex-col flex-1 min-w-[150px]">
-      <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
-        Age Bracket
-      </label>
-      <select
-        value={ageGroup}
-        onChange={(e) => setAgeGroup(e.target.value)}
-        className="bg-gray-900 text-white p-3 rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none"
-      >
-        <option value="all">Overall (All Ages)</option>
-        <option value="< 25">&lt; 25</option>
-        <option value="25-29">25 - 29</option>
-        <option value="30-34">30 - 34</option>
-        <option value="35-39">35 - 39</option>
-        <option value="40-44">40 - 44</option>
-        <option value="45-49">45 - 49</option>
-      </select>
-    </div>
-  </div>
+          {/* Age Dropdown */}
+          <div className="flex flex-col flex-1 min-w-[150px]">
+            <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
+              Age Bracket
+            </label>
+            <select
+              value={ageGroup}
+              onChange={(e) => setAgeGroup(e.target.value)}
+              className="bg-base-100 text-white px-3 py-1 rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none"
+            >
+              <option value="all">Overall (All Ages)</option>
+              <option value="< 25">&lt; 25</option>
+              <option value="25-29">25 - 29</option>
+              <option value="30-34">30 - 34</option>
+              <option value="35-39">35 - 39</option>
+              <option value="40-44">40 - 44</option>
+              <option value="45-49">45 - 49</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-      <div id="LBs">
-        <div id="PT_Scores">
+      <div className="flex flex-col items-center">
+        <div className="w-72 bg-base-200 rounded-lg shadow-md p-6 mb-8">
           <h1 className="text-lg font-bold text-accent">Top 10 PT Scores</h1>
           <ol>
             {merged
@@ -175,11 +183,14 @@ export default function Leaderboard() {
               Top 10 Fastest 2-Mile Runs
             </h1>
             <ol>
-              {applyFilters(runs).map(entry => (
-                <li key={entry.id}>
-                  {entry.rank} {entry.first_name} {entry.last_name} : {formatTime(entry.time)}
-                </li>
-              )).slice(0, 10) }
+              {applyFilters(runs)
+                .map((entry) => (
+                  <li key={entry.id}>
+                    {entry.rank} {entry.first_name} {entry.last_name} :{" "}
+                    {formatTime(entry.time)}
+                  </li>
+                ))
+                .slice(0, 10)}
             </ol>
           </div>
           <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
