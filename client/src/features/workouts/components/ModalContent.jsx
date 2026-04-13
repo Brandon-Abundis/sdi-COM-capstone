@@ -15,6 +15,7 @@ export default function ModalContent({ cancel, info }) {
     muscle_group,
     weight,
     storedId,
+    created_at,
   } = info
     ? info
     : {
@@ -124,12 +125,18 @@ export default function ModalContent({ cancel, info }) {
 
       <div
         id="inputList"
-        className="border-2 border-base-300 rounded-lg gap-2 bg-base-200 w-160 h-200 flex flex-col items-center justify-center text-secondary font-bold"
+        className="border-2 border-base-300 rounded-lg gap-2 bg-base-200 w-160 h-220 flex flex-col items-center justify-center text-secondary font-bold"
       >
         {storedId ? (
           <h3 className="text-base-content/50 text-xs"> Workout ID: {storedId} </h3>
         ) : (
           <h3 className="text-base-content/30 text-xs">— New Workout —</h3>
+        )}
+
+        {created_at ? (
+          <h3 className="text-base-content/50 text-xs"> Time Created: {created_at.toDateString()} </h3>
+        ) : (
+          <h3 className="text-base-content/30 text-xs">— No Date Yet —</h3>
         )}
 
         <h2> Title </h2>
