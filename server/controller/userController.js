@@ -13,7 +13,7 @@ const getAll = async (req, res) => {
         action: "FETCH_USERS",
         status_code: 200,
         user_id: null,
-        metadata: JSON.stringify(result),
+        metadata: { message: "Fetched all users" },
       });
     }
     res.status(200).send(result);
