@@ -1,4 +1,5 @@
-export default function Button({ name, func }) {
+export default function Button({ name, func, type }) {
+  
   return (
     <button
       onClick={() => func()}
