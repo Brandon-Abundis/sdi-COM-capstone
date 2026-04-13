@@ -178,21 +178,62 @@ export default function Leaderboard() {
           </ol>
         </div>
         <div className="flex flex-wrap justify-center gap-6">
-          <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
-            <h1 className="text-lg font-bold text-accent">
-              Top 10 Fastest 2-Mile Runs
+
+              {/* 2 mile component */}
+          <div className="w-96 bg-[#1a1f2e] rounded-xl shadow-2xl p-6 text-white border border-gray-800">
+            <h1 className="text-xl font-bold text-center mb-1 uppercase tracking-tight">
+              Fastest 2-Mile Runs
             </h1>
-            <ol>
+            <p className="text-gray-400 text-xs text-center mb-6">(Lower is Better)</p>
+
+            <div className="space-y-3">
               {applyFilters(runs)
-                .map((entry) => (
-                  <li key={entry.id}>
-                    {entry.rank} {entry.first_name} {entry.last_name} :{" "}
-                    {formatTime(entry.time)}
-                  </li>
-                ))
-                .slice(0, 10)}
-            </ol>
+                .slice(0, 10)
+                .map((entry, index) => {
+                  const rank = index + 1;
+                  // Logic for top 3 emojis
+                  const trophy = rank === 1 ? "🏆" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : "";
+
+                  return (
+                    <div
+                      key={entry.workout_id}
+                      className="flex items-center justify-between bg-[#252a3a] p-3 rounded-lg border border-gray-700/50"
+                    >
+                      <div className="flex items-center gap-3">
+                        {/* Rank Number */}
+                        <span className={`text-lg font-bold w-5 ${rank <= 3 ? 'text-yellow-400' : 'text-gray-400'}`}>
+                          {rank}.
+                        </span>
+
+                        {/* Circular Avatar */}
+                        {/* <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-600">
+                          <img
+                            src={entry.profile || 'https://placeholder.com'}
+                            alt="profile"
+                            className="w-full h-full object-cover"
+                          />
+                        </div> */}
+
+                        {/* Name */}
+                        <span className="font-semibold text-sm">
+                          {entry.rank} {entry.first_name} {entry.last_name}
+                        </span>
+                      </div>
+
+                      {/* Time & Trophy */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-400 font-mono font-bold">
+                          {formatTime(entry.time)}
+                        </span>
+                        <span>{trophy}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
+
+
           <div className="w-72 bg-base-200 rounded-lg shadow-md p-6">
             <h1 className="text-lg font-bold text-accent">
               Top 10 Most Push Ups (M/F)
