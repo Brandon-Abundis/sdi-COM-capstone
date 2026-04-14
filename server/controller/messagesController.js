@@ -13,9 +13,11 @@ const getGroupMessages = async (req, res) => {
         "messages.text",
         "messages.user_id",
         "messages.created_at",
+        "users.username",
         "users.first_name",
         "users.last_name",
         "users.rank",
+        "users.profile",
       );
     res.status(200).json(messages);
   } catch (err) {
@@ -54,9 +56,11 @@ const getDMMessages = async (req, res) => {
         "messages.user_id",
         "messages.to_user_id",
         "messages.created_at",
+        "users.username",
         "users.first_name",
         "users.last_name",
         "users.rank",
+        "users.profile",
       );
     res.status(200).json(messages);
   } catch (err) {
