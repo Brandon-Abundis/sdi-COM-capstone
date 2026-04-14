@@ -77,8 +77,6 @@ export default function AvatarSelection() {
     edit(updatedProfile);
   };
 
-  if (!user?.profile) return <h1>loading...</h1>;
-
   return (
     <div className="flex flex-col md:flex-row gap-8 p-6 bg-base-100 rounded-xl shadow-xl">
       <div className="flex flex-col items-center gap-4">
