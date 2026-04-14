@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../../../app/AuthProvider";
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
@@ -25,7 +24,6 @@ function getDaysUntil(dateStr) {
 }
 
 export default function UpcomingEvents() {
-  const { user } = useAuth();
   const [allEvents, setAllEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,52 +42,55 @@ export default function UpcomingEvents() {
       .then((results) => {
         const future = results
           .flat()
-          .filter((e) => getDaysUntil(e.start_date) > 0)
-          .sort((a, b) => new Date(a.date) - new Date(b.date));
+          .filter((e) => getDaysUntil(e.start_date) >= 0)
+          .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
         setAllEvents(future);
       })
       .catch(() => setAllEvents([]))
       .finally(() => setLoading(false));
   }, []);
 
-  const events = user?.is_admin
-    ? allEvents.filter((e) => getDaysUntil(e.start_date) <= 7).slice(0, 5)
-    : allEvents;
+  const within7 = allEvents.filter((e) => getDaysUntil(e.start_date) <= 7);
+  const beyond7 = allEvents.filter((e) => getDaysUntil(e.start_date) > 7);
+
+  function renderCard(event) {
+    const days = getDaysUntil(event.start_date);
+    return (
+      <div
+        key={event.id}
+        className="card bg-base-200 border border-base-300 p-4 flex items-center justify-between gap-3"
+      >
+        <div className="space-y-0.5">
+          <p className="text-sm font-semibold text-base-content">{event.name}</p>
+          <p className="text-xs text-base-content/50">
+            {formatDate(event.start_date)} · {formatTime(event.start_time)}
+          </p>
+        </div>
+        <span className="text-xs font-bold flex-shrink-0 px-2 py-1 rounded-md bg-base-300 text-secondary border border-primary">
+          {days === 0 ? "Today" : `In ${days}d`}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-bold text-accent">
-        Upcoming Events
-        {user?.is_admin && (
-          <span className="text-xs text-secondary font-normal ml-2">(Next 7 Days)</span>
-        )}
-      </h2>
+      <h2 className="text-lg font-bold text-accent">Upcoming Events</h2>
 
       {loading && <p className="text-sm text-base-content/50">Loading...</p>}
 
-      {!loading && events.length === 0 && (
+      {!loading && allEvents.length === 0 && (
         <p className="text-sm text-base-content/50">No upcoming events.</p>
       )}
 
-      {events.map((event) => {
-        const days = getDaysUntil(event.start_date);
-        return (
-          <div
-            key={event.id}
-            className="card bg-base-200 border border-base-300 p-4 flex items-center justify-between gap-3"
-          >
-            <div className="space-y-0.5">
-              <p className="text-sm font-semibold text-base-content">{event.name}</p>
-              <p className="text-xs text-base-content/50">
-                {formatDate(event.start_date)} · {formatTime(event.start_time)}
-              </p>
-            </div>
-            <span className="text-xs font-bold flex-shrink-0 px-2 py-1 rounded-md bg-base-300 text-secondary border border-primary">
-              In {days}d
-            </span>
-          </div>
-        );
-      })}
+      {within7.map(renderCard)}
+
+      {beyond7.length > 0 && (
+        <div className="mt-3">
+          <p className="text-xs font-bold text-base-content/30 uppercase tracking-wider mb-2">Further Out</p>
+          {beyond7.map(renderCard)}
+        </div>
+      )}
     </div>
   );
 }

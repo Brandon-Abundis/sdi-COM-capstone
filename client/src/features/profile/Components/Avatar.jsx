@@ -30,6 +30,7 @@ export default function Avatar({ userData }) {
 
       {savedAvatar && (
         <>
+          <img src={savedAvatar.color} className="absolute inset-0 z-5" />
           <img src={savedAvatar.base} className="absolute inset-0 z-10" />
           {savedAvatar.chosenGloves && (
             <img
