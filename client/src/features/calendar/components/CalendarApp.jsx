@@ -35,6 +35,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
   }
 //  console.log(dayEvents)
 
+
   return (
     <div className="calendar">
       <header>
@@ -92,8 +93,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
               {dayEvents.length > 3 && (
                 <span className="event-tab-more">+{dayEvents.length - 3} more</span>
               )}
-              <div className="Workouts">
-                
+              {/* <div className="Workouts">
                 <CalendarPopulator
                   day={day}
                   dayEvents={dayEvents}
@@ -101,7 +101,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
                   events={events}
                   selectedDay={selectedDay}
                 />
-              </div>
+              </div> */}
             </div>
           );
         })}
