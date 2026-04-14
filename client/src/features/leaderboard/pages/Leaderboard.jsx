@@ -123,7 +123,7 @@ export default function Leaderboard() {
 
         <div className="flex flex-wrap gap-4 bg-base-300 p-4 rounded-xl border border-accent">
           {/* Gender Dropdown */}
-          <div className="flex flex-col flex-1 min-w-[150px]">
+          <div className="flex flex-col flex-1 min-w-37.5">
             <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
               Gender
             </label>
@@ -139,7 +139,7 @@ export default function Leaderboard() {
           </div>
 
           {/* Age Dropdown */}
-          <div className="flex flex-col flex-1 min-w-[150px]">
+          <div className="flex flex-col flex-1 min-w-37.5">
             <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
               Age Bracket
             </label>
