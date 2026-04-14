@@ -72,7 +72,7 @@ export default function GoalsWidget() {
         <>
           <div className="space-y-4 mb-4">
             {goals.slice(0, 3).map((goal) => (
-              <div key={goal.id} className="border-l-2 border-primary pl-4">
+              <div key={goal.id} className="border-l-4 border-primary pl-4">
                 <h4 className="text-lg font-bold text-secondary">
                   {goal.name}
                 </h4>
