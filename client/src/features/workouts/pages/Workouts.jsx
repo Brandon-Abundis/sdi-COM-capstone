@@ -2,13 +2,16 @@ import WorkoutBox from "../components/WorkoutBox";
 import AddWorkout from "../components/AddWorkout";
 import Modal from "../components/Modal";
 import Tab from "../components/Tab";
-import { useState, useEffect } from "react";
+import "../styles/Workouts.css"
+import { useState, useEffect, useRef } from "react";
 
 export default function Workouts() {
   let [showModal, setShowModal] = useState(false);
   let [editInfo, setEditInfo] = useState(null);
   let [allInfo, setAllInfo] = useState([]);
   let [tab, setTab] = useState(null);
+  let progressRef = useRef(null)
+  let completeRef = useRef(null)
   let tabClicked =
     "font-bold hover:bg-gray-500 bg-purple-500 cursor-pointer p-4  border-2 rounded-md";
   let def = "font-bold hover:bg-gray-500 bg-purple-500 cursor-pointer p-4  border-2 rounded-md"
@@ -98,19 +101,33 @@ export default function Workouts() {
       <div className={"flex justify-center gap-2"}>
         {/*--------------------------------- TABS RIGHT HERE ---------------------------------*/}
         <Tab
+        ref={progressRef}
           name={"In Progress"}
-          classOver={tabClicked}
           func={() => {
             let currentTab = tab
             setTab(currentTab != "In Progress" ? "In Progress" : null);
+
+            if (currentTab != "In Progress") {
+              progressRef.current.id = "chosenTab"
+              completeRef.current.id = ""
+            } else {
+              progressRef.current.id = ""
+            }
           }}
         />
         <Tab
+          ref={completeRef}
           name={"Completed"}
-          classOver={tab == "Completed" ? def : tab == "In Progress" ? def : tabClicked}
           func={() => {
             let currentTab = tab
             setTab(currentTab != "Completed" ? "Completed" : null);
+
+            if (currentTab != "Completed") {
+              completeRef.current.id = "chosenTab"
+              progressRef.current.id = ""
+            } else {
+              completeRef.current.id = ""
+            }
           }}
         />
         {/*--------------------------------- TABS STILL RIGHT HERE ---------------------------------*/}
