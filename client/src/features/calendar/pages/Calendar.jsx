@@ -31,6 +31,7 @@ export default function Calendar() {
   const [saveError, setSaveError] = useState("");
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   // const [dayWorkouts, setDayWorkouts] = useState(null)
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [userWorkouts, setUserWorkouts] = useState([]);
   
   const year = currentDate.getFullYear();
@@ -53,7 +54,15 @@ export default function Calendar() {
   function handleMonthChange(newDate) {
     setCurrentDate(newDate);
     setSelectedDay(null);
+    setSelectedEvent(null)
   }
+
+  function handleDaySelect(day) {
+  setSelectedDay(day);
+  setSelectedEvent(null);
+}
+
+
   
   function getDaysAway(eventStartDate, selectedDate) {
     const eventDate = new Date(eventStartDate)
@@ -212,6 +221,41 @@ export default function Calendar() {
   })
   : null;
   
+  // TEST CODE BELOOWWWWWWWWW ------------------------------------------------------------
+
+    function displayWorkoutsForEvent(event) {
+    if (!event.workouts_list || event.workouts_list.length === 0) {
+      return <p>No workouts for this event.</p>
+    }
+
+    const workoutsForEvent = event.workouts_list
+      .map((workoutId) => userWorkouts.find((w) => w.id === workoutId))
+      .filter(Boolean)
+
+    if (workoutsForEvent.length === 0) {
+      return <p>No workouts found for this event.</p>
+    }
+
+    return (
+      <ul className="workout-list">
+        {workoutsForEvent.map((workout) => (
+          <li key={workout.id}>{workout.name}</li>
+        ))}
+      </ul>
+    )
+  }
+
+  function eventsForDay(day) {
+    return events
+      .filter((e) => {
+        const eventDateStr = new Date(e.start_date).toISOString().split("T")[0];
+        const selectedDateStr = new Date(Date.UTC(year, month, day))
+          .toISOString()
+          .split("T")[0];
+        return eventDateStr === selectedDateStr
+      })
+    .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
+  }
 
 
   return (
@@ -242,7 +286,7 @@ export default function Calendar() {
           currentDate={currentDate}
           onMonthChange={handleMonthChange}
           selectedDay={selectedDay}
-          onDaySelect={setSelectedDay}
+          onDaySelect={handleDaySelect}
           events={events}
           dayEvents={dayEvents}
           dayWorkouts={dayWorkouts}
@@ -261,10 +305,10 @@ export default function Calendar() {
             ) : (
               <ul className="event-list">
                 {dayEvents.map((ev) => (
-                  <li key={ev.id}>
+                  <li key={ev.id} onClick={() => setSelectedEvent(ev)}>
                     <span className="event-name">{ev.name}</span>
-                    {ev.time && (
-                      <span className="event-time">{formatTime(ev.time)}</span>
+                    {ev.start_time && (
+                      <span className="event-time">{formatTime(ev.start_time)}</span>
                     )}
                     {confirmDeleteId === ev.id ? (
                       <span className="delete-confirm">
@@ -288,7 +332,12 @@ export default function Calendar() {
                 ))}
               </ul>
             )}
-
+  {selectedEvent && (
+  <div className="workout-panel">
+    <h4>Workouts for {selectedEvent.name}</h4>
+    {displayWorkoutsForEvent(selectedEvent)}
+  </div>
+)}
             <form className="add-event-form" onSubmit={handleAddEvent}>
               <h3>Add Event</h3>
               <input
