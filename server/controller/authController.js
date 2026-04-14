@@ -10,6 +10,7 @@ const createUser = async (user) => {
     .returning([
       "id",
       "email",
+      "username",
       "first_name",
       "last_name",
       "gender",
@@ -137,6 +138,7 @@ const login = async (req, res) => {
     res.status(200).json({
       id: user.id,
       email: email,
+      username: user.username,
       first_name: user.first_name,
       last_name: user.last_name,
       profile: user.profile,
