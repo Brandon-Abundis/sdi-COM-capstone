@@ -16,7 +16,7 @@ module.exports = async () => {
       password: adminPassword,
       rank: "General",
       gender: "Male",
-      age: 45,
+      age: 67,
       xp: 2500,
       rival_ids: [2, 3, 4],
       badges_ids: [1, 2, 5, 10, 15],
