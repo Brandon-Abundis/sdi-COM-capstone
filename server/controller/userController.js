@@ -709,12 +709,11 @@ const createEvent = async (req, res) => {
     workouts_list,
   } = req.body;
   if (
-    (!goals_list && !workouts_list) ||
     !name ||
     !start_date ||
     !end_date ||
-    start_time ||
-    end_time ||
+    !start_time ||
+    !end_time ||
     !user_id
   ) {
     return res
