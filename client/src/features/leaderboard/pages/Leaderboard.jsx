@@ -11,11 +11,11 @@ export default function Leaderboard() {
   //const user = [ (user:pt score, push ups, situps, minutes, 2 mile)]
   // use .sort to organize by score asc -> desc
   //Fetch for user scores will go here
+  const [showModal, setShowModal] = useState(false);
   const [UserData, setUserData] = useState();
   const [users, setUsers] = useState();
   const [scores, setScores] = useState();
   const [merged, setMerged] = useState();
-
   const [gender, setGender] = useState("all");
   const [ageGroup, setAgeGroup] = useState("all");
 
@@ -112,6 +112,23 @@ export default function Leaderboard() {
   //     alert("Congratulations! You made it on the Leaderboard!");
   //   };
   // }
+  //--------Begin Modal for being on leaderboard----------
+  // useEffect(() => {
+  //   if (merged && user) {
+  //     const top10Ids = applyFilters(merged)
+  //       .sort((a, b) => b.score - a.score)
+  //       .slice(0, 10)
+  //       .map((u) => u.id);
+
+  //     if (top10Ids.includes(user.id)) {
+  //       const timer = setTimeout(() => {
+  //         setShowModal(true);
+  //       }, 1000); // 3 second delay
+
+  //       return () => clearTimeout(timer);
+  //     }
+  //   }
+  // }, [merged, user, gender, ageGroup]);
 
   if (!users && !scores) return <h1>Loading Leaderboards...</h1>;
   return (
@@ -121,16 +138,16 @@ export default function Leaderboard() {
           LEADERBOARDS
         </h1>
 
-        <div className="flex flex-wrap gap-4 bg-base-300 p-4 rounded-xl border border-accent">
+        <div className="flex flex-wrap gap-6 bg-base-300 p-2 px-4 rounded-lg items-center">
           {/* Gender Dropdown */}
-          <div className="flex flex-col flex-1 min-w-37.5">
-            <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
+          <div className="flex flex-row items-center gap-2">
+            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">
               Gender
             </label>
             <select
               value={gender}
               onChange={(e) => setGender(e.target.value)}
-              className="bg-base-100 text-white px-3 py-1 rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none"
+              className="bg-base-100 text-white px-2 py-1 text-sm rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none cursor-pointer"
             >
               <option value="all">All Genders</option>
               <option value="Male">Male</option>
@@ -139,14 +156,14 @@ export default function Leaderboard() {
           </div>
 
           {/* Age Dropdown */}
-          <div className="flex flex-col flex-1 min-w-37.5">
-            <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
+          <div className="flex flex-row items-center gap-2">
+            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">
               Age Bracket
             </label>
             <select
               value={ageGroup}
               onChange={(e) => setAgeGroup(e.target.value)}
-              className="bg-base-100 text-white px-3 py-1 rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none"
+              className="bg-base-100 text-white px-2 py-1 text-sm rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none cursor-pointer"
             >
               <option value="all">Overall (All Ages)</option>
               <option value="< 25">&lt; 25</option>
