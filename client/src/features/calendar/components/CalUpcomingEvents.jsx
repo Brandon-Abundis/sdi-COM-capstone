@@ -17,9 +17,7 @@ export default function CalUpcomingEvents({selectedDay, events}) {
             <p> here is everything to see if it worked. check your console log</p>
             <ul>
                 {events.map(event => (
-                        <>
                             <li key={event.id}>{event.name}</li>
-                        </>
                     ))}
             </ul>
         </>

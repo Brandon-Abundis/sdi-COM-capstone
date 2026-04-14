@@ -13,3 +13,43 @@ export const fetchUserGoals = async (userId) => {
     throw error;
   }
 };
+
+export const createUserGoal = async (goalData) => {
+  try {
+    const res = await fetch(`${BASE_URL}/users/user_goals/create/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(goalData),
+    });
+    if (!res.ok) {
+      throw new Error("Failed to create user goal");
+    }
+    const newGoal = await res.json();
+    return newGoal;
+  } catch (error) {
+    console.error("Error creating user goal:", error);
+    throw error;
+  }
+};
+
+export const updateUserGoal = async (goalId, goalData) => {
+  try {
+    const res = await fetch(`${BASE_URL}/users/user_goals/update/id/${goalId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(goalData),
+    });
+    if (!res.ok) {
+      throw new Error("Failed to update user goal");
+    }
+    const updatedGoal = await res.json();
+    return updatedGoal;
+  } catch (error) {
+    console.error("Error updating user goal:", error);
+    throw error;
+  }
+};

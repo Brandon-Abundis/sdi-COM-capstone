@@ -39,7 +39,7 @@ const getById = async (req, res) => {
         action: "FETCH_USER",
         status_code: 200,
         user_id: result.id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched user data" },
       });
     }
     res.status(200).send(result);
@@ -297,7 +297,7 @@ const getGroupsById = async (req, res) => {
         action: "FETCH_USER_GROUPS",
         status_code: 200,
         user_id: id,
-        metadata: JSON.stringify(groupData),
+        metadata: { message: "fetched all user group data" },
       });
     }
     res.status(200).send(groupData);
@@ -324,7 +324,7 @@ const getGoalsById = async (req, res) => {
         action: "FETCH_USER_GOALS",
         status_code: 200,
         user_id: result.id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all user goals for a user" },
       });
     }
     res.status(200).send(result);
@@ -489,7 +489,7 @@ const getWorkoutsById = async (req, res) => {
         action: "FETCH_USER_WORKOUTS",
         status_code: 200,
         user_id: result.id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all user workouts for a user" },
       });
     }
     res.status(200).send(result);
@@ -656,7 +656,7 @@ const getAllEvents = async (req, res) => {
       action: "FETCH_ALL_USER_EVENTS",
       status_code: 200,
       user_id: null,
-      metadata: JSON.stringify(result),
+      metadata: { message: "fetched all user events for all user" },
     });
     res.status(200).send(result);
   } catch (err) {
@@ -681,7 +681,7 @@ const getEventsById = async (req, res) => {
         action: "FETCH_USER_EVENTS",
         status_code: 200,
         user_id: result.id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all user events for a user" },
       });
     }
     res.status(200).send(result);
@@ -698,15 +698,40 @@ const getEventsById = async (req, res) => {
 };
 
 const createEvent = async (req, res) => {
-  const { name, date, time, user_id } = req.body;
-  if (!name || !date || !user_id) {
+  const {
+    name,
+    start_date,
+    end_date,
+    start_time,
+    end_time,
+    user_id,
+    goals_list,
+    workouts_list,
+  } = req.body;
+  if (
+    !name ||
+    !start_date ||
+    !end_date ||
+    !start_time ||
+    !end_time ||
+    !user_id
+  ) {
     return res
       .status(400)
       .send({ message: "name, date, and user_id are required" });
   }
   try {
     const [newEvent] = await db("user_events")
-      .insert({ name, date, time: time || null, user_id })
+      .insert({
+        name,
+        start_date,
+        end_date,
+        start_time,
+        end_time,
+        user_id,
+        goals_list: goals_list || [],
+        workouts_list: workouts_list || [],
+      })
       .returning("*");
     createLog({
       method: "POST",

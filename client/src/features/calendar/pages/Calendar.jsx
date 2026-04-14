@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Calendar.css";
 import CalendarApp from "../components/CalendarApp.jsx";
+import useCreateUserEvent from "../customHooks/UseEventCreator.jsx"
 // import CalUpcomingEvents  from "../components/CalUpcomingEvents.jsx";
 import { useAuth } from "../../../app/AuthProvider.jsx";
 
@@ -29,6 +30,8 @@ export default function Calendar() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  // const [dayWorkouts, setDayWorkouts] = useState(null)
+  const [userWorkouts, setUserWorkouts] = useState([]);
   
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -39,8 +42,13 @@ export default function Calendar() {
     .then((r) => r.json())
     .then((data) => setEvents(Array.isArray(data) ? data : []))
     .catch(() => setEvents([]));
+
+    fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
+  .then((r) => r.json())
+  .then((data) => setUserWorkouts(Array.isArray(data) ? data : []))
+  .catch(() => setUserWorkouts([]));
   }, [user?.id]);
-  
+
   // Clear selected day when month changes so the side panel doesn't show stale data
   function handleMonthChange(newDate) {
     setCurrentDate(newDate);
@@ -77,42 +85,51 @@ export default function Calendar() {
   ? new Date(Date.UTC(year, month, selectedDay + 7))
   : null;
   
+  
+  
   const dayEvents = selectedDate
   ? events
-  .filter((e) => {
-    const d = new Date(e.start_date);
-    return (
-      d.getUTCFullYear() === selectedDate.getUTCFullYear() &&
-      d.getUTCMonth() === selectedDate.getUTCMonth() &&
-      d.getUTCDate() === selectedDate.getUTCDate()
-    );
+    .filter((e) => {
+      // const d = new Date(e.start_date);
+      // return (
+      //   d.getUTCFullYear() === selectedDate.getUTCFullYear() &&
+      //   d.getUTCMonth() === selectedDate.getUTCMonth() &&
+      //   d.getUTCDate() === selectedDate.getUTCDate()
+      // );
+      const eventDateStr = new Date(e.start_date)
+        .toISOString()
+        .split("T")[0]
+      const selectedDateStr = selectedDate
+        .toISOString()
+        .split("T")[0];
+
+      return eventDateStr === selectedDateStr
   })
   .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
   : [];
   
+  const dayWorkouts = dayEvents.length > 0
+    ? dayEvents.flatMap((event) => 
+    (event.workouts_list || [])
+      .map((workoutId) => userWorkouts.find((w) => w.id === workoutId))
+      .filter(Boolean)
+) : [];
+
   const upcomingWeekEvents = upcomingDateWindowStart && upcomingDateWindowEnd
   ? events
   .filter((e) => {
-    const d = new Date(e.start_date);
+    const d = new Date(e.start_date).getTime();
 
     return (
-      d.getUTCFullYear() >= upcomingDateWindowStart.getUTCFullYear() &&
-      d.getUTCMonth() >= upcomingDateWindowStart.getUTCMonth() &&
-      d.getUTCDate() >= upcomingDateWindowStart.getUTCDate() &&
-      d.getUTCFullYear() <= upcomingDateWindowEnd.getUTCFullYear() &&
-      d.getUTCMonth() <= upcomingDateWindowEnd.getUTCMonth() &&
-      d.getUTCDate() <= upcomingDateWindowEnd.getUTCDate()
+      d >= upcomingDateWindowStart.getTime() &&
+      d <= upcomingDateWindowEnd.getTime()
     );
   })
   .sort((a, b) => {
     const dateA = new Date(a.start_date)
     const dateB = new Date(b.start_date)
-
     const dateDiff = dateA - dateB;
-  
-    if (dateDiff !== 0) {
-      return dateDiff;
-    }
+    if (dateDiff !== 0) return dateDiff;
 
     return timeToMinutes(a.time) - timeToMinutes(b.time)
   })
@@ -138,6 +155,14 @@ export default function Calendar() {
   
   async function handleAddEvent(e) {
     e.preventDefault();
+    const eventObject = {
+      name: form.name.trim(),
+      start_date: selectedDate,
+      end_date: selectedDate,
+      start_time: "test",
+      end_time: "test",
+      user_id: user.id,
+    };
     setSaveError("");
     if (!form.name.trim() || !selectedDate || !user?.id) return;
     setSaving(true);
@@ -145,12 +170,7 @@ export default function Calendar() {
       const res = await fetch("http://localhost:8080/users/user_events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          date: selectedDate.toISOString().split("T")[0],
-          time: form.time || null,
-          user_id: user.id,
-        }),
+        body: JSON.stringify(eventObject),
       });
       if (res.ok) {
         const newEvent = await res.json();
@@ -185,6 +205,8 @@ export default function Calendar() {
   })
   : null;
   
+
+
   return (
     <div className="calendar-page">
       {selectedDay === null ? (
@@ -216,6 +238,7 @@ export default function Calendar() {
           onDaySelect={setSelectedDay}
           events={events}
           dayEvents={dayEvents}
+          dayWorkouts={dayWorkouts}
         />
       </div>
 
