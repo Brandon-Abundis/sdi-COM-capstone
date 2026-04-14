@@ -22,7 +22,14 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6">
+      <div className="mb-8">
+        <img
+          className="h-30"
+          src="/WarfighterFit_logo.png"
+          alt="WarfighterFit Logo"
+        />
+      </div>
       <div className="card bg-base-200 card-border border-accent w-full max-w-lg">
         <div className="card-body">
           <h2 className="card-title text-primary text-2xl pb-3">Login</h2>

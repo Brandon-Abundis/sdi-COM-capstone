@@ -121,41 +121,42 @@ export default function Leaderboard() {
           LEADERBOARDS
         </h1>
 
-      <div className="flex flex-wrap gap-6 bg-base-300 p-2 px-4 rounded-lg items-center">
-        {/* Gender Dropdown */}
-        <div className="flex flex-row items-center gap-2">
-          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">
-            Gender
-          </label>
-          <select
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
-            className="bg-base-100 text-white px-2 py-1 text-sm rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none cursor-pointer"
-          >
-            <option value="all">All Genders</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-        </div>
+        <div className="flex flex-wrap gap-4 bg-base-300 p-4 rounded-xl border border-accent">
+          {/* Gender Dropdown */}
+          <div className="flex flex-col flex-1 min-w-37.5">
+            <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
+              Gender
+            </label>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="bg-base-100 text-white px-3 py-1 rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none"
+            >
+              <option value="all">All Genders</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
 
-        {/* Age Dropdown */}
-        <div className="flex flex-row items-center gap-2">
-          <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider whitespace-nowrap">
-            Age Bracket
-          </label>
-          <select
-            value={ageGroup}
-            onChange={(e) => setAgeGroup(e.target.value)}
-            className="bg-base-100 text-white px-2 py-1 text-sm rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none cursor-pointer"
-          >
-            <option value="all">Overall (All Ages)</option>
-            <option value="< 25">&lt; 25</option>
-            <option value="25-29">25 - 29</option>
-            <option value="30-34">30 - 34</option>
-            <option value="35-39">35 - 39</option>
-            <option value="40-44">40 - 44</option>
-            <option value="45-49">45 - 49</option>
-          </select>
+          {/* Age Dropdown */}
+          <div className="flex flex-col flex-1 min-w-37.5">
+            <label className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">
+              Age Bracket
+            </label>
+            <select
+              value={ageGroup}
+              onChange={(e) => setAgeGroup(e.target.value)}
+              className="bg-base-100 text-white px-3 py-1 rounded-lg border border-gray-600 focus:border-blue-500 outline-none appearance-none"
+            >
+              <option value="all">Overall (All Ages)</option>
+              <option value="< 25">&lt; 25</option>
+              <option value="25-29">25 - 29</option>
+              <option value="30-34">30 - 34</option>
+              <option value="35-39">35 - 39</option>
+              <option value="40-44">40 - 44</option>
+              <option value="45-49">45 - 49</option>
+            </select>
+          </div>
         </div>
       </div>
 
