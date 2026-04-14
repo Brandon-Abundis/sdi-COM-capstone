@@ -154,44 +154,37 @@ export default function Calendar() {
   }
   
   async function handleAddEvent(e) {
-    const customFetch = useCreateUserEvent().submitEvent
+    e.preventDefault();
     const eventObject = {
-      name: "TestDataName",
-      start_date: selectedDay,
-      end_date: selectedDay,
+      name: form.name.trim(),
+      start_date: selectedDate,
+      end_date: selectedDate,
       start_time: "test",
-      end_time:"test",
-      user_id: user.id
+      end_time: "test",
+      user_id: user.id,
     };
-    customFetch(eventObject)
-    // e.preventDefault();
-    // setSaveError("");
-    // if (!form.name.trim() || !selectedDate || !user?.id) return;
-    // setSaving(true);
-    // try {
-    //   const res = await fetch("http://localhost:8080/users/user_events", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       name: form.name.trim(),
-    //       date: selectedDate.toISOString().split("T")[0],
-    //       time: form.time || null,
-    //       user_id: user.id,
-    //     }),
-    //   });
-    //   if (res.ok) {
-    //     const newEvent = await res.json();
-    //     setEvents((prev) => [...prev, newEvent]);
-    //     setForm({ name: "", time: "" });
-    //   } else {
-    //     const body = await res.json().catch(() => ({}));
-    //     setSaveError(body.message || `Error ${res.status}`);
-    //   }
-    // } catch {
-    //   setSaveError("Could not reach the server.");
-    // } finally {
-    //   setSaving(false);
-    // }
+    setSaveError("");
+    if (!form.name.trim() || !selectedDate || !user?.id) return;
+    setSaving(true);
+    try {
+      const res = await fetch("http://localhost:8080/users/user_events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(eventObject),
+      });
+      if (res.ok) {
+        const newEvent = await res.json();
+        setEvents((prev) => [...prev, newEvent]);
+        setForm({ name: "", time: "" });
+      } else {
+        const body = await res.json().catch(() => ({}));
+        setSaveError(body.message || `Error ${res.status}`);
+      }
+    } catch {
+      setSaveError("Could not reach the server.");
+    } finally {
+      setSaving(false);
+    }
   }
   
   const selectedLabel = selectedDate
