@@ -1,12 +1,14 @@
 import InputField from "./InputField";
 import Button from "./Button";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
 export default function ModalContent({ cancel, info }) {
   let id = JSON.parse(localStorage.getItem("user")).id;
 
   const throwError = (elem, type) => {
-    elem.innerHTML = type ? "Check all Fields & Try Again" : "Internal Server Error; Check All Fields & Try Again";
+    elem.innerHTML = type
+      ? "Check all Fields & Try Again"
+      : "Internal Server Error; Check All Fields & Try Again";
     elem.scrollIntoView({
       behavior: "smooth",
       block: "center",
@@ -52,19 +54,6 @@ export default function ModalContent({ cancel, info }) {
         weight: "",
       };
 
-  let empty = {
-    title: title || "",
-    type: type || "",
-    time: time || "",
-    distance: distance || "",
-    reps: reps || "",
-    muscle_group: muscle_group || "",
-    weight: weight || "",
-    notes: notes || "",
-  };
-
-  let [data, setData] = useState(empty);
-
   let titleRef = useRef();
   let typeRef = useRef();
   let timeRef = useRef();
@@ -76,16 +65,12 @@ export default function ModalContent({ cancel, info }) {
 
   const submit = () => {
     let ress = document.querySelector("#listen");
-    if (
-      titleRef.current?.value == "" ||
-      titleRef.current?.value == undefined
-    ) {
-      throwError(ress, 'local')
+    if (titleRef.current?.value == "" || titleRef.current?.value == undefined) {
+      throwError(ress, "local");
       return;
     }
 
     const payload = {
-      ...data,
       name: titleRef.current?.value,
       type: typeRef.current?.value,
       time: timeRef.current?.value * 60,
@@ -96,9 +81,14 @@ export default function ModalContent({ cancel, info }) {
       notes: noteRef.current?.value || "N/A",
       user_id: Number(id),
     };
-    console.log(payload)
-    if (isNaN(payload.time) || isNaN(payload.distance) || isNaN(reps) || isNaN(weight)) {
-      throwError(ress, "local")
+    console.log(payload);
+    if (
+      isNaN(payload.time) ||
+      isNaN(payload.distance) ||
+      isNaN(reps) ||
+      isNaN(weight)
+    ) {
+      throwError(ress, "local");
       return;
     }
 
@@ -116,7 +106,7 @@ export default function ModalContent({ cancel, info }) {
           return res.json();
         })
         .then(() => {
-         progress(ress);
+          progress(ress);
         })
         .catch((err) => console.error(err));
       return;

@@ -1,0 +1,16 @@
+/* this file exists to allow me to dynamically render the clicked button with the proper css
+    i coudlved named tab.css, i should probably do that yeah
+*/
+
+#chosenTab {
+  font-weight: 700;
+  background-color: rgb(168, 85, 247);
+  cursor: pointer;
+  padding: 1rem;
+  border: 2px solid;
+  border-radius: 0.375rem;
+}
+
+#chosenTab:hover {
+  background-color: rgb(216, 180, 254);
+}
