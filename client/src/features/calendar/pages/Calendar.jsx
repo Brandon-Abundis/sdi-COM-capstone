@@ -154,6 +154,7 @@ export default function Calendar() {
       );
       if (res.ok) {
         setEvents((prev) => prev.filter((ev) => ev.id !== id));
+        if (selectedEvent?.id === id) setSelectedEvent(null);
       }
     } catch {
       // silently fail — event stays in list if request fails
@@ -313,17 +314,17 @@ export default function Calendar() {
                     {confirmDeleteId === ev.id ? (
                       <span className="delete-confirm">
                         Remove?{" "}
-                        <button onClick={() => handleDeleteEvent(ev.id)}>
+                        <button onClick={(e) => { e.stopPropagation(); handleDeleteEvent(ev.id);}}>
                           Yes
                         </button>
-                        <button onClick={() => setConfirmDeleteId(null)}>
+                        <button onClick={() => { e.stopPropagation(); setConfirmDeleteId(null);}}>
                           No
                         </button>
                       </span>
                     ) : (
                       <button
                         className="delete-btn"
-                        onClick={() => setConfirmDeleteId(ev.id)}
+                        onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(ev.id); }}
                       >
                         ✕
                       </button>
