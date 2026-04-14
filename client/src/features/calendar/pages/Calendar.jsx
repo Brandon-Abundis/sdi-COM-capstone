@@ -55,7 +55,7 @@ export default function Calendar() {
     setSelectedDay(null);
   }
   
-  function getDaysAway(eventStartDate) {
+  function getDaysAway(eventStartDate, selectedDate) {
     const eventDate = new Date(eventStartDate)
     const transferSelectedDate = new Date(selectedDate)
 
@@ -158,10 +158,10 @@ export default function Calendar() {
     const eventObject = {
       name: form.name.trim(),
       start_date: selectedDate,
-      end_date: selectedDate,
-      start_time: "test",
-      end_time: "test",
-      user_id: user.id,
+      end_date: form.end_date,
+      start_time: form.start_time,
+      end_time: form.end_time,
+      user_id: user.id
     };
     setSaveError("");
     if (!form.name.trim() || !selectedDate || !user?.id) return;
@@ -175,7 +175,14 @@ export default function Calendar() {
       if (res.ok) {
         const newEvent = await res.json();
         setEvents((prev) => [...prev, newEvent]);
-        setForm({ name: "", time: "" });
+        setForm({
+          name: "",
+          start_date: selectedDate,
+          end_date: "",
+          start_time: "",
+          end_time: "",
+          user_id: ""
+        });
       } else {
         const body = await res.json().catch(() => ({}));
         setSaveError(body.message || `Error ${res.status}`);
@@ -292,11 +299,30 @@ export default function Calendar() {
                   setForm((f) => ({ ...f, name: e.target.value }))
                 }
               />
+              <p>End date</p>
+              <input
+                type="date"
+                value={form.end_date}
+                onChange={(e) => 
+                  setForm((f) => ({ ...f, end_date: e.target.value }))
+                }
+              />
+              <p>Start time</p>
               <input
                 type="time"
-                value={form.time}
+                value={form.start_time}
+                placeholder = "start_time"
                 onChange={(e) =>
-                  setForm((f) => ({ ...f, time: e.target.value }))
+                  setForm((f) => ({ ...f, start_time: e.target.value }))
+                }
+              />
+              <p>End time</p>
+              <input
+                type="time"
+                value={form.end_time}
+                placeholder = "end_time"
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, end_time: e.target.value }))
                 }
               />
               {saveError && <p className="save-error">{saveError}</p>}
