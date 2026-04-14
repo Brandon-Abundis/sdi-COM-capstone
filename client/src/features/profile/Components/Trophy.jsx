@@ -1,11 +1,106 @@
 import { xp_to_level_up, current_level } from "../Helpers/Xp";
 import { useState, useEffect } from "react";
+import {
+  Flame,
+  Zap,
+  Dumbbell,
+  Footprints,
+  Target,
+  Crown,
+  TrendingUp,
+  Shield,
+  Ghost,
+  Sword,
+  Compass,
+  Medal,
+  Users,
+  Brain,
+  CheckCircle,
+} from "lucide-react";
 
 export default function Trophy({ userData }) {
   const titles = {};
   for (let i = 1; i <= 15; i++) {
     titles[i] = `/Titles/${i}.png`;
   }
+
+  const icons = [
+    {
+      component: Flame,
+      label: "Inferno",
+      criteria: "Maintain a 30-day consecutive activity streak.",
+    },
+    {
+      component: Zap,
+      label: "Voltage",
+      criteria: "Log 300 total workouts.",
+    },
+    {
+      component: Dumbbell,
+      label: "Iron",
+      criteria: "Surpass 100,000 lbs in cumulative volume lifted.",
+    },
+    {
+      component: Footprints,
+      label: "March",
+      criteria: "Complete 26.2 miles in cumulative run distance.",
+    },
+    {
+      component: Target,
+      label: "Deadeye",
+      criteria: "Achieve a score of 90 or higher on the Space Force PT test.",
+    },
+    {
+      component: Crown,
+      label: "Elite",
+      criteria: "Achieve a perfect 100 score on the Space Force PT test.",
+    },
+    {
+      component: TrendingUp,
+      label: "Apex",
+      criteria: "Log 50 sessions with a heart rate in the 'Peak' zone.",
+    },
+    {
+      component: Shield,
+      label: "Bastion",
+      criteria: "Log 100 total hours of strength-specific training.",
+    },
+    {
+      component: Ghost,
+      label: "Phantom",
+      criteria: "Complete 10 sessions between 0300 and 0500 hours.",
+    },
+    {
+      component: Sword,
+      label: "Combat",
+      criteria: "Register 1000 workouts.",
+    },
+    {
+      component: Compass,
+      label: "Scout",
+      criteria: "Track 50 miles of outdoor running.",
+    },
+    {
+      component: Medal,
+      label: "Veteran",
+      criteria: "Complete 365 days of active days in the app.",
+    },
+    {
+      component: Users,
+      label: "Platoon",
+      criteria: "Participate in 25 group workouts.",
+    },
+    {
+      component: Brain,
+      label: "Zenith",
+      criteria: "Complete 50 workouts in one week.",
+    },
+    {
+      component: CheckCircle,
+      label: "Mission",
+      criteria: "Complete an activity for 14 consecutive days.",
+    },
+  ];
 
   if (!userData) return <h1>Loading...</h1>;
 
@@ -31,14 +126,37 @@ export default function Trophy({ userData }) {
             <div className="relative">
               <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-              <div className="avatar">
-                <div className="w-40 h-40 rounded-2xl bg-gradient-to-br from-base-200 to-base-300 shadow-lg border border-base-100 group-hover:border-primary/50 transition-all duration-300 group-hover:-translate-y-2">
-                  {/* <img
-                    src={badge}
-                    alt="Trophy"
-                    className="object-contain p-1"
-                  /> */}
-                  Badge ID (to be replaced with image): {badge}
+              <div className="avatar group [perspective:1000px] w-40 h-40">
+                <div className="relative w-full h-full transition-all duration-500 [transform-style:preserve-3d] ">
+                  <div className="avatar">
+                    <div className="w-40 h-40 rounded-2xl bg-gradient-to-br from-base-200 to-base-300 shadow-lg border border-base-100 p-4 flex flex-col items-center justify-between text-center group hover:border-primary/50 transition-all duration-300">
+                      {(() => {
+                        const badgeData = icons[badge - 1];
+                        if (!badgeData) return null;
+                        const IconTag = badgeData.component;
+
+                        return (
+                          <>
+                            <IconTag
+                              size={36}
+                              strokeWidth={1.25}
+                              className="text-primary mt-1 drop-shadow-[0_0_8px_rgba(var(--p),0.3)]"
+                            />
+
+                            <div className="flex-1 flex items-center justify-center px-1">
+                              <p className="text-[11px] leading-tight text-base-content/80 font-medium italic">
+                                "{badgeData.criteria}"
+                              </p>
+                            </div>
+
+                            <span className="text-[9px] uppercase tracking-[0.2em] text-primary font-bold pt-2 border-t border-base-content/5 w-full">
+                              {badgeData.label}
+                            </span>
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

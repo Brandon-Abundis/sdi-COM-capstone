@@ -342,8 +342,17 @@ const getGoalsById = async (req, res) => {
 
 const updateGoalsById = async (req, res) => {
   const { id } = req.params;
-  const { name, type, time, distance, reps, muscle_group, weight, notes } =
-    req.body;
+  const {
+    name,
+    type,
+    time,
+    distance,
+    reps,
+    muscle_group,
+    weight,
+    notes,
+    completed,
+  } = req.body;
   try {
     if (
       !name &&
@@ -353,7 +362,8 @@ const updateGoalsById = async (req, res) => {
       !reps &&
       !muscle_group &&
       !weight &&
-      !notes
+      !notes &&
+      completed === undefined
     ) {
       createLog({
         method: "POST",
@@ -387,6 +397,7 @@ const updateGoalsById = async (req, res) => {
         muscle_group: muscle_group ? muscle_group : userGoalData.muscle_group,
         weight: weight ? weight : userGoalData.weight,
         notes: notes ? notes : userGoalData.notes,
+        completed: completed !== undefined ? completed : userGoalData.completed,
       })
       .returning("*");
     if (result) {
