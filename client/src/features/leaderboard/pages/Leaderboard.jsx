@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../../../app/AuthProvider";
 
 //_________________________________brandon's code_______________________________________
+import Avatar from "../../profile/Components/Avatar";
 import useFetchBestRuns from "./costomHooks/getFetchBestRuns";
 import useFetchBestPushUps from "./costomHooks/getFetchBestPushUps";
 import useFetchBestSitUps from "./costomHooks/getFetchBestSitUps";
@@ -198,6 +199,9 @@ export default function Leaderboard() {
                       >
                         {rank}.
                       </span>
+                      <div>
+                        <Avatar userData={merge}/>{console.log(merge.profile)}
+                      </div>
                       <div className="flex flex-wrap items-baseline gap-x-2">
                         <span className="text-sm text-base-content/60">
                           {merge.rank}
