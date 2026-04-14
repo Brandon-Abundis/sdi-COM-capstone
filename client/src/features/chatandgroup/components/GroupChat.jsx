@@ -80,6 +80,7 @@ function ChallengeModal({ group, user, onClose, onSent }) {
         ...msg,
         first_name: user.first_name,
         last_name: user.last_name,
+        username: user.username,
       });
       onClose();
     } catch (err) {
@@ -164,7 +165,23 @@ export default function GroupChat({ group }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [showChallenge, setShowChallenge] = useState(false);
+  const [userMap, setUserMap] = useState({});
   const bottomRef = useRef(null);
+
+  useEffect(() => {
+    if (!group?.user_ids?.length) return;
+    Promise.all(
+      group.user_ids.map((id) =>
+        fetch(`http://localhost:8080/users/id/${id}`)
+          .then((res) => (res.ok ? res.json() : null))
+          .catch(() => null)
+      )
+    ).then((results) => {
+      const map = {};
+      results.filter(Boolean).forEach((u) => { map[u.id] = u; });
+      setUserMap(map);
+    });
+  }, [group?.id]);
 
   useEffect(() => {
     if (!group?.id) return;
@@ -190,7 +207,7 @@ export default function GroupChat({ group }) {
       const msg = await res.json();
       setMessages((prev) => [
         ...prev,
-        { ...msg, first_name: user.first_name, last_name: user.last_name },
+        { ...msg, first_name: user.first_name, last_name: user.last_name, username: user.username },
       ]);
     }
     setInput("");
@@ -214,6 +231,8 @@ export default function GroupChat({ group }) {
     const timestamp = formatTimestamp(msg.created_at);
     const challenge = parseChallenge(msg.text);
 
+    const msgUser = userMap[msg.user_id] ?? { first_name: msg.first_name, last_name: msg.last_name, username: msg.username, profile: null };
+
     if (challenge) {
       return (
         <ChallengeCard
@@ -221,7 +240,7 @@ export default function GroupChat({ group }) {
           isOwn={isOwn}
           challenge={{
             from_user_id: msg.user_id,
-            from_name: `${msg.first_name} ${msg.last_name}`,
+            from_name: msgUser.username || msg.username || `${msg.first_name} ${msg.last_name}`,
             from_avatar: `https://i.pravatar.cc/40?u=${msg.user_id}`,
             timestamp,
             exercise: challenge.exercise ?? "",
@@ -241,8 +260,10 @@ export default function GroupChat({ group }) {
         message={{
           id: msg.id,
           user_id: msg.user_id,
-          full_name: `${msg.first_name} ${msg.last_name}`,
-          avatar: `https://i.pravatar.cc/40?u=${msg.user_id}`,
+          first_name: msgUser.first_name || msg.first_name || "?",
+          last_name: msgUser.last_name || msg.last_name || "?",
+          username: msgUser.username || msg.username || `${msg.first_name} ${msg.last_name}`,
+          profile: msgUser.profile ?? null,
           text: msg.text,
           timestamp,
         }}

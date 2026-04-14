@@ -2,7 +2,7 @@ import WorkoutBox from "../components/WorkoutBox";
 import AddWorkout from "../components/AddWorkout";
 import Modal from "../components/Modal";
 import Tab from "../components/Tab";
-import "../styles/Workouts.css"
+import "../styles/WorkoutTabs.css"
 import { useState, useEffect, useRef } from "react";
 
 export default function Workouts() {

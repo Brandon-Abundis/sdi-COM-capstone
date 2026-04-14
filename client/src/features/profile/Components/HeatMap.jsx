@@ -58,7 +58,7 @@ export default function WorkoutHeatmap({ userData }) {
           startDate={start}
           endDate={end}
           values={heatmapValues()}
-          showWeekdayLabels={true}
+          showWeekdayLabels={false}
           gutterSize={1.5}
           classForValue={(v) => {
             if (!v || v.count === 0) return "color-empty";
@@ -76,23 +76,27 @@ export default function WorkoutHeatmap({ userData }) {
 
             <div className="flex gap-1">
               <div
-                className="w-3 h-3 rounded-[2px] bg-base-content/5"
+                className="w-3 h-3 rounded-[2px] bg-white/5"
                 title="No activity"
               />
+
               <div
-                className="w-3 h-3 rounded-[2px] bg-neutral"
+                className="w-3 h-3 rounded-[2px] bg-[#4c1d95]"
                 title="1 workout"
               />
+
               <div
-                className="w-3 h-3 rounded-[2px] bg-secondary"
+                className="w-3 h-3 rounded-[2px] bg-[#7c3aed]"
                 title="2 workouts"
               />
+
               <div
-                className="w-3 h-3 rounded-[2px] bg-accent"
+                className="w-3 h-3 rounded-[2px] bg-[#a78bfa]"
                 title="3 workouts"
               />
+
               <div
-                className="w-3 h-3 rounded-[2px] bg-primary"
+                className="w-3 h-3 rounded-[2px] bg-[#ddd6fe] shadow-[0_0_5px_rgba(167,139,250,0.5)]"
                 title="4+ workouts"
               />
             </div>
@@ -123,25 +127,25 @@ export default function WorkoutHeatmap({ userData }) {
         }
 
         .react-calendar-heatmap .color-empty {
-          fill: rgba(255, 255, 255, 0.05);
-        }
+    fill: rgba(255, 255, 255, 0.05);
+  }
 
-        .react-calendar-heatmap .color-scale-1 {
-          fill: #2a2245;
-        }
+  .react-calendar-heatmap .color-scale-1 {
+    fill: #4c1d95;
+  }
 
-        .react-calendar-heatmap .color-scale-2 {
-          fill: #a78bfa;
-        }
+  .react-calendar-heatmap .color-scale-2 {
+    fill: #7c3aed;
+  }
 
-        .react-calendar-heatmap .color-scale-3 {
-          fill: #c084fc;
-        }
+  .react-calendar-heatmap .color-scale-3 {
+    fill: #a78bfa;
+  }
 
-        .react-calendar-heatmap .color-scale-4 {
-          fill: #7c3aed;
-          filter: drop-shadow(0 0 3px rgba(192, 132, 252, 0.5));
-        }
+  .react-calendar-heatmap .color-scale-4 {
+    fill: #ddd6fe;
+    filter: drop-shadow(0 0 4px rgba(167, 139, 250, 0.6));
+  }
       `}</style>
     </div>
   );

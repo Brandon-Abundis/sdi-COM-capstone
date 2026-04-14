@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/AuthProvider";
 import MessageBubble from "./MessageBubble";
 import ChallengeCard from "./ChallengeCard";
+import Avatar from "../../profile/Components/Avatar";
 
 function formatTimestamp(iso) {
   const d = new Date(iso);
@@ -64,7 +66,7 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
       if (!msgRes.ok) throw new Error("Failed to send challenge");
       const msg = await msgRes.json();
 
-      onSent({ ...msg, first_name: user.first_name, last_name: user.last_name });
+      onSent({ ...msg, first_name: user.first_name, last_name: user.last_name, username: user.username });
       onClose();
     } catch (err) {
       setError(err.message);
@@ -145,10 +147,20 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
 
 export default function DirectMessage({ dmUser }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [showChallenge, setShowChallenge] = useState(false);
+  const [dmUserFull, setDmUserFull] = useState(null);
   const bottomRef = useRef(null);
+
+  useEffect(() => {
+    if (!dmUser?.user_id) return;
+    fetch(`http://localhost:8080/users/id/${dmUser.user_id}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => { if (data) setDmUserFull(data); })
+      .catch(() => {});
+  }, [dmUser?.user_id]);
 
   useEffect(() => {
     if (!user?.id || !dmUser?.user_id) return;
@@ -172,7 +184,7 @@ export default function DirectMessage({ dmUser }) {
     });
     if (res.ok) {
       const msg = await res.json();
-      setMessages((prev) => [...prev, { ...msg, first_name: user.first_name, last_name: user.last_name }]);
+      setMessages((prev) => [...prev, { ...msg, first_name: user.first_name, last_name: user.last_name, username: user.username }]);
     }
     setInput("");
   }
@@ -186,6 +198,11 @@ export default function DirectMessage({ dmUser }) {
     const timestamp = formatTimestamp(msg.created_at);
     const challenge = parseChallenge(msg.text);
 
+    // Resolve profile: own messages use auth user, other side uses fetched dmUserFull
+    const resolvedProfile = isOwn
+      ? (user?.profile ?? null)
+      : (dmUserFull?.profile ?? null);
+
     if (challenge) {
       return (
         <ChallengeCard
@@ -193,7 +210,7 @@ export default function DirectMessage({ dmUser }) {
           isOwn={isOwn}
           challenge={{
             from_user_id: msg.user_id,
-            from_name: `${msg.first_name} ${msg.last_name}`,
+            from_name: msg.username || `${msg.first_name} ${msg.last_name}`,
             from_avatar: `https://i.pravatar.cc/40?u=${msg.user_id}`,
             timestamp,
             exercise: challenge.exercise ?? "",
@@ -213,8 +230,10 @@ export default function DirectMessage({ dmUser }) {
         message={{
           id: msg.id,
           user_id: msg.user_id,
-          full_name: `${msg.first_name} ${msg.last_name}`,
-          avatar: `https://i.pravatar.cc/40?u=${msg.user_id}`,
+          first_name: msg.first_name || "?",
+          last_name: msg.last_name || "?",
+          username: msg.username || `${msg.first_name} ${msg.last_name}`,
+          profile: resolvedProfile,
           text: msg.text,
           timestamp,
         }}
@@ -234,21 +253,33 @@ export default function DirectMessage({ dmUser }) {
         />
       )}
 
-      <div className="px-4 py-3 border-b border-[#1e1838] flex items-center gap-3">
-        <img
-          src={`https://i.pravatar.cc/40?u=${dmUser.user_id}`}
-          alt={dmUser.full_name}
-          className="w-8 h-8 rounded-full border-2 border-[#2a2245]"
-        />
+      <div
+        className="px-4 py-3 border-b border-[#1e1838] flex items-center gap-3 cursor-pointer hover:bg-[#7c3aed]/10 transition-colors"
+        onClick={() => navigate(`/profile/${dmUser.user_id}`)}
+      >
+        <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0 border-2 border-[#1e1838]">
+          {dmUserFull ? (
+            <Avatar userData={dmUserFull} />
+          ) : (
+            <span className="w-full h-full flex items-center justify-center text-sm font-bold text-[#c084fc]">
+              {dmUser.username?.[0]}
+            </span>
+          )}
+        </div>
         <div>
-          <span className="font-semibold text-[#e2dff5] text-sm">{dmUser.full_name}</span>
+          <span className="font-semibold text-[#e2dff5] text-sm">{dmUser.username}</span>
           {dmUser.rank && <span className="ml-2 text-xs text-[#a78bfa]">{dmUser.rank}</span>}
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.length === 0 && (
-          <p className="text-sm text-[#e2dff5]/40 text-center mt-8">No messages yet. Start the conversation!</p>
+          <p
+            className="text-sm text-[#e2dff5]/40 text-center mt-8 cursor-pointer hover:text-[#a78bfa] transition-colors"
+            onClick={() => navigate(`/profile/${dmUser.user_id}`)}
+          >
+            No messages yet. View {dmUser.username}'s profile →
+          </p>
         )}
         {messages.map((msg) => renderMessage(msg))}
         <div ref={bottomRef} />
@@ -267,7 +298,7 @@ export default function DirectMessage({ dmUser }) {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={`Message ${dmUser.full_name}`}
+          placeholder={`Message ${dmUser.username}`}
           className="flex-1 bg-[#1e1838] text-[#e2dff5] placeholder-[#e2dff5]/30 rounded-lg px-4 py-2 text-sm outline-none border border-[#2a2245] focus:border-[#7c3aed] transition-colors"
         />
         <button

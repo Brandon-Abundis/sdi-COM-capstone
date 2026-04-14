@@ -1,16 +1,32 @@
 import InputField from "./InputField";
 import Button from "./Button";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
 export default function ModalContent({ cancel, info }) {
   let id = JSON.parse(localStorage.getItem("user")).id;
 
+  const numberCheck = (num) => {
+    if (num !== "" && isNaN(num)) {
+      return true;
+    }
+
+    return false;
+  };
+
   const throwError = (elem, type) => {
-    elem.innerHTML = type ? "Check all Fields & Try Again" : "Internal Server Error; Check All Fields & Try Again";
-    elem.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+    setTimeout(
+      () =>
+        elem.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        }),
+      50,
+    );
+
+    elem.innerHTML = type
+      ? "Check all Fields & Try Again"
+      : "Internal Server Error; Check All Fields & Try Again";
+
     elem.style.color = "red";
     elem.style.fontSize = "25px";
     setTimeout(() => {
@@ -21,12 +37,17 @@ export default function ModalContent({ cancel, info }) {
   };
 
   const progress = (elem) => {
-    setTimeout(() => window.location.reload(), 2000);
+    setTimeout(() => window.location.reload(), 1750);
     elem.innerHTML = "Saved! Reloading the page...";
-    elem.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+    elem.style.color = "";
+
+    setTimeout(
+      elem.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      }),
+      50,
+    );
   };
 
   let {
@@ -52,19 +73,6 @@ export default function ModalContent({ cancel, info }) {
         weight: "",
       };
 
-  let empty = {
-    title: title || "",
-    type: type || "",
-    time: time || "",
-    distance: distance || "",
-    reps: reps || "",
-    muscle_group: muscle_group || "",
-    weight: weight || "",
-    notes: notes || "",
-  };
-
-  let [data, setData] = useState(empty);
-
   let titleRef = useRef();
   let typeRef = useRef();
   let timeRef = useRef();
@@ -76,16 +84,12 @@ export default function ModalContent({ cancel, info }) {
 
   const submit = () => {
     let ress = document.querySelector("#listen");
-    if (
-      titleRef.current?.value == "" ||
-      titleRef.current?.value == undefined
-    ) {
-      throwError(ress, 'local')
+    if (titleRef.current?.value == "" || titleRef.current?.value == undefined) {
+      throwError(ress, "local");
       return;
     }
 
     const payload = {
-      ...data,
       name: titleRef.current?.value,
       type: typeRef.current?.value,
       time: timeRef.current?.value * 60,
@@ -96,9 +100,14 @@ export default function ModalContent({ cancel, info }) {
       notes: noteRef.current?.value || "N/A",
       user_id: Number(id),
     };
-    console.log(payload)
-    if (isNaN(payload.time) || isNaN(payload.distance) || isNaN(reps) || isNaN(weight)) {
-      throwError(ress, "local")
+    console.log(payload);
+    if (
+      numberCheck(payload.time) ||
+      numberCheck(payload.distance) ||
+      numberCheck(payload.reps) ||
+      numberCheck(payload.weight)
+    ) {
+      throwError(ress, "local");
       return;
     }
 
@@ -116,7 +125,7 @@ export default function ModalContent({ cancel, info }) {
           return res.json();
         })
         .then(() => {
-         progress(ress);
+          progress(ress);
         })
         .catch((err) => console.error(err));
       return;
@@ -186,15 +195,15 @@ export default function ModalContent({ cancel, info }) {
           ]}
           chosen={type}
         />
-        <h2> Time Estimate (Min.)</h2>
+        <h2> Time Estimate (Min.) - # </h2>
         <InputField ref={timeRef} style={"Time Estimate (Min.)"} def={time} />
-        <h2> Distance (Mi.)</h2>
+        <h2> Distance (Mi.) - # </h2>
         <InputField ref={distRef} style={"Distance (Mi.)"} def={distance} />
-        <h2> Reps </h2>
+        <h2> Reps - # </h2>
         <InputField ref={repRef} style={"Reps"} def={reps} />
         <h2> Muscle Group </h2>
         <InputField ref={muscRef} style={"Muscle Group"} def={muscle_group} />
-        <h2> Weight (lbs.)</h2>
+        <h2> Weight (lbs.) - # </h2>
         <InputField ref={weightRef} style={"Weight (lbs.)"} def={weight} />
         <h2> Notes </h2>
         <InputField ref={noteRef} style={"Notes"} def={notes} />
