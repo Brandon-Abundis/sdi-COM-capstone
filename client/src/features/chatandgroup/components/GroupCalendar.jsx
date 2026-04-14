@@ -203,8 +203,18 @@ export default function GroupCalendar({ group }) {
         <p className="text-sm text-[#e2dff5]/50">No events scheduled for this group.</p>
       )}
 
-      <div className="space-y-3">
-        {events.map((event) => {
+      {(() => {
+        const sorted = [...events].sort(
+          (a, b) => new Date(a.start_date) - new Date(b.start_date)
+        );
+        const upcoming = sorted.filter((e) => {
+          const d = getDaysUntil(e.start_date);
+          return d >= 0 && d <= 7;
+        });
+        const beyond = sorted.filter((e) => getDaysUntil(e.start_date) > 7);
+        const past = sorted.filter((e) => getDaysUntil(e.start_date) < 0);
+
+        function renderCard(event) {
           const days = getDaysUntil(event.start_date);
           return (
             <div
@@ -232,8 +242,36 @@ export default function GroupCalendar({ group }) {
               </div>
             </div>
           );
-        })}
-      </div>
+        }
+
+        return (
+          <>
+            {upcoming.length > 0 && (
+              <div className="space-y-3">
+                {upcoming.map(renderCard)}
+              </div>
+            )}
+
+            {beyond.length > 0 && (
+              <div className="mt-6">
+                <p className="text-[10px] uppercase font-bold text-[#e2dff5]/30 tracking-wider mb-3">Further Out</p>
+                <div className="space-y-3">
+                  {beyond.map(renderCard)}
+                </div>
+              </div>
+            )}
+
+            {past.length > 0 && (
+              <div className="mt-6">
+                <p className="text-[10px] uppercase font-bold text-[#e2dff5]/30 tracking-wider mb-3">Past</p>
+                <div className="space-y-3 opacity-50">
+                  {past.map(renderCard)}
+                </div>
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }
