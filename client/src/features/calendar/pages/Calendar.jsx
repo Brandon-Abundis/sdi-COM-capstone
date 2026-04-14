@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Calendar.css";
 import CalendarApp from "../components/CalendarApp.jsx";
+import useCreateUserEvent from "../customHooks/UseEventCreator.jsx"
 // import CalUpcomingEvents  from "../components/CalUpcomingEvents.jsx";
 import { useAuth } from "../../../app/AuthProvider.jsx";
 
@@ -120,12 +121,6 @@ export default function Calendar() {
     const d = new Date(e.start_date).getTime();
 
     return (
-      // d.getUTCFullYear() >= upcomingDateWindowStart.getUTCFullYear() &&
-      // d.getUTCMonth() >= upcomingDateWindowStart.getUTCMonth() &&
-      // d.getUTCDate() >= upcomingDateWindowStart.getUTCDate() &&
-      // d.getUTCFullYear() <= upcomingDateWindowEnd.getUTCFullYear() &&
-      // d.getUTCMonth() <= upcomingDateWindowEnd.getUTCMonth() &&
-      // d.getUTCDate() <= upcomingDateWindowEnd.getUTCDate()
       d >= upcomingDateWindowStart.getTime() &&
       d <= upcomingDateWindowEnd.getTime()
     );
@@ -160,6 +155,14 @@ export default function Calendar() {
   
   async function handleAddEvent(e) {
     e.preventDefault();
+    const eventObject = {
+      name: form.name.trim(),
+      start_date: selectedDate,
+      end_date: selectedDate,
+      start_time: "test",
+      end_time: "test",
+      user_id: user.id,
+    };
     setSaveError("");
     if (!form.name.trim() || !selectedDate || !user?.id) return;
     setSaving(true);
@@ -167,12 +170,7 @@ export default function Calendar() {
       const res = await fetch("http://localhost:8080/users/user_events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          date: selectedDate.toISOString().split("T")[0],
-          time: form.time || null,
-          user_id: user.id,
-        }),
+        body: JSON.stringify(eventObject),
       });
       if (res.ok) {
         const newEvent = await res.json();
@@ -207,6 +205,8 @@ export default function Calendar() {
   })
   : null;
   
+
+
   return (
     <div className="calendar-page">
       {selectedDay === null ? (

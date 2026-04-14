@@ -16,8 +16,8 @@ export default function WorkoutHeatmap({ userData }) {
     const counts = {};
 
     const workoutsThisYear = workouts.filter((w) => {
-      const workoutYear = new Date(w.created_at).getFullYear();
-      return workoutYear === currentYear;
+      const workoutYear = new Date(w.created_at);
+      return workoutYear >= start && workoutYear <= end;
     });
 
     workoutsThisYear.forEach((w) => {
@@ -29,10 +29,13 @@ export default function WorkoutHeatmap({ userData }) {
 
   const today = new Date();
   const currentYear = today.getFullYear();
-  const start = new Date(currentYear, 0, 1);
-  const end = new Date(currentYear, 11, 31);
+  const start = new Date();
+  start.setFullYear(today.getFullYear() - 1);
+  const end = new Date(today);
   if (!workouts)
-    return <div className="p-10 text-base-content/20 font-bold">Loading...</div>;
+    return (
+      <div className="p-10 text-base-content/20 font-bold">Loading...</div>
+    );
 
   return (
     <div className="bg-base-100 p-8 rounded-3xl border border-base-content/5 shadow-2xl w-full flex flex-col mb-5">
@@ -72,11 +75,26 @@ export default function WorkoutHeatmap({ userData }) {
             </span>
 
             <div className="flex gap-1">
-              <div className="w-3 h-3 rounded-[2px] bg-base-content/5" title="No activity" />
-              <div className="w-3 h-3 rounded-[2px] bg-neutral" title="1 workout" />
-              <div className="w-3 h-3 rounded-[2px] bg-secondary" title="2 workouts" />
-              <div className="w-3 h-3 rounded-[2px] bg-accent" title="3 workouts" />
-              <div className="w-3 h-3 rounded-[2px] bg-primary" title="4+ workouts" />
+              <div
+                className="w-3 h-3 rounded-[2px] bg-base-content/5"
+                title="No activity"
+              />
+              <div
+                className="w-3 h-3 rounded-[2px] bg-neutral"
+                title="1 workout"
+              />
+              <div
+                className="w-3 h-3 rounded-[2px] bg-secondary"
+                title="2 workouts"
+              />
+              <div
+                className="w-3 h-3 rounded-[2px] bg-accent"
+                title="3 workouts"
+              />
+              <div
+                className="w-3 h-3 rounded-[2px] bg-primary"
+                title="4+ workouts"
+              />
             </div>
 
             <span className="text-[9px] font-bold text-base-content/20 uppercase tracking-tighter">

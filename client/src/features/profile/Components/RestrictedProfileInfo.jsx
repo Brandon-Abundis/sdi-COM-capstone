@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import Avatar from "./Avatar";
 
 export default function RestrictedProfileInfo({ userData, setUserData }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -28,10 +29,10 @@ export default function RestrictedProfileInfo({ userData, setUserData }) {
           <div className="card bg-base-100 shadow-2xl border border-base-200 w-full max-w-md">
             <div className="card-body p-6">
               <div className="avatar mb-2">
-                <div className="w-12 h-12 flex items-center justify-center rounded-full outline outline-1 outline-accent bg-[#2a2245] select-none cursor-default">
-                  <span className="text-sm font-bold text-[#c084fc] leading-none">
-                    {initials}
-                  </span>
+                <div className="avatar mb-2 group relative w-24 h-24">
+                  <div className="w-full h-full flex items-center justify-center rounded-full outline outline-1 outline-accent bg-[#2a2245] overflow-hidden">
+                    <Avatar userData={userData}></Avatar>
+                  </div>
                 </div>
               </div>
 
