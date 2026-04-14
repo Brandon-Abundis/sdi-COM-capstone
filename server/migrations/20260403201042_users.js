@@ -16,7 +16,7 @@ exports.up = function (knex) {
     table.string("rank");
     table.string("gender");
     table.integer("age");
-    table.integer("xp").defaultTo(0);
+    table.bigInteger("xp").defaultTo(0);
 
     table.specificType("rival_ids", "integer[]").defaultTo(knex.raw("'{}'"));
 
