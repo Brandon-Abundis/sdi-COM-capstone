@@ -31,38 +31,66 @@ exports.seed = async function(knex) {
     for (let i = 0; i < 320; i++) {
       const exercise = faker.helpers.arrayElement(WEIGHTED_POOL);
       const isRun = exercise.name === '2-Mile Run';
-      const isPFAStrength = exercise.name.includes('1-Minute');
+      const isPushUp = exercise.name.includes('Push-ups');
+      const isSitUp = exercise.name.includes('Sit-ups');
+      const isPFAStrength = isPushUp || isSitUp;
       const randomDate = faker.date.recent({ days: 365 });
 
       let reps = null, time = null, weight = 0;
 
       if (isRun) {
-        let baseMin = 840 + (ageFactor * 600) + (isFemale ? 150 : 0);
-        let baseMax = 1140 + (ageFactor * 600) + (isFemale ? 180 : 0);
-        time = faker.number.int({ min: Math.floor(baseMin), max: Math.floor(baseMax) });
-      } else if (isPFAStrength || exercise.bodyweight) {
-        // Handle Pull-ups, Push-ups, Sit-ups
-        const repDrop = Math.floor(ageFactor * 20);
-        const genderRepAdjust = (exercise.name.includes('Push-ups') || exercise.name === 'Pull-ups') && isFemale ? 15 : 0;
+        // --- ULTRA-RARE RUN TIMES ---
+        const runRarity = faker.number.float({ min: 0, max: 100 });
+        const genderPenalty = isFemale ? 120 : 0;
+        const agePenalty = ageFactor * 400;
 
-        reps = faker.number.int({
-          min: Math.max(5, 30 - repDrop - genderRepAdjust),
-          max: 60 - repDrop - Math.floor(genderRepAdjust / 2)
-        });
-        weight = 0; // Bodyweight exercise
+        let baseSeconds;
+        if (runRarity > 99.5) {
+          // ULTRA ELITE (0.5%): 12:00 - 13:30 (720s - 810s)
+          baseSeconds = faker.number.int({ min: 720, max: 810 });
+        } else if (runRarity > 95) {
+          // ELITE (4.5%): 13:31 - 15:00 (811s - 900s)
+          baseSeconds = faker.number.int({ min: 811, max: 900 });
+        } else if (runRarity > 75) {
+          // ATHLETIC (20%): 15:01 - 18:00 (901s - 1080s)
+          baseSeconds = faker.number.int({ min: 901, max: 1080 });
+        } else {
+          // STANDARD (75%): 18:01 - 24:00 (1081s - 1440s)
+          baseSeconds = faker.number.int({ min: 1081, max: 1440 });
+        }
+
+        // Apply penalties (minimal impact on Elite to keep them at the top)
+        const totalPenalty = (runRarity > 99.5) ? (agePenalty * 0.1) : agePenalty;
+        time = Math.floor(baseSeconds + totalPenalty + genderPenalty);
+
+      } else if (isPFAStrength || exercise.bodyweight) {
+        const repDrop = Math.floor(ageFactor * 15);
+        const genderAdjust = (isPushUp || exercise.name === 'Pull-ups') && isFemale ? 12 : 0;
+        const rarityRoll = faker.number.float({ min: 0, max: 100 });
+        let baseReps;
+
+        if (rarityRoll > 99.8 && isPFAStrength) {
+            baseReps = faker.number.int({ min: 72, max: isSitUp ? 85 : 76 });
+        } else if (rarityRoll > 99.6) {
+            baseReps = faker.number.int({ min: 55, max: 71 });
+        } else if (rarityRoll > 87) {
+            baseReps = faker.number.int({ min: 40, max: 54 });
+        } else if (rarityRoll > 40) {
+            baseReps = faker.number.int({ min: 20, max: 39 });
+        } else {
+            baseReps = faker.number.int({ min: 5, max: 19 });
+        }
+
+        reps = Math.max(0, baseReps - repDrop - genderAdjust);
+        weight = 0;
         if (isPFAStrength) time = 60;
+
       } else {
-        // Weighted Exercises
         reps = faker.number.int({ min: 1, max: 12 });
         const genderWeightMult = isFemale ? 0.65 : 1.0;
-
-        if (exercise.name === 'Lunges' || exercise.name === 'Bicep Curls') {
-          // Dumbbell weight range
-          weight = faker.number.int({ min: 15, max: Math.floor(60 * genderWeightMult) });
-        } else {
-          // Barbell weight range (Squat, Bench, Deadlift)
-          weight = faker.number.int({ min: 45, max: Math.floor(315 * genderWeightMult) });
-        }
+        weight = (exercise.name === 'Lunges' || exercise.name === 'Bicep Curls')
+          ? faker.number.int({ min: 15, max: Math.floor(60 * genderWeightMult) })
+          : faker.number.int({ min: 45, max: Math.floor(315 * genderWeightMult) });
       }
 
       userWorkouts.push({
@@ -70,7 +98,7 @@ exports.seed = async function(knex) {
         type: exercise.type,
         muscle_group: exercise.muscle,
         user_id: user.id,
-        reps,
+        reps: reps !== null ? Math.floor(reps) : null,
         weight,
         time,
         distance: isRun ? 2.0 : null,
