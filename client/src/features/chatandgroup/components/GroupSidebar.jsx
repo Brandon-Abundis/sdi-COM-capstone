@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../../app/AuthProvider";
+import Avatar from "../../profile/Components/Avatar";
 
 function CreateGroupModal({ userId, onClose, onCreated }) {
   const [name, setName] = useState("");
@@ -63,7 +64,7 @@ function NewDMModal({ dmUsers, onClose, onSelect }) {
 
   const filtered = query.trim()
     ? dmUsers.filter((u) =>
-        `${u.first_name} ${u.last_name}`.toLowerCase().includes(query.toLowerCase())
+        (u.username || `${u.first_name} ${u.last_name}`).toLowerCase().includes(query.toLowerCase())
       )
     : dmUsers;
 
@@ -90,16 +91,16 @@ function NewDMModal({ dmUsers, onClose, onSelect }) {
             <button
               key={u.id}
               onClick={() => {
-                onSelect({ type: "dm", data: { user_id: u.id, full_name: `${u.first_name} ${u.last_name}`, rank: u.rank } });
+                onSelect({ type: "dm", data: { user_id: u.id, username: u.username || `${u.first_name} ${u.last_name}`, rank: u.rank } });
                 onClose();
               }}
               className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#7c3aed]/20 transition-colors text-left"
             >
-              <div className="w-8 h-8 rounded-full bg-[#2a2245] flex items-center justify-center text-sm text-[#a78bfa] font-bold flex-shrink-0">
-                {u.first_name?.[0]}
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0">
+                <Avatar userData={u} />
               </div>
               <div>
-                <p className="text-sm text-[#e2dff5] font-semibold">{u.first_name} {u.last_name}</p>
+                <p className="text-sm text-[#e2dff5] font-semibold">{u.username || `${u.first_name} ${u.last_name}`}</p>
                 <p className="text-[10px] text-[#a78bfa]">{u.rank}</p>
               </div>
             </button>
@@ -117,7 +118,7 @@ function InviteModal({ group, allUsers, onClose }) {
 
   const filtered = (query.trim()
     ? allUsers.filter((u) =>
-        `${u.first_name} ${u.last_name}`.toLowerCase().includes(query.toLowerCase())
+        (u.username || `${u.first_name} ${u.last_name}`).toLowerCase().includes(query.toLowerCase())
       )
     : allUsers
   );
@@ -155,10 +156,10 @@ function InviteModal({ group, allUsers, onClose }) {
               .filter((u) => memberSet.has(u.id))
               .map((u) => (
                 <div key={u.id} className="flex items-center gap-1.5 bg-[#1e1838] rounded-full px-2 py-1">
-                  <div className="w-4 h-4 rounded-full bg-[#2a2245] flex items-center justify-center text-[9px] text-[#a78bfa] font-bold">
-                    {u.first_name?.[0]}
+                  <div className="w-4 h-4 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0">
+                    <Avatar userData={u} />
                   </div>
-                  <span className="text-[10px] text-[#e2dff5]/70">{u.first_name} {u.last_name}</span>
+                  <span className="text-[10px] text-[#e2dff5]/70">{u.username || `${u.first_name} ${u.last_name}`}</span>
                 </div>
               ))}
           </div>
@@ -188,11 +189,11 @@ function InviteModal({ group, allUsers, onClose }) {
                 return (
                   <div key={u.id} className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-[#7c3aed]/20 transition-colors">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-[#2a2245] flex items-center justify-center text-xs text-[#a78bfa] font-bold flex-shrink-0">
-                        {u.first_name?.[0]}
+                      <div className="w-7 h-7 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0">
+                        <Avatar userData={u} />
                       </div>
                       <div>
-                        <p className="text-xs text-[#e2dff5] font-semibold">{u.first_name} {u.last_name}</p>
+                        <p className="text-xs text-[#e2dff5] font-semibold">{u.username || `${u.first_name} ${u.last_name}`}</p>
                         <p className="text-[10px] text-[#a78bfa]">{u.rank}</p>
                       </div>
                     </div>
@@ -488,17 +489,17 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
               {dmUsers.slice(0, 10).map((u) => (
                 <button
                   key={u.id}
-                  onClick={() => onSelect({ type: "dm", data: { user_id: u.id, full_name: `${u.first_name} ${u.last_name}`, rank: u.rank } })}
+                  onClick={() => onSelect({ type: "dm", data: { user_id: u.id, username: u.username || `${u.first_name} ${u.last_name}`, rank: u.rank } })}
                   className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 ${
                     selectedItem?.type === "dm" && selectedItem.data.user_id === u.id
                       ? "bg-[#7c3aed]/30 text-[#c084fc]"
                       : "text-[#e2dff5]/70 hover:bg-[#7c3aed]/20 hover:text-[#c084fc]"
                   }`}
                 >
-                  <div className="w-5 h-5 rounded-full bg-[#2a2245] flex items-center justify-center text-[10px] text-[#a78bfa] flex-shrink-0">
-                    {u.first_name?.[0]}
+                  <div className="w-5 h-5 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0">
+                    <Avatar userData={u} />
                   </div>
-                  <span className="truncate">{u.first_name} {u.last_name}</span>
+                  <span className="truncate">{u.username || `${u.first_name} ${u.last_name}`}</span>
                 </button>
               ))}
             </div>

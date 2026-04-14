@@ -20,7 +20,6 @@ function CreateGroupEventModal({ group, onClose, onCreated }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-
   function set(field, val) {
     setForm((prev) => ({ ...prev, [field]: val }));
   }
