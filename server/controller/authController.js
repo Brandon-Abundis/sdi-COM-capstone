@@ -12,6 +12,7 @@ const createUser = async (user) => {
       "email",
       "first_name",
       "last_name",
+      "username",
       "gender",
       "rank",
       "profile",
@@ -27,8 +28,16 @@ const createUser = async (user) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { email, password, first_name, last_name, gender, rank, age } =
-      req.body;
+    const {
+      email,
+      password,
+      username,
+      first_name,
+      last_name,
+      gender,
+      rank,
+      age,
+    } = req.body;
     const exists = await db("users").where({ email }).first();
 
     if (exists) {
@@ -47,6 +56,7 @@ const registerUser = async (req, res) => {
     const newUser = await createUser({
       email,
       password: hashWord,
+      username,
       first_name,
       last_name,
       gender,
@@ -139,6 +149,7 @@ const login = async (req, res) => {
       email: email,
       first_name: user.first_name,
       last_name: user.last_name,
+      username: user.username,
       profile: user.profile,
       gender: user.gender,
       rank: user.rank,
