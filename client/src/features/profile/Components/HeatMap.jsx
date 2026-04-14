@@ -42,14 +42,14 @@ export default function WorkoutHeatmap({ userData }) {
       <div className="mb-6 flex justify-between items-end">
         <div>
           <h2 className="text-base-content text-xl font-black tracking-tight leading-none">
-            Yearly Workouts
+            Yearly Exercise
           </h2>
           <p className="text-base-content/20 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">
             The {currentYear} Journey
           </p>
         </div>
         <div className="text-[10px] font-black text-base-content/40 uppercase bg-base-content/5 px-3 py-1 rounded-full border border-base-content/5">
-          {heatmapValues().length} Active Days This Year
+          {heatmapValues().length} Active Days Over the Past Year
         </div>
       </div>
 
@@ -71,7 +71,7 @@ export default function WorkoutHeatmap({ userData }) {
         <div className="flex gap-4">
           <div className="flex items-center gap-3">
             <span className="text-[9px] font-bold text-base-content/20 uppercase tracking-tighter">
-              0 Workouts
+              0 Exercises
             </span>
 
             <div className="flex gap-1">
@@ -98,7 +98,7 @@ export default function WorkoutHeatmap({ userData }) {
             </div>
 
             <span className="text-[9px] font-bold text-base-content/20 uppercase tracking-tighter">
-              4+ Workouts
+              4+ Exercices
             </span>
           </div>
         </div>

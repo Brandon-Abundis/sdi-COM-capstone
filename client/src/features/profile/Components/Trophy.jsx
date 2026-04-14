@@ -7,6 +7,17 @@ export default function Trophy({ userData }) {
     titles[i] = `/Titles/${i}.png`;
   }
 
+  const Badge = ({ icon: Icon, label }) => (
+    <div className="flex flex-col items-center gap-2">
+      <div className="w-16 h-16 rounded-full border border-zinc-800 flex items-center justify-center bg-zinc-900/50 hover:border-zinc-500 transition-colors">
+        <Icon size={24} className="text-zinc-400" />
+      </div>
+      <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-medium">
+        {label}
+      </span>
+    </div>
+  );
+
   if (!userData) return <h1>Loading...</h1>;
 
   const curr_level = current_level(userData.xp);
