@@ -39,7 +39,7 @@ export default function Profile() {
             onClick={handleSignOut}
             className="absolute top-4 right-4 z-4 px-4 py-2 bg-red-500/10 hover:bg-red-500 hover:text-white text-red-500 text-xs font-black uppercase tracking-widest border border-red-500/20 rounded-lg transition-all duration-300 backdrop-blur-sm"
           >
-            Sign Out
+            Log Out
           </button>
 
           <div className="grid grid-cols-2 grid-rows-2 h-screen w-full bg-base-300 p-6 pt-16 gap-6">
