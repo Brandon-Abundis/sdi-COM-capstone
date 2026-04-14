@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./Calendar.css";
 import CalendarApp from "../components/CalendarApp.jsx";
+import useCreateUserEvent from "../customHooks/UseEventCreator.jsx"
 // import CalUpcomingEvents  from "../components/CalUpcomingEvents.jsx";
 import { useAuth } from "../../../app/AuthProvider.jsx";
 
@@ -120,12 +121,6 @@ export default function Calendar() {
     const d = new Date(e.start_date).getTime();
 
     return (
-      // d.getUTCFullYear() >= upcomingDateWindowStart.getUTCFullYear() &&
-      // d.getUTCMonth() >= upcomingDateWindowStart.getUTCMonth() &&
-      // d.getUTCDate() >= upcomingDateWindowStart.getUTCDate() &&
-      // d.getUTCFullYear() <= upcomingDateWindowEnd.getUTCFullYear() &&
-      // d.getUTCMonth() <= upcomingDateWindowEnd.getUTCMonth() &&
-      // d.getUTCDate() <= upcomingDateWindowEnd.getUTCDate()
       d >= upcomingDateWindowStart.getTime() &&
       d <= upcomingDateWindowEnd.getTime()
     );
@@ -159,34 +154,44 @@ export default function Calendar() {
   }
   
   async function handleAddEvent(e) {
-    e.preventDefault();
-    setSaveError("");
-    if (!form.name.trim() || !selectedDate || !user?.id) return;
-    setSaving(true);
-    try {
-      const res = await fetch("http://localhost:8080/users/user_events", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          date: selectedDate.toISOString().split("T")[0],
-          time: form.time || null,
-          user_id: user.id,
-        }),
-      });
-      if (res.ok) {
-        const newEvent = await res.json();
-        setEvents((prev) => [...prev, newEvent]);
-        setForm({ name: "", time: "" });
-      } else {
-        const body = await res.json().catch(() => ({}));
-        setSaveError(body.message || `Error ${res.status}`);
-      }
-    } catch {
-      setSaveError("Could not reach the server.");
-    } finally {
-      setSaving(false);
-    }
+    const customFetch = useCreateUserEvent().submitEvent
+    const eventObject = {
+      name: "TestDataName",
+      start_date: selectedDay,
+      end_date: selectedDay,
+      start_time: "test",
+      end_time:"test",
+      user_id: user.id
+    };
+    customFetch(eventObject)
+    // e.preventDefault();
+    // setSaveError("");
+    // if (!form.name.trim() || !selectedDate || !user?.id) return;
+    // setSaving(true);
+    // try {
+    //   const res = await fetch("http://localhost:8080/users/user_events", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       name: form.name.trim(),
+    //       date: selectedDate.toISOString().split("T")[0],
+    //       time: form.time || null,
+    //       user_id: user.id,
+    //     }),
+    //   });
+    //   if (res.ok) {
+    //     const newEvent = await res.json();
+    //     setEvents((prev) => [...prev, newEvent]);
+    //     setForm({ name: "", time: "" });
+    //   } else {
+    //     const body = await res.json().catch(() => ({}));
+    //     setSaveError(body.message || `Error ${res.status}`);
+    //   }
+    // } catch {
+    //   setSaveError("Could not reach the server.");
+    // } finally {
+    //   setSaving(false);
+    // }
   }
   
   const selectedLabel = selectedDate
@@ -207,6 +212,8 @@ export default function Calendar() {
   })
   : null;
   
+
+
   return (
     <div className="calendar-page">
       {selectedDay === null ? (
