@@ -16,10 +16,6 @@ export default function TopBar({ user, onToggleSidebar, onLogout }) {
     closeTimer.current = setTimeout(() => setProfileOpen(false), 100);
   }
 
-  const initials = user
-    ? `${user.first_name?.[0] ?? ""}${user.last_name?.[0] ?? ""}`.toUpperCase()
-    : "?";
-
   return (
     <div className="sticky top-0 z-40 flex items-center px-4 py-2 border-b border-base-300 bg-base-100">
       <div className="flex-1">
