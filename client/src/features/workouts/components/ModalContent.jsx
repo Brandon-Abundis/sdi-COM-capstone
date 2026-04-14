@@ -5,14 +5,28 @@ import { useRef } from "react";
 export default function ModalContent({ cancel, info }) {
   let id = JSON.parse(localStorage.getItem("user")).id;
 
+  const numberCheck = (num) => {
+    if (num !== "" && isNaN(num)) {
+      return true;
+    }
+
+    return false;
+  };
+
   const throwError = (elem, type) => {
+    setTimeout(
+      () =>
+        elem.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        }),
+      50,
+    );
+
     elem.innerHTML = type
       ? "Check all Fields & Try Again"
       : "Internal Server Error; Check All Fields & Try Again";
-    elem.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+
     elem.style.color = "red";
     elem.style.fontSize = "25px";
     setTimeout(() => {
@@ -23,12 +37,17 @@ export default function ModalContent({ cancel, info }) {
   };
 
   const progress = (elem) => {
-    setTimeout(() => window.location.reload(), 2000);
+    setTimeout(() => window.location.reload(), 1750);
     elem.innerHTML = "Saved! Reloading the page...";
-    elem.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+    elem.style.color = "";
+
+    setTimeout(
+      elem.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      }),
+      50,
+    );
   };
 
   let {
@@ -83,10 +102,10 @@ export default function ModalContent({ cancel, info }) {
     };
     console.log(payload);
     if (
-      isNaN(payload.time) ||
-      isNaN(payload.distance) ||
-      isNaN(reps) ||
-      isNaN(weight)
+      numberCheck(payload.time) ||
+      numberCheck(payload.distance) ||
+      numberCheck(payload.reps) ||
+      numberCheck(payload.weight)
     ) {
       throwError(ress, "local");
       return;
@@ -176,15 +195,15 @@ export default function ModalContent({ cancel, info }) {
           ]}
           chosen={type}
         />
-        <h2> Time Estimate (Min.)</h2>
+        <h2> Time Estimate (Min.) - # </h2>
         <InputField ref={timeRef} style={"Time Estimate (Min.)"} def={time} />
-        <h2> Distance (Mi.)</h2>
+        <h2> Distance (Mi.) - # </h2>
         <InputField ref={distRef} style={"Distance (Mi.)"} def={distance} />
-        <h2> Reps </h2>
+        <h2> Reps - # </h2>
         <InputField ref={repRef} style={"Reps"} def={reps} />
         <h2> Muscle Group </h2>
         <InputField ref={muscRef} style={"Muscle Group"} def={muscle_group} />
-        <h2> Weight (lbs.)</h2>
+        <h2> Weight (lbs.) - # </h2>
         <InputField ref={weightRef} style={"Weight (lbs.)"} def={weight} />
         <h2> Notes </h2>
         <InputField ref={noteRef} style={"Notes"} def={notes} />
