@@ -20,8 +20,6 @@ export default function Avatar({ userData }) {
   //     </span>
   //   );
 
-  if (!userData?.profile) return <h1>loading...</h1>;
-
   return (
     <div className="relative w-full h-full flex items-center justify-center">
       {!savedAvatar && (
