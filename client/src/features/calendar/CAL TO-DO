@@ -71,12 +71,20 @@ WHAT IM WORKING ON TODAY ______________________________________
 
  - Ensure all workouts displayed are on the Event box, including those from existing workouts. -----DONE -->
 
-Ensure there is a way to populate events with workouts. ----SPEAK TO OTHERS ON THIS
+Ensure there is a way to populate events with workouts. ----SPEAK TO OTHERS ON THIS? (BUILD SOLO BEFORE ASKING JACKSON ON IT)
 
-Ensure there is a way to delete events ----SPEAK TO BACKEND TEAM FOR THIS?
+Ensure that individual workouts are routed to their workout on the workout page. (OR USE MODAL) --- SPEAK TO JACKSON & TAFARI on this --- TEST BEFORE SPEAKING
+
+ - Ensure there is a way to delete events ----SPEAK TO BACKEND TEAM FOR THIS? TEST SOLO FIRST ---- DID SOLO AND WORKED ----
 
  <!-- - Ensure that it gathers group events as well. --- DO SOLO ----DONE
 
  - Ensure that the group events are all handled well -- DO SOLO ----DONE -->
 
-Ensure that individual workouts are routed to their workout on the workout page. (OR USE MODAL) --- SPEAK TO JACKSON & TAFARI on this
+
+
+----- Minor changes ----------
+
+when click on calendarday highlight changes, ensure difference between group and personal stays.
+
+change end day to auto hide then reveal if desired

@@ -3,6 +3,7 @@ import "./Calendar.css";
 import CalendarApp from "../components/CalendarApp.jsx";
 import useCreateUserEvent from "../customHooks/UseEventCreator.jsx"
 // import CalUpcomingEvents  from "../components/CalUpcomingEvents.jsx";
+import Modal from "../../workouts/components/Modal.jsx"
 import { useAuth } from "../../../app/AuthProvider.jsx";
 
 function formatTime(timeStr) {
@@ -33,7 +34,10 @@ export default function Calendar() {
   // const [dayWorkouts, setDayWorkouts] = useState(null)
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [userWorkouts, setUserWorkouts] = useState([]);
-  
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedWorkout, setSelectedWorkout] = useState(null)
+
+
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   
@@ -292,8 +296,18 @@ export default function Calendar() {
       // console.log("Step 1: IDs in this event:", event.workouts_list);
       // console.log("Step 2: Total workouts in state:", userWorkouts.length);
 
+
     if (!event.workouts_list || event.workouts_list.length === 0) {
       return <p>No workouts for this event.</p>
+    }
+
+    function handleOpen(workout) {
+      console.log(`clicked ${Object.keys(workout)}`)
+      setSelectedWorkout(workout);
+      setIsOpen(true);
+    }
+    function handleClose() {
+      setIsOpen(false)
     }
 
     const workoutsForEvent = event.workouts_list
@@ -308,11 +322,23 @@ export default function Calendar() {
     }
 
     return (
-      <ul className="workout-list">
-        {workoutsForEvent.map((workout) => (
-          <li key={workout.id}>{workout.name}</li>
-        ))}
-      </ul>
+      <>
+        <ul className="workout-list">
+          {workoutsForEvent.map((workout) => (
+            <li 
+              key={workout.id}
+              onClick={() => handleOpen(workout)}
+              className="cursor-pointer hover:text-purple-400"
+              >{workout.name}
+            </li>
+          ))}
+        </ul>
+        {/* <Modal 
+          openModal={isOpen}
+          closeModal={handleClose}
+          info={selectedWorkout}
+        /> */}
+      </>
     )
   }
 
