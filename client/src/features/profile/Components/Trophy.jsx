@@ -274,9 +274,7 @@ export default function Trophy({ userData }) {
                 className="flex-none w-80 h-32 snap-center relative group cursor-pointer"
               >
                 <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateX(180deg)]">
-                  {/* FRONT SIDE */}
                   <div className="absolute inset-0 [backface-visibility:hidden] z-[2] flex flex-col border border-white/10 overflow-hidden bg-[#0a0a0a]">
-                    {/* 1. The Image (Top part) */}
                     <div className="flex-grow overflow-hidden">
                       <img
                         src={card.path}
@@ -285,7 +283,6 @@ export default function Trophy({ userData }) {
                       />
                     </div>
 
-                    {/* 2. The Solid Black Bar (Bottom part) */}
                     <div className="h-8 bg-black flex items-center px-3 border-t border-white/20">
                       <h3 className="text-white font-sans font-bold text-[11px] uppercase tracking-wider">
                         {card.label}
@@ -293,7 +290,6 @@ export default function Trophy({ userData }) {
                     </div>
                   </div>
 
-                  {/* BACK SIDE */}
                   <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateX(180deg)] z-[1] bg-[#111] border border-white/10 flex flex-col justify-center items-center px-4">
                     <span className="text-[10px] uppercase tracking-widest text-accent mb-1 font-bold">
                       Challenge Criteria
@@ -302,7 +298,6 @@ export default function Trophy({ userData }) {
                       "{card.criteria}"
                     </p>
 
-                    {/* Decorative Corner (Optional BO2 vibe) */}
                     <div className="absolute bottom-1 right-1 w-2 h-2 border-r border-b border-accent/50" />
                   </div>
                 </div>
