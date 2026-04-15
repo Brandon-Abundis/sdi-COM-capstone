@@ -58,7 +58,7 @@ export default function ProgressWidget() {
 
   return (
     <div className="card bg-base-200 p-4">
-      <h3 className="text-2xl font-semibold text-primary mb-4">Progress</h3>
+      <h3 className="text-2xl font-semibold text-primary mb-4">💪 Progress</h3>
 
       {userRank ? (
         <div className="space-y-4">
@@ -98,7 +98,9 @@ export default function ProgressWidget() {
                   <div className="flex items-center gap-2">
                     <span
                       className={`font-bold w-8 text-center ${
-                        u.id === user.id ? "text-primary" : "text-base-content/60"
+                        u.id === user.id
+                          ? "text-primary"
+                          : "text-base-content/60"
                       }`}
                     >
                       #{u.rank}

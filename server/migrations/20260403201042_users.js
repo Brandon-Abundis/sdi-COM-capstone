@@ -8,6 +8,7 @@ exports.up = function (knex) {
     table.boolean("is_admin").defaultTo(false);
     table.boolean("is_active").defaultTo(true);
     table.string("username");
+    table.string("profile");
     table.string("first_name");
     table.string("last_name");
     table.string("email");
@@ -15,7 +16,7 @@ exports.up = function (knex) {
     table.string("rank");
     table.string("gender");
     table.integer("age");
-    table.integer("xp").defaultTo(0);
+    table.bigInteger("xp").defaultTo(0);
 
     table.specificType("rival_ids", "integer[]").defaultTo(knex.raw("'{}'"));
 

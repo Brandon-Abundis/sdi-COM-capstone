@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../app/AuthProvider";
 import { fetchUserGoals } from "../api/userGoals";
+import ViewAllGoalsModal from "./ViewAllGoalsModal";
+import AddNewGoalModal from "./AddNewGoalModal";
 
 export default function GoalsWidget() {
   const { user } = useAuth();
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAllGoalsModal, setShowAllGoalsModal] = useState(false);
+  const [showAddGoalModal, setShowAddGoalModal] = useState(false);
 
   useEffect(() => {
     const loadGoals = async () => {
@@ -22,6 +26,17 @@ export default function GoalsWidget() {
     };
     loadGoals();
   }, [user?.id]);
+
+  const handleGoalCreated = async (newGoal) => {
+    // Add the new goal to the list
+    setGoals((prevGoals) => [newGoal, ...prevGoals]);
+    setShowAddGoalModal(false);
+  };
+
+  const handleGoalCompleted = (goalId) => {
+    // Remove the completed goal from the list
+    setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== goalId));
+  };
 
   if (loading)
     return <div className="card bg-base-200 p-4">Loading goals...</div>;
@@ -48,21 +63,34 @@ export default function GoalsWidget() {
     );
   };
 
+  // Filter goals to only show incomplete goals
+  const incompleteGoals = goals.filter((goal) => !goal.completed);
+
+  // Sort goals by updated_at (newest first)
+  const sortedGoals = [...incompleteGoals].sort((a, b) => {
+    const dateA = new Date(a.updated_at);
+    const dateB = new Date(b.updated_at);
+    return dateB - dateA;
+  });
+
   return (
     <div className="card bg-base-200 p-4">
-      <h3 className="text-2xl font-semibold text-primary mb-4">Active Goals</h3>
+      <h3 className="text-2xl font-semibold text-primary mb-4">
+        🏃 Active Goals
+      </h3>
 
-      {goals.length > 0 && (
-        <p className="text-sm text-base-content/70 mb-4">
-          {goals.length} active goal{goals.length !== 1 ? "s" : ""}
+      {incompleteGoals.length > 0 && (
+        <p className="text-sm font-bold text-base-content/70 uppercase mb-4">
+          {incompleteGoals.length} active goal
+          {incompleteGoals.length !== 1 ? "s" : ""}
         </p>
       )}
 
-      {goals.length > 0 ? (
+      {incompleteGoals.length > 0 ? (
         <>
           <div className="space-y-4 mb-4">
-            {goals.slice(0, 3).map((goal) => (
-              <div key={goal.id} className="border-l-2 border-primary pl-4">
+            {sortedGoals.slice(0, 3).map((goal) => (
+              <div key={goal.id} className="border-l-4 border-primary pl-4">
                 <h4 className="text-lg font-bold text-secondary">
                   {goal.name}
                 </h4>
@@ -89,12 +117,18 @@ export default function GoalsWidget() {
           </div>
 
           <div className="flex gap-2 pt-4 border-t border-base-300">
-            {goals.length > 3 && (
-              <button className="btn btn-sm btn-outline flex-1">
-                View All Goals ({goals.length})
+            {incompleteGoals.length > 3 && (
+              <button
+                onClick={() => setShowAllGoalsModal(true)}
+                className="btn btn-sm btn-outline flex-1"
+              >
+                View All Goals ({incompleteGoals.length})
               </button>
             )}
-            <button className="btn btn-sm btn-outline flex-1">
+            <button
+              onClick={() => setShowAddGoalModal(true)}
+              className="btn btn-sm btn-outline flex-1"
+            >
               Add New Goal
             </button>
           </div>
@@ -102,6 +136,20 @@ export default function GoalsWidget() {
       ) : (
         <p className="text-md text-base-content">No active goals.</p>
       )}
+
+      <ViewAllGoalsModal
+        isOpen={showAllGoalsModal}
+        onClose={() => setShowAllGoalsModal(false)}
+        goals={incompleteGoals}
+        onGoalCompleted={handleGoalCompleted}
+      />
+
+      <AddNewGoalModal
+        isOpen={showAddGoalModal}
+        onClose={() => setShowAddGoalModal(false)}
+        userId={user?.id}
+        onGoalCreated={handleGoalCreated}
+      />
     </div>
   );
 }

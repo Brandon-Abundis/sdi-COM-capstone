@@ -1,17 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CloseIcon from "./CloseIcon.jsx";
+import Avatar from "../../features/profile/Components/Avatar.jsx";
 
-export default function Sidebar({ isOpen, onClose }) {
+export default function Sidebar({ isOpen, onClose, user }) {
+  const navigate = useNavigate();
+
   return (
     <div
       className={`sidebar fixed inset-y-0 left-0 z-50 w-64 transform ${
         isOpen ? "translate-x-0" : "-translate-x-full"
-      } transition-transform duration-300 ease-in-out`}
+      } transition-transform duration-300 ease-in-out flex flex-col`}
     >
-      <div className="px-4 py-7">
+      <div className="px-4 py-8 flex-1">
         <button
           onClick={onClose}
-          className="hover:text-primary mb-4 flex items-center gap-2 ml-auto"
+          className="hover:text-primary cursor-pointer mb-4 flex items-center gap-2 ml-auto"
           aria-label="Close sidebar"
         >
           <CloseIcon />
@@ -55,6 +58,27 @@ export default function Sidebar({ isOpen, onClose }) {
           </Link>
         </nav>
       </div>
+
+      {/* Bottom-left profile widget */}
+      {user && (
+        <div className="px-3 py-4 border-t border-base-300">
+          <div
+            className="flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer hover:bg-base-200 transition-colors"
+            onClick={() => { onClose(); navigate("/profile"); }}
+          >
+            {/* Avatar */}
+            <div className="relative w-9 h-9 rounded-full overflow-hidden ring-1 ring-accent bg-neutral flex-shrink-0 justify-center items-center pt-2">
+              <Avatar userData={user} />
+            </div>
+
+            {/* Logged in as */}
+            <div className="flex flex-col overflow-hidden">
+              <p className="text-[10px] text-secondary">Logged in as:</p>
+              <p className="text-sm font-semibold text-base-content truncate">{user?.username}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

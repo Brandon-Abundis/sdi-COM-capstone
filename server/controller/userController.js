@@ -13,7 +13,7 @@ const getAll = async (req, res) => {
         action: "FETCH_USERS",
         status_code: 200,
         user_id: null,
-        metadata: JSON.stringify(result),
+        metadata: { message: "Fetched all users" },
       });
     }
     res.status(200).send(result);
@@ -39,7 +39,7 @@ const getById = async (req, res) => {
         action: "FETCH_USER",
         status_code: 200,
         user_id: result.id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched user data" },
       });
     }
     res.status(200).send(result);
@@ -62,6 +62,7 @@ const updateById = async (req, res) => {
     first_name,
     last_name,
     username,
+    profile,
     email,
     rank,
     age,
@@ -77,6 +78,7 @@ const updateById = async (req, res) => {
       !first_name &&
       !last_name &&
       !username &&
+      !profile &&
       !email &&
       !rank &&
       !age &&
@@ -104,6 +106,7 @@ const updateById = async (req, res) => {
         first_name: first_name ? first_name : userData.first_name,
         last_name: last_name ? last_name : userData.last_name,
         username: username ? username : userData.username,
+        profile: profile ? profile : userData.profile,
         email: email ? email : userData.email,
         rank: rank ? rank : userData.rank,
         age: age ? age : userData.age,
@@ -294,7 +297,7 @@ const getGroupsById = async (req, res) => {
         action: "FETCH_USER_GROUPS",
         status_code: 200,
         user_id: id,
-        metadata: JSON.stringify(groupData),
+        metadata: { message: "fetched all user group data" },
       });
     }
     res.status(200).send(groupData);
@@ -321,7 +324,7 @@ const getGoalsById = async (req, res) => {
         action: "FETCH_USER_GOALS",
         status_code: 200,
         user_id: result.id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all user goals for a user" },
       });
     }
     res.status(200).send(result);
@@ -339,8 +342,17 @@ const getGoalsById = async (req, res) => {
 
 const updateGoalsById = async (req, res) => {
   const { id } = req.params;
-  const { name, type, time, distance, reps, muscle_group, weight, notes } =
-    req.body;
+  const {
+    name,
+    type,
+    time,
+    distance,
+    reps,
+    muscle_group,
+    weight,
+    notes,
+    completed,
+  } = req.body;
   try {
     if (
       !name &&
@@ -350,7 +362,8 @@ const updateGoalsById = async (req, res) => {
       !reps &&
       !muscle_group &&
       !weight &&
-      !notes
+      !notes &&
+      completed === undefined
     ) {
       createLog({
         method: "POST",
@@ -384,6 +397,7 @@ const updateGoalsById = async (req, res) => {
         muscle_group: muscle_group ? muscle_group : userGoalData.muscle_group,
         weight: weight ? weight : userGoalData.weight,
         notes: notes ? notes : userGoalData.notes,
+        completed: completed !== undefined ? completed : userGoalData.completed,
       })
       .returning("*");
     if (result) {
@@ -486,7 +500,7 @@ const getWorkoutsById = async (req, res) => {
         action: "FETCH_USER_WORKOUTS",
         status_code: 200,
         user_id: result.id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all user workouts for a user" },
       });
     }
     res.status(200).send(result);
@@ -653,7 +667,7 @@ const getAllEvents = async (req, res) => {
       action: "FETCH_ALL_USER_EVENTS",
       status_code: 200,
       user_id: null,
-      metadata: JSON.stringify(result),
+      metadata: { message: "fetched all user events for all user" },
     });
     res.status(200).send(result);
   } catch (err) {
@@ -678,7 +692,7 @@ const getEventsById = async (req, res) => {
         action: "FETCH_USER_EVENTS",
         status_code: 200,
         user_id: result.id,
-        metadata: JSON.stringify(result),
+        metadata: { message: "fetched all user events for a user" },
       });
     }
     res.status(200).send(result);
@@ -695,15 +709,40 @@ const getEventsById = async (req, res) => {
 };
 
 const createEvent = async (req, res) => {
-  const { name, date, time, user_id } = req.body;
-  if (!name || !date || !user_id) {
+  const {
+    name,
+    start_date,
+    end_date,
+    start_time,
+    end_time,
+    user_id,
+    goals_list,
+    workouts_list,
+  } = req.body;
+  if (
+    !name ||
+    !start_date ||
+    !end_date ||
+    !start_time ||
+    !end_time ||
+    !user_id
+  ) {
     return res
       .status(400)
       .send({ message: "name, date, and user_id are required" });
   }
   try {
     const [newEvent] = await db("user_events")
-      .insert({ name, date, time: time || null, user_id })
+      .insert({
+        name,
+        start_date,
+        end_date,
+        start_time,
+        end_time,
+        user_id,
+        goals_list: goals_list || [],
+        workouts_list: workouts_list || [],
+      })
       .returning("*");
     createLog({
       method: "POST",

@@ -24,19 +24,36 @@ const SF_RANKS = [
 export default function Signup() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [gender, setGender] = useState("Other");
+  const [gender, setGender] = useState("");
   const [rank, setRank] = useState("Spc1");
   const [age, setAge] = useState("");
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const navigate = useNavigate();
 
+  const validateUsername = (username) => {
+    if (username.length < 5 || username.length > 16) {
+      return `Username must be between 5 and 16 characters`;
+    }
+    if (!/^[a-zA-Z0-9._-]+$/.test(username)) {
+      return `Username can only contain letters, numbers, periods, underscores, and hyphens`;
+    }
+    return "";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    const usernameError = validateUsername(username);
+    if (usernameError) {
+      setError(usernameError);
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -46,6 +63,7 @@ export default function Signup() {
     const newUser = {
       email,
       password,
+      username,
       first_name: firstName,
       last_name: lastName,
       gender,
@@ -62,7 +80,14 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6">
+      <div className="mb-8">
+        <img
+          className="h-30"
+          src="/WarfighterFit_logo.png"
+          alt="WarfighterFit Logo"
+        />
+      </div>
       <div className="card card-border border-accent bg-base-200 w-full max-w-lg">
         <div className="card-body">
           <h2 className="card-title text-primary text-2xl pb-3">Signup</h2>
@@ -97,6 +122,15 @@ export default function Signup() {
             />
             <input
               className="input input-bordered w-full"
+              name="username"
+              type="text"
+              required
+              placeholder="Username (5-16 characters)"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+              className="input input-bordered w-full"
               name="password"
               type="password"
               required
@@ -121,7 +155,7 @@ export default function Signup() {
             >
               <option value="Male">Male</option>
               <option value="Female">Female</option>
-              <option value="Other">Other</option>
+              <option value=""></option>
             </select>
             <input
               className="input input-bordered w-full"

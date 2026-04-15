@@ -1,5 +1,5 @@
 const base = 100;
-const ratio = 1.5;
+const ratio = 1.1;
 
 function xp_to_level_up(level) {
   if (level <= 0) {

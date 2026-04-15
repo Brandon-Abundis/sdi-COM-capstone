@@ -2,6 +2,29 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../../app/AuthProvider";
 import { fetchUserEvents, fetchUserWorkouts } from "../api/userEvents";
 
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function formatTime(timeStr) {
+  if (!timeStr) return "";
+  const [h, m] = timeStr.split(":").map(Number);
+  const ampm = h >= 12 ? "PM" : "AM";
+  const hour = h % 12 || 12;
+  const mins = (m || 0) > 0 ? `:${String(m).padStart(2, "0")}` : "";
+  return `${hour}${mins} ${ampm}`;
+}
+
+function getDaysUntil(isoString) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const target = new Date(isoString);
+  target.setHours(0, 0, 0, 0);
+  return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+}
+
 export default function EventsWidget() {
   const { user } = useAuth();
   const [events, setEvents] = useState([]);
@@ -29,118 +52,106 @@ export default function EventsWidget() {
   }, [user?.id]);
 
   if (loading)
-    return <div className="card bg-base-200 p-4">Loading workouts...</div>;
-  if (error)
     return (
-      <div className="card bg-base-200 p-4 text-error">Error: {error}</div>
+      <div className="card bg-base-200 p-4">
+        <h3 className="text-lg font-bold text-accent flex items-center gap-1.5 mb-4">
+          <span className="inline-block w-0.75 h-4 rounded-full bg-yellow-400/70 mr-1" />{" "}
+          Events
+        </h3>
+        <p className="text-sm text-base-content/50">Loading events...</p>
+      </div>
     );
 
-  // Create an object mapping workout id to workout name
-  const workoutMap = workouts.reduce((map, workout) => {
-    map[workout.id] = workout.name;
+  if (error)
+    return (
+      <div className="card bg-base-200 p-4">
+        <h3 className="text-lg font-bold text-accent flex items-center gap-1.5 mb-4">
+          <span className="inline-block w-0.75 h-4 rounded-full bg-yellow-400/70 mr-1" />{" "}
+          Events
+        </h3>
+        <p className="text-sm text-error">Error: {error}</p>
+      </div>
+    );
+
+  const workoutMap = workouts.reduce((map, w) => {
+    map[w.id] = w.name;
     return map;
   }, {});
 
-  // Filter events with workouts
-  const eventsWithWorkouts = events.filter(
-    (event) => event.workouts_list && event.workouts_list.length > 0,
+  const eventsWithWorkouts = events
+    .filter((e) => e.workouts_list?.length > 0)
+    .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+
+  const todayEvents = eventsWithWorkouts.filter(
+    (e) => getDaysUntil(e.start_date) === 0,
   );
-
-  // Sort by events by start_date
-  const sortedEvents = eventsWithWorkouts.sort(
-    (a, b) => new Date(a.start_date) - new Date(b.start_date),
-  );
-
-  // Today's date in local timezone (YYYY-MM-DD)
-  const getLocalDate = () => {
-    const localDate = new Date();
-    const year = localDate.getFullYear();
-    const month = String(localDate.getMonth() + 1).padStart(2, "0");
-    const day = String(localDate.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  // Extract local date from ISO string (YYYY-MM-DD)
-  const getEventLocalDate = (isoString) => {
-    const date = new Date(isoString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  const today = getLocalDate();
-
-  // Get today's events and upcoming events (near-term events past today)
-  const todayEvents = sortedEvents.filter((event) => {
-    const eventDate = getEventLocalDate(event.start_date);
-    return eventDate === today;
-  });
-  const upcomingEvents = sortedEvents
-    .filter((event) => {
-      const eventDate = getEventLocalDate(event.start_date);
-      return eventDate > today;
-    })
+  const upcomingEvents = eventsWithWorkouts
+    .filter((e) => getDaysUntil(e.start_date) > 0)
     .slice(0, 3);
+
+  function renderEventRow(event) {
+    const days = getDaysUntil(event.start_date);
+    return (
+      <div
+        key={event.id}
+        className="flex items-start justify-between gap-3 px-3 py-2.5 rounded-lg hover:bg-base-300 transition-colors cursor-default"
+      >
+        <div className="space-y-0.5 min-w-0">
+          <p className="text-sm font-semibold text-secondary truncate">
+            {event.name}
+          </p>
+          <p className="text-xs text-base-content/50">
+            {formatDate(event.start_date)}
+            {event.start_time && ` · ${formatTime(event.start_time)}`}
+            {event.end_time && ` – ${formatTime(event.end_time)}`}
+          </p>
+          {event.workouts_list?.length > 0 && (
+            <p className="text-[10px] text-base-content/40">
+              {event.workouts_list.map((id) => workoutMap[id]).join(", ")}
+            </p>
+          )}
+        </div>
+        <span
+          className={`text-[10px] font-bold shrink-0 px-2 py-1 rounded-md border ${
+            days === 0
+              ? "bg-primary text-primary-content border-transparent"
+              : "bg-base-300 text-secondary border-primary"
+          }`}
+        >
+          {days === 0 ? "Today" : `In ${days}d`}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="card bg-base-200 p-4">
-      <h3 className="text-2xl font-semibold text-primary mb-4">Events</h3>
+      <h3 className="text-2xl font-bold text-primary flex items-center gap-1.5 mb-4">
+        ⚡ Events
+      </h3>
+
+      {todayEvents.length === 0 && upcomingEvents.length === 0 && (
+        <p className="text-sm text-base-content/50">No upcoming events.</p>
+      )}
+
       {todayEvents.length > 0 && (
-        <div className="pb-4 border-b-2 border-primary">
-          <h4 className="text-lg font-bold text-secondary pb-2">Today:</h4>
-          <ul className="space-y-1">
-            {todayEvents.map((event) => (
-              <li key={event.id} className="text-sm">
-                <strong>{event.name}</strong> - {event.start_time}{" "}
-                {`- ${event.end_time}`}
-                {event.workouts_list.length > 0 && (
-                  <div className="ml-2 text-xs text-base-content/60">
-                    Workouts:{" "}
-                    {event.workouts_list.map((id) => workoutMap[id]).join(", ")}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+        <div className="mb-2">
+          <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3 mb-1">
+            Today
+          </p>
+          {todayEvents.map(renderEventRow)}
         </div>
       )}
+
       {upcomingEvents.length > 0 && (
         <div>
-          <h4 className="text-lg font-bold text-secondary pb-2 pt-2">
-            Upcoming:
-          </h4>
-          <ul className="space-y-1">
-            {upcomingEvents.map((event) => (
-              <li key={event.id} className="text-sm">
-                <strong>{event.name}</strong> -
-                {event.start_date === event.end_date ? (
-                  <span>
-                    {" "}
-                    {new Date(event.start_date).toLocaleDateString()}{" "}
-                    {event.start_time}
-                    {event.end_time && ` - ${event.end_time}`}
-                  </span>
-                ) : (
-                  <span>
-                    {" "}
-                    {new Date(event.start_date).toLocaleDateString()} -{" "}
-                    {new Date(event.end_date).toLocaleDateString()}
-                  </span>
-                )}
-                {event.workouts_list.length > 0 && (
-                  <div className="ml-2 text-xs text-base-content/60">
-                    Workouts:{" "}
-                    {event.workouts_list.map((id) => workoutMap[id]).join(", ")}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+          {todayEvents.length > 0 && (
+            <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3 mb-1 mt-2">
+              Upcoming
+            </p>
+          )}
+          {upcomingEvents.map(renderEventRow)}
         </div>
-      )}
-      {todayEvents.length === 0 && upcomingEvents.length === 0 && (
-        <p className="text-md text-base-content">No upcoming events.</p>
       )}
     </div>
   );

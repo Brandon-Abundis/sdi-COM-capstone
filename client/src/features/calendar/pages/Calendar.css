@@ -84,7 +84,7 @@
   border: 1px solid #1e1838;
   border-radius: 10px;
   padding: 6px;
-  height: 110px;
+  /* height: 110px; */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -104,27 +104,7 @@
   cursor: pointer;
 }
 
-/* .day.small,
-.blank.small{
-  padding-top: 60%;
-  padding-bottom: 60%
-}
 
-
-.day.medium,
-.blank.medium{
-
-
-  padding-top: 40%;
-  padding-bottom: 40%
-}
-
-
-.day.large,
-.blank.large{
-  padding-top: 60%;
-  padding-bottom: 60%
-} */
 .day:hover {
   border-color: #7c3aed;
   background: #16112a;
@@ -166,6 +146,20 @@
   text-overflow: ellipsis;
   max-width: 100%;
   line-height: 1.4;
+}
+
+.event-tab.personal-workout::before {
+  background: #60a5fa;
+}
+
+.event-tab.group-workout {
+  background: #5b21b6; 
+  color: #ddd6fe;
+  border-color: #8b5cf6;
+}
+
+.event-tab.group-workout::before {
+  background: #c084fc; 
 }
 
 .event-tab::before {
@@ -230,7 +224,30 @@
   gap: 8px;
 }
 
+.event-list.upcoming-events{
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-style: italic;
+}
+
+
 .event-list li {
+  background: #0f0d17;
+  border: 1px solid #1e1838;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  transition: border-color 0.15s;
+}
+
+.event-list.event-list.upcoming-events li {
   background: #0f0d17;
   border: 1px solid #1e1838;
   border-radius: 10px;
@@ -244,6 +261,33 @@
 
 .event-list li .event-name {
   flex: 1;
+}
+
+.event-list li.personal-workout {
+  border-left: 4px solid #3b82f6;
+}
+
+.event-list li.group-workout {
+  border-left: 4px solid #8b5cf6;
+}
+
+.add-btn {
+  background: #2a2245;
+  color: #e2dff5;
+  border: 1px solid #1e1838;
+  border-radius: 8px;
+  padding: 4px 14px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.add-btn:hover {
+  background: #7c3aed;
+  border-color: #7c3aed;
+  color: #fff;
 }
 
 .delete-btn {
@@ -394,3 +438,29 @@
   color: #f87171;
   margin: 0;
 }
+
+
+/* -------------------------TEST-------------------------------- */
+
+.event-list.upcoming-events li.group-workout {
+  border-left: 4px solid #8b5cf6;
+  background: #1c1535;
+}
+
+
+.event-list.upcoming-events li.group-workout .event-name {
+  color: #c084fc; 
+}
+
+.event-list.upcoming-events li.group-workout::after {
+  content: "Group";
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  background: #5b21b6;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+
+/* -------------------------TEST-------------------------------- */

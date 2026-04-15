@@ -2,9 +2,9 @@ Have Upcoming display the data between the week,
  in approaching data (1 day - 7 day away), and allow the 
  format to differ in design from existing events. 
 
- display for upcoming week
+ display for upcoming week  ---- DONE ----
 
- approach from close to far
+ approach from close to far ---- DONE ----
 
  (Name of workout -- # days away)
  1 day away = Tomorrow
@@ -27,3 +27,77 @@ possible look to see if redirects to corresponding workout? (Modem?)
 
 
 clean up commented code before push
+
+------------ PRIORITY LIST --------
+
+Populate calendar with workouts and base on what event, give different design / color.
+
+Make Events clickable to route to corresponding workout page / display in modal?
+
+Popualte user information? show completion? Display decals corresponding with?
+
+Toggleable switch between showing Group data, showing Personal Data, and showing both?
+
+Pair programming discussion- ---------
+
+get an understanding of what is it that needs to be done, passed in
+
+what are events? how do they work? do they contain only personal workouts? are they tied to all workouts including group workouts?
+
+for add event, make it a dropdown to add group or personal events. \
+
+pass in user ID and then go through all the groups, and inside groups go through events. 
+
+another tab called global events, not mapped but prepare for it to be existing.
+
+---- Calendar possible assistance ----
+
+- grid filling
+
+- end_date
+
+- end_time
+
+-later poss workout adds
+
+TO DO ---------------------
+
+ - Build transitions for css.
+
+WHAT IM WORKING ON TODAY ______________________________________
+
+<!-- 
+ - Ensure all events are displayed in calendar with daySelected / total days (e.g. 1/3, 4/7) ----DONE
+
+ - Ensure all workouts displayed are on the Event box, including those from existing workouts. -----DONE -->
+
+Ensure there is a way to populate events with workouts. ----SPEAK TO OTHERS ON THIS? (BUILD SOLO BEFORE ASKING JACKSON ON IT)
+
+Ensure that individual workouts are routed to their workout on the workout page. (OR USE MODAL) --- SPEAK TO JACKSON & TAFARI on this --- TEST BEFORE SPEAKING
+
+ - Ensure there is a way to delete events ----SPEAK TO BACKEND TEAM FOR THIS? TEST SOLO FIRST ---- DID SOLO AND WORKED ----
+
+ <!-- - Ensure that it gathers group events as well. --- DO SOLO ----DONE
+
+ - Ensure that the group events are all handled well -- DO SOLO ----DONE -->
+
+
+
+----- Minor changes ----------
+
+when click on calendarday highlight changes, ensure difference between group and personal stays.
+
+change end day to auto hide then reveal if desired
+
+updateEVent works backed, tagup with tafar and jackson
+
+add goal and add workout to event in cal. Require fetch from goals and workouts.
+
+work on thur.
+
+
+click on workouts to add like excel.
+    -Make graph where you can click then add to a workout. easy B)
+(work with tafari on this one he will be well versed and cool)
+
+click on 

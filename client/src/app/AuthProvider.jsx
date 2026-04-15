@@ -5,6 +5,7 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState(null);
 
   useEffect(() => {
     async function restoreSession() {
@@ -91,12 +92,47 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const refreshUser = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/users/id/${user.id}/`,
+      );
+      if (!response.ok) throw new Error("Fetch failed");
+
+      const data = await response.json();
+
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+
+      return data;
+    } catch (err) {
+      console.error("Failed to refresh user data", err);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.profile) {
+      if (typeof user.profile === "string") {
+        try {
+          setProfile(JSON.parse(user.profile));
+        } catch (err) {
+          console.error("Parse error", err);
+          setProfile({});
+        }
+      } else {
+        setProfile(user.profile);
+      }
+    }
+  }, [user]);
+
   const value = {
     user,
     loading,
     login,
     logout,
     signup,
+    refreshUser,
+    profile,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

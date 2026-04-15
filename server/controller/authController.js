@@ -10,10 +10,13 @@ const createUser = async (user) => {
     .returning([
       "id",
       "email",
+      "username",
       "first_name",
       "last_name",
+      "username",
       "gender",
       "rank",
+      "profile",
       "age",
       "xp",
       "rival_ids",
@@ -26,8 +29,16 @@ const createUser = async (user) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { email, password, first_name, last_name, gender, rank, age } =
-      req.body;
+    const {
+      email,
+      password,
+      username,
+      first_name,
+      last_name,
+      gender,
+      rank,
+      age,
+    } = req.body;
     const exists = await db("users").where({ email }).first();
 
     if (exists) {
@@ -46,6 +57,7 @@ const registerUser = async (req, res) => {
     const newUser = await createUser({
       email,
       password: hashWord,
+      username,
       first_name,
       last_name,
       gender,
@@ -63,7 +75,7 @@ const registerUser = async (req, res) => {
       });
     }
 
-    res.cookie("userId", newUser.id, {
+    res.cookie("userId", newUser[0].id, {
       signed: true,
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -136,8 +148,11 @@ const login = async (req, res) => {
     res.status(200).json({
       id: user.id,
       email: email,
+      username: user.username,
       first_name: user.first_name,
       last_name: user.last_name,
+      username: user.username,
+      profile: user.profile,
       gender: user.gender,
       rank: user.rank,
       age: user.age,
