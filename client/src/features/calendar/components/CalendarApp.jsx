@@ -17,17 +17,35 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
 
 
   function eventsForDay(day) {
+    const calendarDate = new Date(Date.UTC(year, month, day));
     return events
-      .filter((e) => {
-        const d = new Date(e.start_date);
-        return (
-          d.getUTCFullYear() === year &&
-          d.getUTCMonth() === month &&
-          d.getUTCDate() === day
-        );
-      })
-      .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
-  }
+    .filter((e) => {
+      const startDay = new Date(e.start_date);
+      // if (e.end_date) {
+      //   const endDay = new Date(e.end_date)
+      // } 
+      const endDay = e.end_date ? new Date(e.end_date) : startDay
+
+      if (!isNaN(startDay) && !isNaN(endDay)) {
+        const s = new Date(Date.UTC(startDay.getUTCFullYear(), startDay.getUTCMonth(), startDay.getUTCDate()));
+        const end = new Date(Date.UTC(endDay.getUTCFullYear(), endDay.getUTCMonth(), endDay.getUTCDate()));
+        
+        return (calendarDate >= s && calendarDate <= end)
+        // .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
+      } else {
+        return false
+      }
+    }) 
+    .map((e) => {
+      if (!e.end_date) return e;
+      const strt = new Date(e.start_date)
+      const nd = new Date(e.end_date)
+      const totalDays = Math.ceil((nd - strt) / (1000 * 60 * 60 * 24 )) + 1;
+      const currentDayNum = Math.ceil((calendarDate - strt) / (1000 * 60 * 60 * 24 )) + 1;
+      return totalDays > 1 ? { ...e, name: `${e.name} (${currentDayNum}/${totalDays})`} : e;
+    })
+    .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
+  };
 
 
   function handleDayClick(day) {
@@ -39,9 +57,8 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
   return (
     <div className="calendar">
       <header>
+{/* ------------------------------------------------------------ Header ------------------------------------------------------------ */}
         <button
-
-
           type="button"
           onClick={() => onMonthChange(new Date(year, month - 1))}
         >
@@ -54,8 +71,6 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
           })}
         </h2>
         <button
-
-
           type="button"
           onClick={() => onMonthChange(new Date(year, month + 1))}
           className="clickable"
@@ -63,6 +78,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
           Next
         </button>
       </header>
+{/* ------------------------------------------------------------ CalendarDayLabel ------------------------------------------------------------ */}
       <div className="day-names">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
             <div key={d} className="day-names-height">
@@ -70,12 +86,11 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
             </div>
           ))}
       </div>
+{/*  ------------------------------------------------------------ CalendarBlocks ------------------------------------------------------------ */}
       <div className="calendarGuts">
         {blanks.map((_, i) => (
           <div key={`blank-${i}`} className="blank" />
         ))}
-
-
         {days.map((day) => {
           const dayEvents = eventsForDay(day);
           return (
