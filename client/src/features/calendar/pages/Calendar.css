@@ -271,6 +271,25 @@
   border-left: 4px solid #8b5cf6;
 }
 
+.add-btn {
+  background: #2a2245;
+  color: #e2dff5;
+  border: 1px solid #1e1838;
+  border-radius: 8px;
+  padding: 4px 14px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.add-btn:hover {
+  background: #7c3aed;
+  border-color: #7c3aed;
+  color: #fff;
+}
+
 .delete-btn {
   background: none;
   border: none;
