@@ -60,7 +60,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
-  height: 70vh;
+  height: 65vh;
 }
 
 /* Day-name header row */
