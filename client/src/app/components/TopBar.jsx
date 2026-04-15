@@ -48,9 +48,13 @@ export default function TopBar({ user, onToggleSidebar, onLogout }) {
             role="button"
             onMouseEnter={openProfile}
             onMouseLeave={scheduleClose}
-            className="btn btn-ghost btn-circle avatar ring-1 ring-accent hover:ring-primary bg-neutral select-none w-11 h-11"
+            className="cursor-pointer"
           >
-            <Avatar userData={user}> </Avatar>
+            <div className="avatar mb-2 group relative w-12 h-12">
+              <div className="w-full h-full flex items-center justify-center rounded-full outline outline-accent bg-[#2a2245] overflow-hidden">
+                <Avatar userData={user}></Avatar>
+              </div>
+            </div>
           </div>
 
           <ul
