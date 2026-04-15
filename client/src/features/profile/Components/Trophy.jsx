@@ -33,7 +33,7 @@ export default function Trophy({ userData }) {
     {
       path: "/Titles/ghost.png",
       label: "Off the Grid",
-      criteria: "Complete ten individual workouts between 1200 and 0400",
+      criteria: "Complete ten individual workouts between 0000 and 0400",
     },
     {
       path: "/Titles/king.png",
