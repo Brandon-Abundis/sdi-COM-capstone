@@ -75,11 +75,14 @@ export default function GoalsWidget() {
 
   return (
     <div className="card bg-base-200 p-4">
-      <h3 className="text-2xl font-semibold text-primary mb-4">Active Goals</h3>
+      <h3 className="text-2xl font-semibold text-primary mb-4">
+        🏃 Active Goals
+      </h3>
 
       {incompleteGoals.length > 0 && (
-        <p className="text-sm text-base-content/70 mb-4">
-          {incompleteGoals.length} active goal{incompleteGoals.length !== 1 ? "s" : ""}
+        <p className="text-sm font-bold text-base-content/70 uppercase mb-4">
+          {incompleteGoals.length} active goal
+          {incompleteGoals.length !== 1 ? "s" : ""}
         </p>
       )}
 
