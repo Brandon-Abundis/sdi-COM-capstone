@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import OpenIcon from "./OpenIcon.jsx";
 import Avatar from "../../features/profile/Components/Avatar.jsx";
 
 export default function TopBar({ user, onToggleSidebar, onLogout }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const closeTimer = useRef(null);
+  const navigate = useNavigate();
 
   function openProfile() {
     clearTimeout(closeTimer.current);
@@ -33,33 +34,30 @@ export default function TopBar({ user, onToggleSidebar, onLogout }) {
         </Link>
       </div>
 
-      {/* PFP hover dropdown */}
-      <div className="flex-1 flex justify-end items-center gap-4">
-        {/* Logged in as section */}
-        <div className="flex flex-col items-end">
-          <p className="text-xs text-secondary">Logged in as:</p>
-          <p className="text-sm font-semibold text-base-content">
-            {user?.username}
-          </p>
-        </div>
+      {/* PFP widget — click anywhere to go to profile, hover shows dropdown */}
+      <div className="flex-1 flex justify-end items-center">
+        <div
+          className="relative flex items-center gap-4 px-3 py-2 rounded-xl cursor-pointer hover:bg-base-200 transition-colors"
+          onMouseEnter={openProfile}
+          onMouseLeave={scheduleClose}
+          onClick={() => navigate("/profile")}
+        >
+          {/* Logged in as section */}
+          <div className="flex flex-col items-end">
+            <p className="text-xs text-secondary">Logged in as:</p>
+            <p className="text-sm font-semibold text-base-content">
+              {user?.username}
+            </p>
+          </div>
 
-        <div className="relative">
-          <div
-            role="button"
-            onMouseEnter={openProfile}
-            onMouseLeave={scheduleClose}
-            className="cursor-pointer"
-          >
-            <div className="avatar mb-2 group relative w-12 h-12">
-              <div className="w-full h-full flex items-center justify-center rounded-full outline outline-accent bg-[#2a2245] overflow-hidden">
-                <Avatar userData={user}></Avatar>
-              </div>
-            </div>
+          <div className="relative w-9 h-9 rounded-full overflow-hidden ring-1 ring-accent bg-neutral select-none justify-center items-center pt-2">
+            <Avatar userData={user} />
           </div>
 
           <ul
             onMouseEnter={openProfile}
             onMouseLeave={scheduleClose}
+            onClick={(e) => e.stopPropagation()}
             className={`absolute right-0 top-full z-50 mt-2 w-52 rounded-xl border border-base-300 bg-base-200 p-2 shadow-xl flex flex-col gap-0.5 ${
               profileOpen ? "block" : "hidden"
             }`}

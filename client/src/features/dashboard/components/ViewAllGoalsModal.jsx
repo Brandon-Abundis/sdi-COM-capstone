@@ -1,4 +1,13 @@
-export default function ViewAllGoalsModal({ isOpen, onClose, goals }) {
+import { useState } from "react";
+import { updateUserGoal } from "../api/userGoals";
+
+export default function ViewAllGoalsModal({
+  isOpen,
+  onClose,
+  goals,
+  onGoalCompleted,
+}) {
+  const [completing, setCompleting] = useState(null);
   const formatTime = (seconds) => {
     if (!seconds && seconds !== 0) return null;
     const minutes = Math.floor(seconds / 60);
@@ -29,19 +38,34 @@ export default function ViewAllGoalsModal({ isOpen, onClose, goals }) {
 
   if (!isOpen) return null;
 
+  // Filter goals to only show incomplete goals
+  const incompleteGoals = goals.filter((goal) => !goal.completed);
+
   // Sort goals by updated_at (newest first)
-  const sortedGoals = [...goals].sort((a, b) => {
+  const sortedGoals = [...incompleteGoals].sort((a, b) => {
     const dateA = new Date(a.updated_at);
     const dateB = new Date(b.updated_at);
     return dateB - dateA;
   });
+
+  const handleMarkCompleted = async (goalId) => {
+    setCompleting(goalId);
+    try {
+      await updateUserGoal(goalId, { completed: true });
+      onGoalCompleted(goalId);
+    } catch (err) {
+      console.error("Error marking goal as completed:", err);
+    } finally {
+      setCompleting(null);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-base-200 border border-base-300 rounded-2xl p-6 w-full max-w-2xl max-h-[80vh] flex flex-col gap-4 shadow-xl">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-primary tracking-wide">
-            All Goals ({goals.length})
+            Active Goals ({incompleteGoals.length})
           </h2>
           <button
             onClick={onClose}
@@ -52,13 +76,22 @@ export default function ViewAllGoalsModal({ isOpen, onClose, goals }) {
         </div>
 
         <div className="overflow-y-auto flex-1">
-          {goals.length > 0 ? (
+          {incompleteGoals.length > 0 ? (
             <div className="space-y-4 pr-2">
               {sortedGoals.map((goal) => (
                 <div
                   key={goal.id}
-                  className="border-l-4 border-l-primary rounded-2xl pl-4 pb-2 hover:bg-base-300"
+                  className="relative border-l-4 border-l-primary rounded-2xl pl-4 pb-2 hover:bg-base-300 group transition-colors"
                 >
+                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => handleMarkCompleted(goal.id)}
+                      disabled={completing === goal.id}
+                      className="btn btn-xs btn-success"
+                    >
+                      {completing === goal.id ? "Completing..." : "✓ Complete"}
+                    </button>
+                  </div>
                   <h4 className="text-lg font-bold text-secondary">
                     {goal.name}
                   </h4>

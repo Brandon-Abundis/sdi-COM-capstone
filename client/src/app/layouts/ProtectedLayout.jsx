@@ -1,9 +1,8 @@
-import { useRef, useState, useEffect } from "react";
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar.jsx";
 import TopBar from "../components/TopBar.jsx";
 import { useAuth } from "../AuthProvider.jsx";
-import Avatar from "../../features/profile/Components/Avatar.jsx";
 
 export default function ProtectedLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -19,7 +18,7 @@ export default function ProtectedLayout() {
 
   return (
     <div className="min-h-screen">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} user={user} onLogout={handleLogout} />
 
       <TopBar
         user={user}
