@@ -90,11 +90,12 @@ export default function AvatarSelection() {
       chosenGloves,
       chosenMisc,
     };
-
     const updatedProfile = {
       ...user,
       profile: avatarSelection,
     };
+
+    localStorage.setItem("user", JSON.stringify(updatedProfile));
 
     edit(updatedProfile);
   };
