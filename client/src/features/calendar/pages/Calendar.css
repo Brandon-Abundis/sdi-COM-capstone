@@ -148,6 +148,20 @@
   line-height: 1.4;
 }
 
+.event-tab.personal-workout::before {
+  background: #60a5fa;
+}
+
+.event-tab.group-workout {
+  background: #5b21b6; 
+  color: #ddd6fe;
+  border-color: #8b5cf6;
+}
+
+.event-tab.group-workout::before {
+  background: #c084fc; 
+}
+
 .event-tab::before {
   content: "";
   display: inline-block;
@@ -247,6 +261,14 @@
 
 .event-list li .event-name {
   flex: 1;
+}
+
+.event-list li.personal-workout {
+  border-left: 4px solid #3b82f6;
+}
+
+.event-list li.group-workout {
+  border-left: 4px solid #8b5cf6;
 }
 
 .delete-btn {
@@ -397,3 +419,29 @@
   color: #f87171;
   margin: 0;
 }
+
+
+/* -------------------------TEST-------------------------------- */
+
+.event-list.upcoming-events li.group-workout {
+  border-left: 4px solid #8b5cf6;
+  background: #1c1535;
+}
+
+
+.event-list.upcoming-events li.group-workout .event-name {
+  color: #c084fc; 
+}
+
+.event-list.upcoming-events li.group-workout::after {
+  content: "Group";
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  background: #5b21b6;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin-left: 8px;
+}
+
+
+/* -------------------------TEST-------------------------------- */
