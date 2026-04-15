@@ -1,5 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/AuthProvider";
+import Avatar from "../../profile/Components/Avatar";
 
 //_________________________________brandon's code_______________________________________
 import useFetchBestRuns from "./costomHooks/getFetchBestRuns";
@@ -20,6 +22,7 @@ export default function Leaderboard() {
   const [ageGroup, setAgeGroup] = useState("all");
 
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   /*________________________________brandon's code______________________________________*/
   const { runs } = useFetchBestRuns();
@@ -201,24 +204,27 @@ export default function Leaderboard() {
                 return (
                   <div
                     key={merge.id}
-                    // Dynamic border logic: Yellow for top 3, Blue for the rest
                     className={`flex items-center justify-between bg-base-300 p-3 rounded-lg border-1 ${
                       rank <= 3
                         ? "border-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.2)]"
                         : "border-blue-400"
                     }`}
                   >
-                    {/* Left section: Rank and Name info */}
+                    {/* Left section: Rank, Avatar, Name */}
                     <div className="flex items-center gap-3 min-w-0">
                       <span
                         className={`text-lg font-bold w-5 flex-shrink-0 ${rank <= 3 ? "text-yellow-400" : "text-gray-400"}`}
                       >
                         {rank}.
                       </span>
-                      <div className="flex flex-wrap items-baseline gap-x-2">
-                        <span className="text-sm text-base-content/60">
-                          {merge.rank}
-                        </span>
+                      <div
+                        className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
+                        onClick={() => navigate(`/profile/${merge.id}`)}
+                      >
+                        <Avatar userData={{ first_name: merge.first_name, last_name: merge.last_name, profile: merge.profile }} />
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-[10px] uppercase text-base-content/60 leading-none">{merge.rank}</span>
                         <span className="font-semibold text-sm whitespace-nowrap">
                           {merge.first_name} {merge.last_name}
                         </span>
@@ -271,22 +277,17 @@ export default function Leaderboard() {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        {/* Gold rank for winners, gray for others */}
                         <span
                           className={`text-lg font-bold w-5 ${isTopThree ? "text-yellow-400" : "text-gray-500"}`}
                         >
                           {rank}.
                         </span>
-
-                        {/* Circular Avatar Placeholder (Preserved) */}
-                        {/* <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-600">
-                          <img
-                            src={entry.profile || 'https://placeholder.com'}
-                            alt="profile"
-                            className="w-full h-full object-cover"
-                          />
-                        </div> */}
-
+                        <div
+                          className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
+                          onClick={() => navigate(`/profile/${entry.user_id}`)}
+                        >
+                          <Avatar userData={{ first_name: entry.first_name, last_name: entry.last_name, profile: entry.profile }} />
+                        </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase text-base-content/60 leading-none">
                             {entry.rank}
@@ -344,12 +345,17 @@ export default function Leaderboard() {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        {/* Rank number stays gold for top 3, gray for others */}
                         <span
                           className={`text-lg font-bold w-5 ${isTopThree ? "text-yellow-400" : "text-gray-500"}`}
                         >
                           {rank}.
                         </span>
+                        <div
+                          className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
+                          onClick={() => navigate(`/profile/${entry.user_id}`)}
+                        >
+                          <Avatar userData={{ first_name: entry.first_name, last_name: entry.last_name, profile: entry.profile }} />
+                        </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase text-base-content/60 leading-none">
                             {entry.rank}
@@ -404,13 +410,17 @@ export default function Leaderboard() {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        {/* Rank color matches Push Ups: Gold for Top 3, Gray for 4-10 */}
                         <span
                           className={`text-lg font-bold w-5 ${isTopThree ? "text-yellow-400" : "text-gray-500"}`}
                         >
                           {rank}.
                         </span>
-
+                        <div
+                          className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
+                          onClick={() => navigate(`/profile/${entry.user_id}`)}
+                        >
+                          <Avatar userData={{ first_name: entry.first_name, last_name: entry.last_name, profile: entry.profile }} />
+                        </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase text-base-content/60 leading-none">
                             {entry.rank}
@@ -468,13 +478,17 @@ export default function Leaderboard() {
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        {/* Gold rank for winners, gray for the rest */}
                         <span
                           className={`text-lg font-bold w-5 ${isTopThree ? "text-yellow-400" : "text-gray-500"}`}
                         >
                           {rank}.
                         </span>
-
+                        <div
+                          className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
+                          onClick={() => navigate(`/profile/${entry.id}`)}
+                        >
+                          <Avatar userData={{ first_name: entry.first_name, last_name: entry.last_name, profile: entry.profile }} />
+                        </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase text-base-content/60 leading-none">
                             {entry.rank}
