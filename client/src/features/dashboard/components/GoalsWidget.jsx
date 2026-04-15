@@ -80,9 +80,14 @@ export default function GoalsWidget() {
       </h3>
 
       {incompleteGoals.length > 0 && (
+<<<<<<< HEAD
         <p className="text-sm font-bold text-base-content/70 uppercase mb-4">
           {incompleteGoals.length} active goal
           {incompleteGoals.length !== 1 ? "s" : ""}
+=======
+        <p className="text-sm text-base-content/70 mb-4">
+          {incompleteGoals.length} active goal{incompleteGoals.length !== 1 ? "s" : ""}
+>>>>>>> 5df17214118b30fbd14e3fca789dbe54488c3684
         </p>
       )}
 
