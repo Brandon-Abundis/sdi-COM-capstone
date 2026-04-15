@@ -132,6 +132,7 @@ export default function Leaderboard() {
       }
     }
   }, [merged, user, gender, ageGroup]);
+  console.log(merged);
 
   useEffect(() => {
     if (user) {
@@ -262,6 +263,9 @@ export default function Leaderboard() {
                         <span className="font-semibold text-sm whitespace-nowrap">
                           {merge.first_name} {merge.last_name}
                         </span>
+                        <span className="text-sm text-base-content/60">
+                          {merge.username}
+                        </span>
                       </div>
                     </div>
 
@@ -328,6 +332,9 @@ export default function Leaderboard() {
                           </span>
                           <span className="font-semibold text-sm">
                             {entry.first_name} {entry.last_name}
+                          </span>
+                          <span className="text-sm text-base-content/60">
+                            {entry.username}
                           </span>
                         </div>
                       </div>
@@ -397,6 +404,9 @@ export default function Leaderboard() {
                           <span className="font-semibold text-sm">
                             {entry.first_name} {entry.last_name}
                           </span>
+                          <span className="text-sm text-base-content/60">
+                            {entry.username}
+                          </span>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -461,6 +471,9 @@ export default function Leaderboard() {
                           </span>
                           <span className="font-semibold text-sm">
                             {entry.first_name} {entry.last_name}
+                          </span>
+                          <span className="text-sm text-base-content/60">
+                            {entry.username}
                           </span>
                         </div>
                       </div>
@@ -529,6 +542,9 @@ export default function Leaderboard() {
                           </span>
                           <span className="font-semibold text-sm">
                             {entry.first_name} {entry.last_name}
+                          </span>
+                          <span className="text-sm text-base-content/60">
+                            {entry.username}
                           </span>
                         </div>
                       </div>
