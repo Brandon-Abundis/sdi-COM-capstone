@@ -28,7 +28,7 @@ export default function Avatar({ userData }) {
         </span>
       )}
 
-      <div className="relative w-full h-full flex items-center justify-center mr-1.5">
+      <div className="relative w-full h-full flex items-center justify-center ">
         {savedAvatar && (
           <div className="absolute inset-0 scale-150 transition-transform">
             {savedAvatar.back && (
