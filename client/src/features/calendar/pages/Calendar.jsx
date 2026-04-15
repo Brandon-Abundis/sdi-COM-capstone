@@ -105,14 +105,34 @@ export default function Calendar() {
       //   d.getUTCMonth() === selectedDate.getUTCMonth() &&
       //   d.getUTCDate() === selectedDate.getUTCDate()
       // );
-      const eventDateStr = new Date(e.start_date)
-        .toISOString()
-        .split("T")[0]
-      const selectedDateStr = selectedDate
-        .toISOString()
-        .split("T")[0];
+      const selUTC = new Date(Date.UTC(
+        selectedDate.getUTCFullYear(),
+        selectedDate.getUTCMonth(),
+        selectedDate.getUTCDate()
+      ));
 
-      return eventDateStr === selectedDateStr
+      const startDay = new Date(e.start_date);
+      const endDay = e.end_date ? new Date(e.end_date) : startDay;
+      const s = new Date(Date.UTC(startDay.getUTCFullYear(), startDay.getUTCMonth(), startDay.getUTCDate()));
+      const end = new Date(Date.UTC(endDay.getUTCFullYear(), endDay.getUTCMonth(), endDay.getUTCDate()));
+      return selUTC >= s && selUTC <= end;
+      
+      // const eventDateStr = new Date(e.start_date)
+      //   .toISOString()
+      //   .split("T")[0]
+      // const selectedDateStr = selectedDate
+      //   .toISOString()
+      //   .split("T")[0];
+
+      // return eventDateStr === selectedDateStr
+  })
+  .map((e) => {
+      if (!e.end_date) return e;
+      const strt = new Date(e.start_date)
+      const nd = new Date(e.end_date)
+      const totalDays = Math.ceil((nd - strt) / (1000 * 60 * 60 * 24 )) + 1;
+      const currentDayNum = Math.ceil((selectedDate - strt) / (1000 * 60 * 60 * 24 )) + 1;
+      return totalDays > 1 ? { ...e, name: `${e.name} (${currentDayNum}/${totalDays})`} : e;
   })
   .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time))
   : [];
@@ -317,7 +337,7 @@ export default function Calendar() {
                         <button onClick={(e) => { e.stopPropagation(); handleDeleteEvent(ev.id);}}>
                           Yes
                         </button>
-                        <button onClick={() => { e.stopPropagation(); setConfirmDeleteId(null);}}>
+                        <button onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(null);}}>
                           No
                         </button>
                       </span>
