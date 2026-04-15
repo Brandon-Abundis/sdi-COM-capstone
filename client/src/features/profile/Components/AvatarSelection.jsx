@@ -24,6 +24,14 @@ export default function AvatarSelection() {
     "/Avatar/headband.png",
     "/Avatar/wreath.png",
   ];
+  const hands = [
+    "Avatar/Hands/image (1).png",
+    "Avatar/Hands/image (2).png",
+    "Avatar/Hands/image (3).png",
+    "Avatar/Hands/image (4).png",
+    "Avatar/Hands/image (5).png",
+    "Avatar/Hands/image (6).png",
+  ];
   const gloves = ["/Avatar/gloves.png", "/Avatar/gloves2.png"];
   const misc = [
     "/Avatar/outline.png",
@@ -37,6 +45,8 @@ export default function AvatarSelection() {
 
   const [base, setBase] = useState(profile?.base || base_pic[0]);
   const [color, setColor] = useState(profile?.color || colors[0]);
+  const [hand, setHand] = useState(profile?.hand || hands[0]);
+
   const [head, setHead] = useState(profile?.head || null);
   const [chosenGloves, setChosenGloves] = useState(
     profile?.chosenGloves || null,
@@ -47,6 +57,7 @@ export default function AvatarSelection() {
     if (profile) {
       setBack(profile.back || null);
       setColor(profile.color || colors[0]);
+      setHand(profile.hand || hands[0]);
 
       setBase(profile.base || base_pic[0]);
       setHead(profile.head || null);
@@ -84,6 +95,7 @@ export default function AvatarSelection() {
   const handleSave = () => {
     const avatarSelection = {
       back,
+      hand,
       color,
       base,
       head,
@@ -95,7 +107,7 @@ export default function AvatarSelection() {
       profile: avatarSelection,
     };
 
-    localStorage.setItem("user", JSON.stringify(updatedProfile));
+    // localStorage.setItem("user", JSON.stringify(updatedProfile));
 
     edit(updatedProfile);
   };
@@ -116,6 +128,10 @@ export default function AvatarSelection() {
           )}
           <img
             src={color}
+            className="absolute inset-0 w-full h-full z-5 object-contain"
+          />
+          <img
+            src={hand}
             className="absolute inset-0 w-full h-full z-5 object-contain"
           />
 
@@ -191,7 +207,10 @@ export default function AvatarSelection() {
                     ? "border-accent bg-accent/20"
                     : "border-transparent hover:bg-base-300"
                 }`}
-                onClick={() => setColor(pic)}
+                onClick={() => {
+                  setColor(pic);
+                  setHand(hands[index]);
+                }}
               />
             ))}
           </div>
