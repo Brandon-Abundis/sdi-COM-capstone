@@ -28,7 +28,7 @@ exports.seed = async function(knex) {
     const ageFactor = user.age > 25 ? (user.age - 25) * 0.015 : 0;
     const isFemale = user.gender.toLowerCase() === 'female';
 
-    for (let i = 0; i < 256; i++) {
+    for (let i = 0; i < 211; i++) {
       const exercise = faker.helpers.arrayElement(WEIGHTED_POOL);
       const isRun = exercise.name === '2-Mile Run';
       const isPushUp = exercise.name.includes('Push-ups');
