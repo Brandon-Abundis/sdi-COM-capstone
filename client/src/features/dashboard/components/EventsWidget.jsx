@@ -55,7 +55,8 @@ export default function EventsWidget() {
     return (
       <div className="card bg-base-200 p-4">
         <h3 className="text-lg font-bold text-accent flex items-center gap-1.5 mb-4">
-          <span className="inline-block w-[3px] h-4 rounded-full bg-yellow-400/70 mr-1" /> Events
+          <span className="inline-block w-0.75 h-4 rounded-full bg-yellow-400/70 mr-1" />{" "}
+          Events
         </h3>
         <p className="text-sm text-base-content/50">Loading events...</p>
       </div>
@@ -65,7 +66,8 @@ export default function EventsWidget() {
     return (
       <div className="card bg-base-200 p-4">
         <h3 className="text-lg font-bold text-accent flex items-center gap-1.5 mb-4">
-          <span className="inline-block w-[3px] h-4 rounded-full bg-yellow-400/70 mr-1" /> Events
+          <span className="inline-block w-0.75 h-4 rounded-full bg-yellow-400/70 mr-1" />{" "}
+          Events
         </h3>
         <p className="text-sm text-error">Error: {error}</p>
       </div>
@@ -80,7 +82,9 @@ export default function EventsWidget() {
     .filter((e) => e.workouts_list?.length > 0)
     .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
-  const todayEvents = eventsWithWorkouts.filter((e) => getDaysUntil(e.start_date) === 0);
+  const todayEvents = eventsWithWorkouts.filter(
+    (e) => getDaysUntil(e.start_date) === 0,
+  );
   const upcomingEvents = eventsWithWorkouts
     .filter((e) => getDaysUntil(e.start_date) > 0)
     .slice(0, 3);
@@ -93,7 +97,9 @@ export default function EventsWidget() {
         className="flex items-start justify-between gap-3 px-3 py-2.5 rounded-lg hover:bg-base-300 transition-colors cursor-default"
       >
         <div className="space-y-0.5 min-w-0">
-          <p className="text-sm font-semibold text-secondary truncate">{event.name}</p>
+          <p className="text-sm font-semibold text-secondary truncate">
+            {event.name}
+          </p>
           <p className="text-xs text-base-content/50">
             {formatDate(event.start_date)}
             {event.start_time && ` · ${formatTime(event.start_time)}`}
@@ -106,7 +112,7 @@ export default function EventsWidget() {
           )}
         </div>
         <span
-          className={`text-[10px] font-bold flex-shrink-0 px-2 py-1 rounded-md border ${
+          className={`text-[10px] font-bold shrink-0 px-2 py-1 rounded-md border ${
             days === 0
               ? "bg-primary text-primary-content border-transparent"
               : "bg-base-300 text-secondary border-primary"
@@ -120,8 +126,8 @@ export default function EventsWidget() {
 
   return (
     <div className="card bg-base-200 p-4">
-      <h3 className="text-lg font-bold text-accent flex items-center gap-1.5 mb-4">
-        <span className="text-yellow-400 text-base">⚡</span> Events
+      <h3 className="text-2xl font-bold text-primary flex items-center gap-1.5 mb-4">
+        ⚡ Events
       </h3>
 
       {todayEvents.length === 0 && upcomingEvents.length === 0 && (
@@ -130,7 +136,9 @@ export default function EventsWidget() {
 
       {todayEvents.length > 0 && (
         <div className="mb-2">
-          <p className="text-[10px] font-bold text-base-content/30 uppercase tracking-wider px-3 mb-1">Today</p>
+          <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3 mb-1">
+            Today
+          </p>
           {todayEvents.map(renderEventRow)}
         </div>
       )}
@@ -138,7 +146,9 @@ export default function EventsWidget() {
       {upcomingEvents.length > 0 && (
         <div>
           {todayEvents.length > 0 && (
-            <p className="text-[10px] font-bold text-base-content/30 uppercase tracking-wider px-3 mb-1 mt-2">Upcoming</p>
+            <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3 mb-1 mt-2">
+              Upcoming
+            </p>
           )}
           {upcomingEvents.map(renderEventRow)}
         </div>

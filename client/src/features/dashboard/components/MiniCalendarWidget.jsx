@@ -3,14 +3,24 @@ import { useNavigate } from "react-router-dom";
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 export default function MiniCalendarWidget() {
   const today = new Date();
   const [viewDate, setViewDate] = useState(
-    new Date(today.getFullYear(), today.getMonth(), 1)
+    new Date(today.getFullYear(), today.getMonth(), 1),
   );
   const [eventDays, setEventDays] = useState(new Set());
   const navigate = useNavigate();
@@ -23,9 +33,9 @@ export default function MiniCalendarWidget() {
           groups.map((g) =>
             fetch(`http://localhost:8080/groups/group_events/id/${g.id}`)
               .then((r) => (r.ok ? r.json() : []))
-              .catch(() => [])
-          )
-        )
+              .catch(() => []),
+          ),
+        ),
       )
       .then((results) => {
         const days = new Set();
@@ -52,12 +62,11 @@ export default function MiniCalendarWidget() {
 
   return (
     <div className="flex flex-col gap-3">
-      <h2 className="text-lg font-bold text-accent flex items-center gap-1.5">
-        <span className="inline-block w-[3px] h-4 rounded-full bg-yellow-400/70 mr-1" /> Calendar
-      </h2>
-
-      <div className="bg-base-200 rounded-xl border border-base-300 p-4">
+      <div className="bg-base-200 rounded-xl p-4">
         {/* Month navigation */}
+        <h3 className="text-2xl font-bold text-primary flex items-center gap-1.5 mb-4">
+          🗓️ Calendar
+        </h3>
         <div className="flex items-center justify-between mb-3">
           <button
             onClick={() => setViewDate(new Date(year, month - 1, 1))}
@@ -122,7 +131,9 @@ export default function MiniCalendarWidget() {
         {/* Legend */}
         <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-base-300">
           <span className="w-1.5 h-1.5 rounded-full bg-yellow-400/60" />
-          <span className="text-[10px] text-base-content/30">Event scheduled</span>
+          <span className="text-[10px] text-base-content/30">
+            Event scheduled
+          </span>
         </div>
       </div>
     </div>
