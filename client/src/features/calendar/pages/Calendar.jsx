@@ -433,8 +433,10 @@ export default function Calendar() {
             )}
   {selectedEvent && (
   <div className="workout-panel">
-    <h4>Workouts for {selectedEvent.name}</h4>
+    <h4><b>Workouts for {selectedEvent.name}</b></h4>
     {displayWorkoutsForEvent(selectedEvent)}
+    <button type="button" className="add-btn" onClick={() => console.log("THIS WILL ADD GOAL")}>Add Goal</button>
+    <button type="button" className="add-btn" onClick={() => console.log("THIS WILL ADD WORKOUT")}>Add Workout</button>
   </div>
 )}
             <form className="add-event-form" onSubmit={handleAddEvent}>
