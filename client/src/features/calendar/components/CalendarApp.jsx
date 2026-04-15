@@ -101,7 +101,7 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
             >
               <span className="day-number">{day}</span>
               {dayEvents.slice(0, 3).map((e) => (
-                <span key={e.id} className="event-tab">
+                <span key={e.id} className={`event-tab ${e.type}`}>
                   {e.name}
                 </span>
               ))}
