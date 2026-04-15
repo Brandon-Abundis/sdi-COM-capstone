@@ -31,6 +31,7 @@ export default function Calendar() {
   const [saveError, setSaveError] = useState("");
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   // const [dayWorkouts, setDayWorkouts] = useState(null)
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [userWorkouts, setUserWorkouts] = useState([]);
   
   const year = currentDate.getFullYear();
@@ -53,9 +54,17 @@ export default function Calendar() {
   function handleMonthChange(newDate) {
     setCurrentDate(newDate);
     setSelectedDay(null);
+    setSelectedEvent(null)
   }
+
+  function handleDaySelect(day) {
+  setSelectedDay(day);
+  setSelectedEvent(null);
+}
+
+
   
-  function getDaysAway(eventStartDate) {
+  function getDaysAway(eventStartDate, selectedDate) {
     const eventDate = new Date(eventStartDate)
     const transferSelectedDate = new Date(selectedDate)
 
@@ -145,6 +154,7 @@ export default function Calendar() {
       );
       if (res.ok) {
         setEvents((prev) => prev.filter((ev) => ev.id !== id));
+        if (selectedEvent?.id === id) setSelectedEvent(null);
       }
     } catch {
       // silently fail — event stays in list if request fails
@@ -158,10 +168,10 @@ export default function Calendar() {
     const eventObject = {
       name: form.name.trim(),
       start_date: selectedDate,
-      end_date: selectedDate,
-      start_time: "test",
-      end_time: "test",
-      user_id: user.id,
+      end_date: form.end_date,
+      start_time: form.start_time,
+      end_time: form.end_time,
+      user_id: user.id
     };
     setSaveError("");
     if (!form.name.trim() || !selectedDate || !user?.id) return;
@@ -175,7 +185,14 @@ export default function Calendar() {
       if (res.ok) {
         const newEvent = await res.json();
         setEvents((prev) => [...prev, newEvent]);
-        setForm({ name: "", time: "" });
+        setForm({
+          name: "",
+          start_date: selectedDate,
+          end_date: "",
+          start_time: "",
+          end_time: "",
+          user_id: ""
+        });
       } else {
         const body = await res.json().catch(() => ({}));
         setSaveError(body.message || `Error ${res.status}`);
@@ -205,6 +222,41 @@ export default function Calendar() {
   })
   : null;
   
+  // TEST CODE BELOOWWWWWWWWW ------------------------------------------------------------
+
+    function displayWorkoutsForEvent(event) {
+    if (!event.workouts_list || event.workouts_list.length === 0) {
+      return <p>No workouts for this event.</p>
+    }
+
+    const workoutsForEvent = event.workouts_list
+      .map((workoutId) => userWorkouts.find((w) => w.id === workoutId))
+      .filter(Boolean)
+
+    if (workoutsForEvent.length === 0) {
+      return <p>No workouts found for this event.</p>
+    }
+
+    return (
+      <ul className="workout-list">
+        {workoutsForEvent.map((workout) => (
+          <li key={workout.id}>{workout.name}</li>
+        ))}
+      </ul>
+    )
+  }
+
+  function eventsForDay(day) {
+    return events
+      .filter((e) => {
+        const eventDateStr = new Date(e.start_date).toISOString().split("T")[0];
+        const selectedDateStr = new Date(Date.UTC(year, month, day))
+          .toISOString()
+          .split("T")[0];
+        return eventDateStr === selectedDateStr
+      })
+    .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
+  }
 
 
   return (
@@ -235,7 +287,7 @@ export default function Calendar() {
           currentDate={currentDate}
           onMonthChange={handleMonthChange}
           selectedDay={selectedDay}
-          onDaySelect={setSelectedDay}
+          onDaySelect={handleDaySelect}
           events={events}
           dayEvents={dayEvents}
           dayWorkouts={dayWorkouts}
@@ -254,25 +306,25 @@ export default function Calendar() {
             ) : (
               <ul className="event-list">
                 {dayEvents.map((ev) => (
-                  <li key={ev.id}>
+                  <li key={ev.id} onClick={() => setSelectedEvent(ev)}>
                     <span className="event-name">{ev.name}</span>
-                    {ev.time && (
-                      <span className="event-time">{formatTime(ev.time)}</span>
+                    {ev.start_time && (
+                      <span className="event-time">{formatTime(ev.start_time)}</span>
                     )}
                     {confirmDeleteId === ev.id ? (
                       <span className="delete-confirm">
                         Remove?{" "}
-                        <button onClick={() => handleDeleteEvent(ev.id)}>
+                        <button onClick={(e) => { e.stopPropagation(); handleDeleteEvent(ev.id);}}>
                           Yes
                         </button>
-                        <button onClick={() => setConfirmDeleteId(null)}>
+                        <button onClick={() => { e.stopPropagation(); setConfirmDeleteId(null);}}>
                           No
                         </button>
                       </span>
                     ) : (
                       <button
                         className="delete-btn"
-                        onClick={() => setConfirmDeleteId(ev.id)}
+                        onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(ev.id); }}
                       >
                         ✕
                       </button>
@@ -281,7 +333,12 @@ export default function Calendar() {
                 ))}
               </ul>
             )}
-
+  {selectedEvent && (
+  <div className="workout-panel">
+    <h4>Workouts for {selectedEvent.name}</h4>
+    {displayWorkoutsForEvent(selectedEvent)}
+  </div>
+)}
             <form className="add-event-form" onSubmit={handleAddEvent}>
               <h3>Add Event</h3>
               <input
@@ -292,11 +349,30 @@ export default function Calendar() {
                   setForm((f) => ({ ...f, name: e.target.value }))
                 }
               />
+              <p>End date</p>
+              <input
+                type="date"
+                value={form.end_date}
+                onChange={(e) => 
+                  setForm((f) => ({ ...f, end_date: e.target.value }))
+                }
+              />
+              <p>Start time</p>
               <input
                 type="time"
-                value={form.time}
+                value={form.start_time}
+                placeholder = "start_time"
                 onChange={(e) =>
-                  setForm((f) => ({ ...f, time: e.target.value }))
+                  setForm((f) => ({ ...f, start_time: e.target.value }))
+                }
+              />
+              <p>End time</p>
+              <input
+                type="time"
+                value={form.end_time}
+                placeholder = "end_time"
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, end_time: e.target.value }))
                 }
               />
               {saveError && <p className="save-error">{saveError}</p>}

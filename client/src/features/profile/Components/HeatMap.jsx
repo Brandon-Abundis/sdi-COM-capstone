@@ -42,14 +42,14 @@ export default function WorkoutHeatmap({ userData }) {
       <div className="mb-6 flex justify-between items-end">
         <div>
           <h2 className="text-base-content text-xl font-black tracking-tight leading-none">
-            Yearly Workouts
+            Yearly Exercise
           </h2>
           <p className="text-base-content/20 text-[10px] font-bold uppercase tracking-[0.2em] mt-2">
             The {currentYear} Journey
           </p>
         </div>
         <div className="text-[10px] font-black text-base-content/40 uppercase bg-base-content/5 px-3 py-1 rounded-full border border-base-content/5">
-          {heatmapValues().length} Active Days This Year
+          {heatmapValues().length} Active Days Over the Past Year
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export default function WorkoutHeatmap({ userData }) {
           startDate={start}
           endDate={end}
           values={heatmapValues()}
-          showWeekdayLabels={true}
+          showWeekdayLabels={false}
           gutterSize={1.5}
           classForValue={(v) => {
             if (!v || v.count === 0) return "color-empty";
@@ -71,34 +71,38 @@ export default function WorkoutHeatmap({ userData }) {
         <div className="flex gap-4">
           <div className="flex items-center gap-3">
             <span className="text-[9px] font-bold text-base-content/20 uppercase tracking-tighter">
-              0 Workouts
+              0 Exercises
             </span>
 
             <div className="flex gap-1">
               <div
-                className="w-3 h-3 rounded-[2px] bg-base-content/5"
+                className="w-3 h-3 rounded-[2px] bg-white/5"
                 title="No activity"
               />
+
               <div
-                className="w-3 h-3 rounded-[2px] bg-neutral"
+                className="w-3 h-3 rounded-[2px] bg-[#4c1d95]"
                 title="1 workout"
               />
+
               <div
-                className="w-3 h-3 rounded-[2px] bg-secondary"
+                className="w-3 h-3 rounded-[2px] bg-[#7c3aed]"
                 title="2 workouts"
               />
+
               <div
-                className="w-3 h-3 rounded-[2px] bg-accent"
+                className="w-3 h-3 rounded-[2px] bg-[#a78bfa]"
                 title="3 workouts"
               />
+
               <div
-                className="w-3 h-3 rounded-[2px] bg-primary"
+                className="w-3 h-3 rounded-[2px] bg-[#ddd6fe] shadow-[0_0_5px_rgba(167,139,250,0.5)]"
                 title="4+ workouts"
               />
             </div>
 
             <span className="text-[9px] font-bold text-base-content/20 uppercase tracking-tighter">
-              4+ Workouts
+              4+ Exercices
             </span>
           </div>
         </div>
@@ -123,25 +127,25 @@ export default function WorkoutHeatmap({ userData }) {
         }
 
         .react-calendar-heatmap .color-empty {
-          fill: rgba(255, 255, 255, 0.05);
-        }
+    fill: rgba(255, 255, 255, 0.05);
+  }
 
-        .react-calendar-heatmap .color-scale-1 {
-          fill: #2a2245;
-        }
+  .react-calendar-heatmap .color-scale-1 {
+    fill: #4c1d95;
+  }
 
-        .react-calendar-heatmap .color-scale-2 {
-          fill: #a78bfa;
-        }
+  .react-calendar-heatmap .color-scale-2 {
+    fill: #7c3aed;
+  }
 
-        .react-calendar-heatmap .color-scale-3 {
-          fill: #c084fc;
-        }
+  .react-calendar-heatmap .color-scale-3 {
+    fill: #a78bfa;
+  }
 
-        .react-calendar-heatmap .color-scale-4 {
-          fill: #7c3aed;
-          filter: drop-shadow(0 0 3px rgba(192, 132, 252, 0.5));
-        }
+  .react-calendar-heatmap .color-scale-4 {
+    fill: #ddd6fe;
+    filter: drop-shadow(0 0 4px rgba(167, 139, 250, 0.6));
+  }
       `}</style>
     </div>
   );

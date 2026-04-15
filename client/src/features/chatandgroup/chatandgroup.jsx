@@ -184,7 +184,7 @@ function InviteModal({ group, onClose }) {
     (u) =>
       !memberSet.has(u.id) &&
       (query.trim()
-        ? `${u.first_name} ${u.last_name}`.toLowerCase().includes(query.toLowerCase())
+        ? (u.username || `${u.first_name} ${u.last_name}`).toLowerCase().includes(query.toLowerCase())
         : true)
   );
 
@@ -228,7 +228,7 @@ function InviteModal({ group, onClose }) {
                     <div className="w-4 h-4 rounded-full bg-[#2a2245] flex items-center justify-center text-[9px] text-[#a78bfa] font-bold">
                       {u.first_name?.[0]}
                     </div>
-                    <span className="text-[10px] text-[#e2dff5]/80">{u.first_name} {u.last_name}</span>
+                    <span className="text-[10px] text-[#e2dff5]/80">{u.username || `${u.first_name} ${u.last_name}`}</span>
                     <span className="text-[9px] text-[#a78bfa]/60">{u.rank}</span>
                   </div>
                 ))}
@@ -263,7 +263,7 @@ function InviteModal({ group, onClose }) {
                           {u.first_name?.[0]}
                         </div>
                         <div>
-                          <p className="text-xs text-[#e2dff5] font-semibold">{u.first_name} {u.last_name}</p>
+                          <p className="text-xs text-[#e2dff5] font-semibold">{u.username || `${u.first_name} ${u.last_name}`}</p>
                           <p className="text-[10px] text-[#a78bfa]">{u.rank}</p>
                         </div>
                       </div>
@@ -326,7 +326,7 @@ export default function ChatAndGroup() {
         <div className="px-4 py-3 border-b border-[#1e1838] flex items-center justify-between">
           <span className="font-bold text-[#e2dff5]">
             {isGroup && `# ${selectedItem.data.name}`}
-            {isDM    && selectedItem.data.full_name}
+            {isDM    && selectedItem.data.username}
             {!selectedItem && <span className="text-[#e2dff5]/40">Select a group or message</span>}
           </span>
 
