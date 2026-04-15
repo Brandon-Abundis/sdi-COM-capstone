@@ -16,6 +16,7 @@ const getBestRun = async (req, res) => {
         "users.last_name",
         "users.gender",
         "users.age",
+        "users.profile",
       )
       .orderBy("user_workouts.time", "asc");
 
@@ -58,6 +59,7 @@ const getBestSitUps = async (req, res) => {
         "users.last_name",
         "users.gender",
         "users.age",
+        "users.profile",
       )
       .orderBy("user_workouts.reps", "desc");
     if (result) {
@@ -98,6 +100,7 @@ const getBestPushUps = async (req, res) => {
         "users.last_name",
         "users.gender",
         "users.age",
+        "users.profile",
       )
       .orderBy("user_workouts.reps", "desc");
     if (result) {
