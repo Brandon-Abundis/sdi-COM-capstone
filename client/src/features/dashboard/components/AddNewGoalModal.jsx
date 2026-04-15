@@ -23,10 +23,8 @@ const FIELD_CONFIG = {
     required: true,
   },
   time: {
-    label: "Target Time (seconds)",
-    type: "number",
-    placeholder: "e.g., 300",
-    min: "0",
+    label: "Target Time",
+    type: "time",
   },
   distance: {
     label: "Target Distance (miles)",
@@ -69,7 +67,8 @@ export default function AddNewGoalModal({
   const [formData, setFormData] = useState({
     name: "",
     type: "aerobic",
-    time: "",
+    timeMinutes: "",
+    timeSeconds: "",
     distance: "",
     reps: "",
     weight: "",
@@ -114,7 +113,11 @@ export default function AddNewGoalModal({
         type: formData.type,
         /* Only include fields that are visible for this type */
         ...(visibleFields.includes("time") &&
-          formData.time && { time: parseInt(formData.time) }),
+          (formData.timeMinutes || formData.timeSeconds) && {
+            time:
+              (parseInt(formData.timeMinutes) || 0) * 60 +
+              (parseInt(formData.timeSeconds) || 0),
+          }),
         ...(visibleFields.includes("distance") &&
           formData.distance && { distance: parseFloat(formData.distance) }),
         ...(visibleFields.includes("reps") &&
@@ -143,7 +146,8 @@ export default function AddNewGoalModal({
     setFormData({
       name: "",
       type: "aerobic",
-      time: "",
+      timeMinutes: "",
+      timeSeconds: "",
       distance: "",
       reps: "",
       weight: "",
@@ -199,6 +203,45 @@ export default function AddNewGoalModal({
             className="textarea w-full bg-base-100 text-base-content"
             rows="3"
           />
+        </div>
+      );
+    }
+
+    if (config.type === "time") {
+      return (
+        <div key={fieldName} className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold text-base-content">
+              {config.label}
+            </span>
+          </label>
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <input
+                type="number"
+                name="timeMinutes"
+                value={formData.timeMinutes}
+                onChange={handleInputChange}
+                placeholder="Min"
+                min="0"
+                className="input input-bordered w-full bg-base-100 text-base-content"
+              />
+              <span className="text-xs text-base-content/60">Minutes</span>
+            </div>
+            <div className="flex-1">
+              <input
+                type="number"
+                name="timeSeconds"
+                value={formData.timeSeconds}
+                onChange={handleInputChange}
+                placeholder="Sec"
+                min="0"
+                max="59"
+                className="input input-bordered w-full bg-base-100 text-base-content"
+              />
+              <span className="text-xs text-base-content/60">Seconds</span>
+            </div>
+          </div>
         </div>
       );
     }

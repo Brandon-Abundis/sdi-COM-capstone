@@ -58,6 +58,13 @@ export default function GoalsWidget() {
     );
   };
 
+  // Sort goals by updated_at (newest first)
+  const sortedGoals = [...goals].sort((a, b) => {
+    const dateA = new Date(a.updated_at);
+    const dateB = new Date(b.updated_at);
+    return dateB - dateA;
+  });
+
   return (
     <div className="card bg-base-200 p-4">
       <h3 className="text-2xl font-semibold text-primary mb-4">Active Goals</h3>
@@ -71,7 +78,7 @@ export default function GoalsWidget() {
       {goals.length > 0 ? (
         <>
           <div className="space-y-4 mb-4">
-            {goals.slice(0, 3).map((goal) => (
+            {sortedGoals.slice(0, 3).map((goal) => (
               <div key={goal.id} className="border-l-4 border-primary pl-4">
                 <h4 className="text-lg font-bold text-secondary">
                   {goal.name}

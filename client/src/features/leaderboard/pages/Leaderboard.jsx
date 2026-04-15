@@ -116,22 +116,56 @@ export default function Leaderboard() {
   //   };
   // }
   //--------Begin Modal for being on leaderboard----------
-  // useEffect(() => {
-  //   if (merged && user) {
-  //     const top10Ids = applyFilters(merged)
-  //       .sort((a, b) => b.score - a.score)
-  //       .slice(0, 10)
-  //       .map((u) => u.id);
+  useEffect(() => {
+    if (merged && user) {
+      const top10Ids = applyFilters(merged)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 10)
+        .map((u) => u.id);
 
-  //     if (top10Ids.includes(user.id)) {
-  //       const timer = setTimeout(() => {
-  //         setShowModal(true);
-  //       }, 1000); // 3 second delay
+      if (top10Ids.includes(user.id)) {
+        const timer = setTimeout(() => {
+          setShowModal(true);
+        }, 1000); // 1 second delay
 
-  //       return () => clearTimeout(timer);
-  //     }
-  //   }
-  // }, [merged, user, gender, ageGroup]);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [merged, user, gender, ageGroup]);
+
+  useEffect(() => {
+    if (user) {
+      // Helper to get top 10 IDs for a specific dataset and sorting key
+      const getTop10Ids = (data, sortKey, ascending = false) => {
+        if (!data) return [];
+        return applyFilters(data)
+          .sort((a, b) =>
+            ascending ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey],
+          )
+          .slice(0, 10)
+          .map((u) => u.user_id || u.id); // Adjust key based on your DB schema
+      };
+
+      // Gather all top 10 IDs across all categories
+      const ptTop10 = getTop10Ids(merged, "score");
+      const runsTop10 = getTop10Ids(runs, "run_time", true); // true if lower time is better
+      const sitUpsTop10 = getTop10Ids(sitUps, "sit_ups");
+      const pushUpsTop10 = getTop10Ids(pushUps, "push_ups");
+      // Add 5th leaderboard here...
+
+      const isOnAnyLeaderboard = [
+        ...ptTop10,
+        ...runsTop10,
+        ...sitUpsTop10,
+        ...pushUpsTop10,
+      ].includes(user.id);
+
+      if (isOnAnyLeaderboard) {
+        const timer = setTimeout(() => setShowModal(true), 1000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [merged, runs, sitUps, pushUps, user, gender, ageGroup]);
 
   if (!users && !scores) return <h1>Loading Leaderboards...</h1>;
   return (
@@ -449,7 +483,7 @@ export default function Leaderboard() {
           {/* --------------------------------------------------------------------------------- */}
           <div className="w-96 bg-base-200 rounded-xl shadow-2xl p-4 text-white">
             <h1 className="text-xl text-secondary font-bold text-center mb-1 pb-2 uppercase tracking-tight">
-              Most PT Minutes
+              Most PT Minute this Week
             </h1>
             <div className="space-y-3">
               {applyFilters(merged)
@@ -515,6 +549,23 @@ export default function Leaderboard() {
           </div>
         </div>
       </div>
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-base-200 p-8 rounded-2xl border-2 border-primary shadow-2xl text-center max-w-sm animate-bounce-short">
+            <div className="text-5xl mb-4">🎉</div>
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Congratulations!
+            </h2>
+            <p className="text-gray-300 mb-6">You're on the leaderboard!</p>
+            <button
+              onClick={() => setShowModal(false)}
+              className="btn btn-primary w-full"
+            >
+              Awesome!
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -19,10 +19,90 @@ import {
 } from "lucide-react";
 
 export default function Trophy({ userData }) {
-  const titles = {};
-  for (let i = 1; i <= 15; i++) {
-    titles[i] = `/Titles/${i}.png`;
-  }
+  const titles = [
+    {
+      path: "/Titles/emp.png",
+      label: "The Blackout",
+      criteria: "Log 10 workouts between 0400 and 0500",
+    },
+    {
+      path: "/Titles/fastrun.png",
+      label: "Overdrive",
+      criteria: "Run 200 total miles since account creation",
+    },
+    {
+      path: "/Titles/ghost.png",
+      label: "Off the Grid",
+      criteria: "Complete ten individual workouts between 0000 and 0400",
+    },
+    {
+      path: "/Titles/king.png",
+      label: "King of the Hill",
+      criteria:
+        "Hold the number one leaderboard spot in your unit for one full week",
+    },
+    {
+      path: "/Titles/master.png",
+      label: "Vanguard",
+      criteria: "Log 100 total hours of recorded physical training",
+    },
+    {
+      path: "/Titles/ninja.png",
+      label: "Nightshade",
+      criteria: "Complete 25 training sessions before sunrise or after sunset",
+    },
+    {
+      path: "/Titles/nuke.png",
+      label: "Supernova",
+      criteria:
+        "Achieve a perfect 100 point score on a Space Force Physical Fitness Assessment",
+    },
+    {
+      path: "/Titles/number1.png",
+      label: "Main Character",
+      criteria:
+        "Finish in the top spot of a unit-wide daily leaderboard 25 times",
+    },
+    {
+      path: "/Titles/relentless.png",
+      label: "Relentless",
+      criteria:
+        "Complete 20 consecutive days of physical training without a missed session",
+    },
+    {
+      path: "/Titles/run.png",
+      label: "Cloudwalker",
+      criteria: "Maintain a sub 8 minute mile pace for 50 total miles",
+    },
+    {
+      path: "/Titles/runn.png",
+      label: "Double Time",
+      criteria:
+        "Log two separate 2 mile runs within the same 24 hour period 10 times",
+    },
+    {
+      path: "/Titles/strong.png",
+      label: "Brute Force",
+      criteria:
+        "Complete 500 total repetitions of weighted squats or deadlifts in a single month",
+    },
+    {
+      path: "/Titles/stronger.png",
+      label: "Indestructible",
+      criteria: "Complete 100 sets of core-stabilizing exercises",
+    },
+    {
+      path: "/Titles/swim.png",
+      label: "Deep Water",
+      criteria: "Accumulate 10,000 total meters of swimming in a single month",
+    },
+    {
+      path: "/Titles/vsat.png",
+      label: "High Ground",
+      criteria:
+        "Complete 100 total flights of stairs or 1,000 feet of elevation gain in a single week",
+    },
+  ];
 
   const icons = [
     {
@@ -178,27 +258,52 @@ export default function Trophy({ userData }) {
         </div>
       </div>
 
-      <div id="Titles" className="flex-1 mt-6">
-        <h3 className="text-[10px] uppercase font-black opacity-40 tracking-widest italic">
+      <div id="Titles" className="flex-1 mt-6 w-full">
+        <h3 className="text-[10px] uppercase font-black opacity-40 tracking-widest italic mb-3">
           Earned Titles
         </h3>
-        <div className="flex overflow-x-auto gap-4 pb-6 no-scrollbar snap-x snap-mandatory">
-          {userData.titles_ids.map((id, index) => (
-            <div
-              key={index}
-              className="flex-none w-64 snap-center relative group overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-[1px] transition-all duration-300 hover:scale-105"
-            >
-              <div className="bg-[#121212] rounded-xl overflow-hidden shadow-2xl">
-                <img
-                  src={titles[id]}
-                  alt={`Title ${id}`}
-                  className="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-                />
-              </div>
 
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent pointer-events-none" />
-            </div>
-          ))}
+        <div className="flex overflow-x-auto gap-4 pb-8 no-scrollbar snap-x snap-mandatory [perspective:1000px]">
+          {userData.titles_ids.map((id, index) => {
+            const card = titles[id - 1];
+            if (!card) return null;
+
+            return (
+              <div
+                key={index}
+                className="flex-none w-80 h-32 snap-center relative group cursor-pointer"
+              >
+                <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateX(180deg)]">
+                  <div className="absolute inset-0 [backface-visibility:hidden] z-[2] flex flex-col border border-white/10 overflow-hidden bg-[#0a0a0a]">
+                    <div className="flex-grow overflow-hidden">
+                      <img
+                        src={card.path}
+                        alt={card.label}
+                        className="w-full h-full object-cover opacity-90"
+                      />
+                    </div>
+
+                    <div className="h-8 bg-black flex items-center px-3 border-t border-white/20">
+                      <h3 className="text-white font-sans font-bold text-[11px] uppercase tracking-wider">
+                        {card.label}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateX(180deg)] z-[1] bg-[#111] border border-white/10 flex flex-col justify-center items-center px-4">
+                    <span className="text-[10px] uppercase tracking-widest text-accent mb-1 font-bold">
+                      Challenge Criteria
+                    </span>
+                    <p className="text-white text-[12px] leading-tight text-center italic opacity-80">
+                      "{card.criteria}"
+                    </p>
+
+                    <div className="absolute bottom-1 right-1 w-2 h-2 border-r border-b border-accent/50" />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

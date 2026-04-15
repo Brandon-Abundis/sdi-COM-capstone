@@ -6,6 +6,18 @@ export default function ViewAllGoalsModal({ isOpen, onClose, goals }) {
     return `${minutes}:${secs.toString().padStart(2, "0")}`;
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   const formatGoalDetail = (label, value) => {
     if (!value || value === 0) return null;
     return (
@@ -16,6 +28,13 @@ export default function ViewAllGoalsModal({ isOpen, onClose, goals }) {
   };
 
   if (!isOpen) return null;
+
+  // Sort goals by updated_at (newest first)
+  const sortedGoals = [...goals].sort((a, b) => {
+    const dateA = new Date(a.updated_at);
+    const dateB = new Date(b.updated_at);
+    return dateB - dateA;
+  });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -35,10 +54,10 @@ export default function ViewAllGoalsModal({ isOpen, onClose, goals }) {
         <div className="overflow-y-auto flex-1">
           {goals.length > 0 ? (
             <div className="space-y-4 pr-2">
-              {goals.map((goal) => (
+              {sortedGoals.map((goal) => (
                 <div
                   key={goal.id}
-                  className="border-l-4 border-primary pl-4 pb-4"
+                  className="border-l-4 border-l-primary rounded-2xl pl-4 pb-2 hover:bg-base-300"
                 >
                   <h4 className="text-lg font-bold text-secondary">
                     {goal.name}
@@ -60,6 +79,12 @@ export default function ViewAllGoalsModal({ isOpen, onClose, goals }) {
                       goal.weight ? `${goal.weight} lbs` : null,
                     )}
                     {formatGoalDetail("Focus Area", goal.muscle_group)}
+                  </div>
+                  <div className="flex flex-col mt-2 pt-2 border-t border-base-300 text-xs text-base-content/50 ">
+                    <p>Notes: {goal.notes}</p>
+                    {goal.updated_at && (
+                      <p>Modified at {formatDate(goal.updated_at)}</p>
+                    )}
                   </div>
                 </div>
               ))}
