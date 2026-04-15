@@ -21,7 +21,7 @@ export default function Avatar({ userData }) {
   //   );
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
+    <div className="relative w-full h-full flex items-center justify-center mr-1.5">
       {!savedAvatar && (
         <span className="text-sm font-bold text-[#c084fc] leading-none">
           {initials}
@@ -32,14 +32,14 @@ export default function Avatar({ userData }) {
         <>
           <img src={savedAvatar.color} className="absolute inset-0 z-5" />
           <img src={savedAvatar.base} className="absolute inset-0 z-10" />
+          {savedAvatar.head && (
+            <img src={savedAvatar.head} className="absolute inset-0 z-30" />
+          )}
           {savedAvatar.chosenGloves && (
             <img
               src={savedAvatar.chosenGloves}
-              className="absolute inset-0 z-20"
+              className="absolute inset-0 z-20 object-contain scale-150"
             />
-          )}
-          {savedAvatar.head && (
-            <img src={savedAvatar.head} className="absolute inset-0 z-30" />
           )}
           {savedAvatar.chosenMisc?.map((path, i) => (
             <img key={i} src={path} className="absolute inset-0 z-40" />
