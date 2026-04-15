@@ -473,7 +473,7 @@ export default function Leaderboard() {
           {/* --------------------------------------------------------------------------------- */}
           <div className="w-96 bg-base-200 rounded-xl shadow-2xl p-4 text-white">
             <h1 className="text-xl text-secondary font-bold text-center mb-1 pb-2 uppercase tracking-tight">
-              Most PT Minutes
+              Most PT Minute this Week
             </h1>
             <div className="space-y-3">
               {applyFilters(merged)
