@@ -84,7 +84,7 @@ export default function Workouts() {
 
   filtered = filtered.sort((a, b) => b.updated_at - a.updated_at);
   return (
-    <div>
+    <div className="min-h-screen bg-base-100 p-4">
       <div>
         <h1
           className={
