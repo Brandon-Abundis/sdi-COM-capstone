@@ -8,7 +8,12 @@ import Avatar from "../../profile/Components/Avatar";
 /** Converts an ISO timestamp string into a human-readable "Mon, 3:45 PM" format */
 function formatTimestamp(iso) {
   const d = new Date(iso);
-  return d.toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", hour12: true });
+  return d.toLocaleString("en-US", {
+    weekday: "short",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
 }
 
 /**
@@ -80,7 +85,12 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
       if (!msgRes.ok) throw new Error("Failed to send challenge");
       const msg = await msgRes.json();
 
-      onSent({ ...msg, first_name: user.first_name, last_name: user.last_name, username: user.username });
+      onSent({
+        ...msg,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        username: user.username,
+      });
       onClose();
     } catch (err) {
       setError(err.message);
@@ -93,13 +103,22 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="bg-[#16112a] border border-[#2a2245] rounded-2xl p-6 w-96 flex flex-col gap-4 shadow-xl">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-[#c084fc] uppercase tracking-wide">⚔️ Issue a Challenge</h2>
-          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#c084fc] text-lg">✕</button>
+          <h2 className="text-sm font-bold text-[#c084fc] uppercase tracking-wide">
+            ⚔️ Issue a Challenge
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-[#e2dff5]/40 hover:text-[#c084fc] text-lg"
+          >
+            ✕
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">Exercise</label>
+            <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">
+              Exercise
+            </label>
             <input
               required
               type="text"
@@ -111,7 +130,9 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">Goal</label>
+            <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">
+              Goal
+            </label>
             <input
               required
               type="text"
@@ -124,7 +145,9 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
 
           <div className="flex gap-2">
             <div className="flex flex-col gap-1 flex-1">
-              <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">Date</label>
+              <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">
+                Date
+              </label>
               <input
                 required
                 type="date"
@@ -134,7 +157,9 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
               />
             </div>
             <div className="flex flex-col gap-1 flex-1">
-              <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">Time (optional)</label>
+              <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">
+                Time (optional)
+              </label>
               <input
                 type="time"
                 value={time}
@@ -181,7 +206,9 @@ export default function DirectMessage({ dmUser }) {
     if (!dmUser?.user_id) return;
     fetch(`http://localhost:8080/users/id/${dmUser.user_id}`)
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => { if (data) setDmUserFull(data); })
+      .then((data) => {
+        if (data) setDmUserFull(data);
+      })
       .catch(() => {});
   }, [dmUser?.user_id]);
 
@@ -206,11 +233,23 @@ export default function DirectMessage({ dmUser }) {
     const res = await fetch("http://localhost:8080/messages/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: input.trim(), user_id: user.id, to_user_id: dmUser.user_id }),
+      body: JSON.stringify({
+        text: input.trim(),
+        user_id: user.id,
+        to_user_id: dmUser.user_id,
+      }),
     });
     if (res.ok) {
       const msg = await res.json();
-      setMessages((prev) => [...prev, { ...msg, first_name: user.first_name, last_name: user.last_name, username: user.username }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          ...msg,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          username: user.username,
+        },
+      ]);
     }
     setInput("");
   }
@@ -291,7 +330,7 @@ export default function DirectMessage({ dmUser }) {
         className="px-4 py-3 border-b border-[#1e1838] flex items-center gap-3 cursor-pointer hover:bg-[#7c3aed]/10 transition-colors"
         onClick={() => navigate(`/profile/${dmUser.user_id}`)}
       >
-        <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0 border-2 border-[#1e1838]">
+        <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0 border-2 border-[#1e1838] relative">
           {dmUserFull ? (
             <Avatar userData={dmUserFull} />
           ) : (
@@ -301,8 +340,12 @@ export default function DirectMessage({ dmUser }) {
           )}
         </div>
         <div>
-          <span className="font-semibold text-[#e2dff5] text-sm">{dmUser.username}</span>
-          {dmUser.rank && <span className="ml-2 text-xs text-[#a78bfa]">{dmUser.rank}</span>}
+          <span className="font-semibold text-[#e2dff5] text-sm">
+            {dmUser.username}
+          </span>
+          {dmUser.rank && (
+            <span className="ml-2 text-xs text-[#a78bfa]">{dmUser.rank}</span>
+          )}
         </div>
       </div>
 
@@ -319,7 +362,10 @@ export default function DirectMessage({ dmUser }) {
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSend} className="p-3 border-t border-[#1e1838] flex gap-2">
+      <form
+        onSubmit={handleSend}
+        className="p-3 border-t border-[#1e1838] flex gap-2"
+      >
         <button
           type="button"
           onClick={() => setShowChallenge(true)}
