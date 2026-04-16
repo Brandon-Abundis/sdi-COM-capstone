@@ -265,7 +265,7 @@ export default function Calendar() {
     function displayWorkoutsForEvent(event) {
 
     if (!event.workouts_list || event.workouts_list.length === 0) {
-      return <p>No workouts for this event.</p>
+      return <p className="workout-side">No workouts for this event.</p>
     }
 
     function handleOpen(workout) {
@@ -285,7 +285,7 @@ export default function Calendar() {
       console.log("DEBUG: Search failed.");
       console.log("Looking for IDs:", event.workouts_list);
       console.log("Available IDs in userWorkouts:", userWorkouts.map(w => w.id));
-      return <p>No workouts found for this event.</p>
+      return <p className="workout-side">No workouts found for this event.</p>
     }
 
     return (
@@ -295,8 +295,8 @@ export default function Calendar() {
             <li 
               key={workout.id}
               onClick={() => handleOpen(workout)}
-              className="cursor-pointer hover:text-purple-400"
-              >{workout.name}
+              className="workout-side cursor-pointer hover:text-purple-400"
+              > - {workout.name}
             </li>
           ))}
         </ul>
@@ -392,7 +392,7 @@ export default function Calendar() {
       <div className="workout-panel">
         <h4><b>Workouts for {selectedEvent.name}</b></h4>
         {displayWorkoutsForEvent(selectedEvent)}
-        <button type="button" className="add-btn" onClick={() => setAddGoalOpen(true)}>Add Goal</button>
+        {/* <button type="button" className="add-btn" onClick={() => setAddGoalOpen(true)}>Add Goal</button> */}
         <button type="button" className="add-btn" onClick={() => setAddWorkoutOpen(true)}>Add Workout</button>
       </div>
     )}
