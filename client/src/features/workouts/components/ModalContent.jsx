@@ -224,6 +224,7 @@ export default function ModalContent({ cancel, info }) {
           aged={tooOld}
           maxLen={40}
         />
+
         <InputField
           ref={typeRef}
           style={"selection"}
@@ -236,7 +237,9 @@ export default function ModalContent({ cancel, info }) {
             "other",
           ]}
           chosen={type}
+          aged={tooOld}
         />
+
         <h2> Time Estimate (Min.) - # </h2>
         <InputField
           ref={timeRef}
