@@ -65,8 +65,7 @@ export default function Leaderboard() {
       return genderFilter.filter((e) => e.age >= 35 && e.age <= 39);
     if (ageGroup === "40-44")
       return genderFilter.filter((e) => e.age >= 40 && e.age <= 44);
-    if (ageGroup === "45-49")
-      return genderFilter.filter((e) => e.age >= 45 && e.age <= 49);
+    if (ageGroup === "45+") return genderFilter.filter((e) => e.age >= 45);
 
     //just incase something really bad happens...
     return genderFilter;
@@ -79,7 +78,6 @@ export default function Leaderboard() {
         setUserData(data);
       });
   }, [user]);
-  console.log(user);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -132,7 +130,6 @@ export default function Leaderboard() {
       }
     }
   }, [merged, user, gender, ageGroup]);
-  console.log(merged);
 
   useEffect(() => {
     if (user) {
@@ -209,7 +206,7 @@ export default function Leaderboard() {
               <option value="30-34">30 - 34</option>
               <option value="35-39">35 - 39</option>
               <option value="40-44">40 - 44</option>
-              <option value="45-49">45 - 49</option>
+              <option value="45+">45+</option>
             </select>
           </div>
         </div>
