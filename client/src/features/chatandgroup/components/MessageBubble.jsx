@@ -18,7 +18,7 @@ export default function MessageBubble({ message, isOwn }) {
   return (
     <div className={`flex gap-3 ${isOwn ? "flex-row-reverse" : "flex-row"}`}>
       <div
-        className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2245] cursor-pointer flex-shrink-0 border-2 border-[#1e1838]"
+        className="w-9 h-9 rounded-full overflow-hidden bg-[#2a2245] cursor-pointer flex-shrink-0 hover:ring-2 hover:ring-primary transition-all flex justify-center items-center pt-2"
         onClick={() => navigate(`/profile/${message.user_id}`)}
       >
         <Avatar userData={{ first_name: message.first_name, last_name: message.last_name, profile: message.profile }} />
