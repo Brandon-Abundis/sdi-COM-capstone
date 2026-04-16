@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 export default function Profile() {
-  const { user, logout } = useAuth();
+  const { user, logout, refresheUser } = useAuth();
 
   const { id } = useParams();
   const [userData, setUserData] = useState();
