@@ -438,8 +438,6 @@
   color: #f87171;
   margin: 0;
 }
-
-
 /* -------------------------TEST-------------------------------- */
 
 .event-list.upcoming-events li.group-workout {
@@ -464,3 +462,28 @@
 
 
 /* -------------------------TEST-------------------------------- */
+/* ── Modal BG ──────────────────────────────────────── */
+
+/* .modal-window-bg {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 9999
+}
+
+.modal-window-main {
+  backgroundColor: '#16112a',
+  padding: '16px',
+  borderRadius: '16px',
+  border: '1px solid #1e1838',
+  boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+  maxWidth: '600px',
+  width: '90%',
+  fontFamily: 'sans-serif'
+} */

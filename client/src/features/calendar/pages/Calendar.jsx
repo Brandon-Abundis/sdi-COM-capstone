@@ -4,6 +4,7 @@ import CalendarApp from "../components/CalendarApp.jsx";
 import useCreateUserEvent from "../customHooks/UseEventCreator.jsx"
 // import CalUpcomingEvents  from "../components/CalUpcomingEvents.jsx";
 import Modal from "../../workouts/components/Modal.jsx"
+import ModalWindowTemp from "../components/ModalWindowTemp.jsx"
 import { useAuth } from "../../../app/AuthProvider.jsx";
 
 function formatTime(timeStr) {
@@ -35,6 +36,8 @@ export default function Calendar() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [userWorkouts, setUserWorkouts] = useState([]);
   const [isOpen, setIsOpen] = useState(false)
+  const [addGoalOpen, setAddGoalOpen] = useState(false)
+  const [addWorkoutOpen, setAddWorkoutOpen] = useState(false)
   const [selectedWorkout, setSelectedWorkout] = useState(null)
 
 
@@ -68,28 +71,11 @@ export default function Calendar() {
             { ...e, type: "group-workout"}
           ));
           allEvents = [...allEvents, ...labeledGroupEvents];
-        // groupsEventsResults.forEach(groupEvents => {
-        //   if (Array.isArray(groupEvents)) {
-        //     //2 here
-        //     const groupEventsResults = await Promise.all(groupEventsPromises);
-        //     const groupsLabeled = groupEventsResults.flat().map(e => ({ ...e, category: 'group-workout'}))
-        //     allEvents = [...allEvents, ...groupEvents];
-        //   }
-        // }
-        // );
       }
 
       setEvents(allEvents);
     })
     .catch((err) => console.error("Error loading events:", err));
-    // setEvents([ ...personalLabeled, ...groupsLabeled]);
-
-
-
-    // fetch(`http://localhost:8080/users/user_events/id/${user.id}`)
-    // .then((r) => r.json())
-    // .then((data) => setEvents(Array.isArray(data) ? data : []))
-    // .catch(() => setEvents([]));
 
     fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
   .then((r) => r.json())
@@ -146,12 +132,6 @@ export default function Calendar() {
   const dayEvents = selectedDate
   ? events
     .filter((e) => {
-      // const d = new Date(e.start_date);
-      // return (
-      //   d.getUTCFullYear() === selectedDate.getUTCFullYear() &&
-      //   d.getUTCMonth() === selectedDate.getUTCMonth() &&
-      //   d.getUTCDate() === selectedDate.getUTCDate()
-      // );
       const selUTC = new Date(Date.UTC(
         selectedDate.getUTCFullYear(),
         selectedDate.getUTCMonth(),
@@ -163,15 +143,6 @@ export default function Calendar() {
       const s = new Date(Date.UTC(startDay.getUTCFullYear(), startDay.getUTCMonth(), startDay.getUTCDate()));
       const end = new Date(Date.UTC(endDay.getUTCFullYear(), endDay.getUTCMonth(), endDay.getUTCDate()));
       return selUTC >= s && selUTC <= end;
-      
-      // const eventDateStr = new Date(e.start_date)
-      //   .toISOString()
-      //   .split("T")[0]
-      // const selectedDateStr = selectedDate
-      //   .toISOString()
-      //   .split("T")[0];
-
-      // return eventDateStr === selectedDateStr
   })
   .map((e) => {
       if (!e.end_date) return e;
@@ -292,10 +263,6 @@ export default function Calendar() {
   // TEST CODE BELOOWWWWWWWWW ------------------------------------------------------------
 
     function displayWorkoutsForEvent(event) {
-      // console.log("Checking this specific event object:", event);
-      // console.log("Step 1: IDs in this event:", event.workouts_list);
-      // console.log("Step 2: Total workouts in state:", userWorkouts.length);
-
 
     if (!event.workouts_list || event.workouts_list.length === 0) {
       return <p>No workouts for this event.</p>
@@ -333,31 +300,10 @@ export default function Calendar() {
             </li>
           ))}
         </ul>
-        {/* <Modal 
-          openModal={isOpen}
-          closeModal={handleClose}
-          info={selectedWorkout}
-        /> */}
       </>
     )
   }
 
-
-  // function eventsForDay(day) {
-  //   return events
-  //     .filter((e) => {
-  //       const eventDateStr = new Date(e.start_date).toISOString().split("T")[0];
-  //       const selectedDateStr = new Date(Date.UTC(year, month, day))
-  //         .toISOString()
-  //         .split("T")[0];
-  //       return eventDateStr === selectedDateStr
-  //     })
-  //   .sort((a, b) => timeToMinutes(a.start_time) - timeToMinutes(b.start_time));
-  // }
-
-
-
-  
 
   return (
       <div className="bg-base-100">
@@ -365,6 +311,13 @@ export default function Calendar() {
                   CALENDAR
                 </h1>
         <div className="calendar-page">
+          <ModalWindowTemp 
+            addGoalOpen={addGoalOpen}
+            setAddGoalOpen={setAddGoalOpen}
+            addWorkoutOpen={addWorkoutOpen}
+            setAddWorkoutOpen={setAddWorkoutOpen}
+            selectedEvent={selectedEvent}
+          />
           {/* {selectedDay === null && ( */}
             <aside className="calendar-side-panel">
               <div className="panel-date-heading">Upcoming Events</div>
@@ -439,8 +392,8 @@ export default function Calendar() {
       <div className="workout-panel">
         <h4><b>Workouts for {selectedEvent.name}</b></h4>
         {displayWorkoutsForEvent(selectedEvent)}
-        <button type="button" className="add-btn" onClick={() => console.log("THIS WILL ADD GOAL")}>Add Goal</button>
-        <button type="button" className="add-btn" onClick={() => console.log("THIS WILL ADD WORKOUT")}>Add Workout</button>
+        <button type="button" className="add-btn" onClick={() => setAddGoalOpen(true)}>Add Goal</button>
+        <button type="button" className="add-btn" onClick={() => setAddWorkoutOpen(true)}>Add Workout</button>
       </div>
     )}
                 <form className="add-event-form" onSubmit={handleAddEvent}>

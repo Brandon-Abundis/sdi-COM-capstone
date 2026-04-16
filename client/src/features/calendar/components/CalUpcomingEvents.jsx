@@ -4,11 +4,6 @@ import { useAuth } from "../../../app/AuthProvider";
 export default function CalUpcomingEvents({selectedDay, events}) {
     const { user } = useAuth();
 
-    // let arry = ["apple", "banana", "cherry"]
-    // console.log(user)
-    // console.log(selectedDay)
-    // console.log(JSON.stringify(events))
-    // console.log("ARRY:" + arry)
     console.log("events length:" + events.length)
 
 
