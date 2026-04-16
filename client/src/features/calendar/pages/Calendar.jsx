@@ -323,7 +323,7 @@ export default function Calendar() {
             <li 
               key={workout.id}
               onClick={() => handleOpen(workout)}
-              style={{textDecoration: new Date(workout.updated_at) < expDate ? "line-through" : "none" }}
+              style={{textDecoration: new Date(workout.updated_at) < expDate ? "none" : "none" }}
               className="workout-side cursor-pointer hover:text-purple-400"
               > - {workout.name}
             </li>
