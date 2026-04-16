@@ -105,7 +105,7 @@
                 }}>
                     {WorkoutLibrary
                         .filter(loc => loc.notes != "Removed")
-                        .filter(loc => new Date(loc.updated_at) >= expDate)
+                        // .filter(loc => new Date(loc.updated_at) >= expDate)
                         .filter(loc => loc.name.toLowerCase().includes(query?.toLowerCase()))
                         .map(loc => (
                             <div
