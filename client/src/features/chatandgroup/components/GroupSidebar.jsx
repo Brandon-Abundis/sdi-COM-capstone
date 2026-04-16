@@ -108,7 +108,7 @@ function NewDMModal({ dmUsers, onClose, onSelect }) {
               }}
               className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#7c3aed]/20 transition-colors text-left"
             >
-              <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0">
+              <div className="w-9 h-9 rounded-full overflow-hidden bg-[#2a2245] cursor-pointer flex-shrink-0 hover:ring-2 hover:ring-primary transition-all flex justify-center items-center pt-2">
                 <Avatar userData={u} />
               </div>
               <div>
@@ -175,7 +175,7 @@ function InviteModal({ group, allUsers, onClose }) {
               .filter((u) => memberSet.has(u.id))
               .map((u) => (
                 <div key={u.id} className="flex items-center gap-1.5 bg-[#1e1838] rounded-full px-2 py-1">
-                  <div className="w-4 h-4 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0">
+                  <div className="w-9 h-9 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0 flex justify-center items-center pt-2">
                     <Avatar userData={u} />
                   </div>
                   <span className="text-[10px] text-[#e2dff5]/70">{u.username || `${u.first_name} ${u.last_name}`}</span>
@@ -208,7 +208,7 @@ function InviteModal({ group, allUsers, onClose }) {
                 return (
                   <div key={u.id} className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-[#7c3aed]/20 transition-colors">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0">
+                      <div className="w-9 h-9 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0 flex justify-center items-center pt-2">
                         <Avatar userData={u} />
                       </div>
                       <div>
@@ -548,7 +548,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
                       : "text-[#e2dff5]/70 hover:bg-[#7c3aed]/20 hover:text-[#c084fc]"
                   }`}
                 >
-                  <div className="w-5 h-5 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0">
+                  <div className="w-9 h-9 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0 flex justify-center items-center pt-2">
                     <Avatar userData={u} />
                   </div>
                   <span className="truncate">{u.username || `${u.first_name} ${u.last_name}`}</span>

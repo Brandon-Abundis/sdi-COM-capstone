@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Avatar from "./Avatar";
+import { useAuth } from "../../../app/AuthProvider";
 
 export default function ProfileInfo({ userData, setUserData }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -9,6 +10,7 @@ export default function ProfileInfo({ userData, setUserData }) {
 
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, refreshUser, profile } = useAuth();
 
   useEffect(() => {
     fetch(` http://localhost:8080/users/groups/id/${userData.id}`)
@@ -38,6 +40,7 @@ export default function ProfileInfo({ userData, setUserData }) {
         const updatedData = await response.json();
         setUserData(updatedData);
         setIsEditing(false);
+        refreshUser();
       }
 
       console.log("Account edited successfully");

@@ -18,7 +18,7 @@ export default function Workouts() {
   const imOld = "1800-01-01T00:00:00.001Z";
   let defaultString = "N/A";
   let defaultNum = 10;
-  let maxLen = 30
+  let maxLen = 30;
   let currentUser = JSON.parse(localStorage.getItem("user")).email;
   console.log("start... up !");
 
@@ -59,9 +59,8 @@ export default function Workouts() {
                     storedId: id,
                   };
                   if (!currentData.title.includes(imOld)) {
-                  setAllInfo((prev) => [...prev, currentData]);
-                  // cant do length check here since setState is async
-
+                    setAllInfo((prev) => [...prev, currentData]);
+                    // cant do length check here since setState is async
                   }
                   // put all in all table anyway
                 });
@@ -84,11 +83,11 @@ export default function Workouts() {
 
   filtered = filtered.sort((a, b) => b.updated_at - a.updated_at);
   return (
-    <div>
+    <div className="min-h-screen bg-base-100 p-4">
       <div>
         <h1
           className={
-            "text-3xl font-bold text-primary mb-6 ml-7 mt-6 tracking-wide"
+            "text-3xl font-bold text-primary mb-6 ml-5 mt-2 tracking-wide"
           }
         >
           {" "}
@@ -147,7 +146,6 @@ export default function Workouts() {
         />
 
         {filtered.map((elem, index) => {
-
           if (index > 30) {
             return;
           }
