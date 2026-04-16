@@ -764,6 +764,62 @@ const createEvent = async (req, res) => {
   }
 };
 
+const updateEventById = async (req, res) => {
+  const { id } = req.params;
+  const { workouts_list } = req.body;
+  try {
+    if (!workouts_list) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER_WORKOUT",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "bad data" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const userEventData = await db("user_events").select("*").where("id", id);
+    if (!userEventData) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER_EVENTS",
+        status_code: 400,
+        user_id: id,
+        metadata: { message: "goal does not exist" },
+      });
+      return res.status(400).json({ message: "bad data" });
+    }
+    const result = await db("user_events")
+      .select("*")
+      .where("id", id)
+      .update({
+        workouts_list: workouts_list
+          ? workouts_list
+          : userEventData.workouts_list,
+      })
+      .returning("*");
+    if (result) {
+      createLog({
+        method: "POST",
+        action: "UPDATE_USER_EVENTS",
+        status_code: 200,
+        user_id: id,
+        metadata: JSON.stringify(result),
+      });
+    }
+    res.status(200).send(result[0]);
+  } catch (err) {
+    createLog({
+      method: "POST",
+      action: "UPDATE_USER_EVENTS",
+      status_code: 500,
+      user_id: id,
+      metadata: err,
+    });
+    res.status(500).send({ message: err });
+  }
+};
+
 const deleteEvent = async (req, res) => {
   const { id } = req.params;
   try {
@@ -804,6 +860,7 @@ module.exports = {
   getAllEvents,
   getEventsById,
   createEvent,
+  updateEventById,
   deleteEvent,
   updateById,
   updatePasswordById,
