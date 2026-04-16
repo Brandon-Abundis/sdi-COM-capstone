@@ -245,6 +245,7 @@
   align-items: center;
   gap: 8px;
   transition: border-color 0.15s;
+  overflow: auto;
 }
 
 .event-list.event-list.upcoming-events li {

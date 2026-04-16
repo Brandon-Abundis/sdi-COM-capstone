@@ -242,6 +242,7 @@ export default function Calendar() {
     }
   }
   
+
   const selectedLabel = selectedDate
   ? selectedDate.toLocaleDateString("en-US", {
     month: "long",
@@ -260,6 +261,20 @@ export default function Calendar() {
   })
   : null;
   
+  function updateEventWorkouts(updatedEvent) {
+      setEvents(prev => prev.map(e => e.id === updatedEvent.id ? updatedEvent : e ));
+      setSelectedEvent(updatedEvent)
+    }
+
+    function handleClose() {
+      setIsOpen(false)
+      fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
+      .then(r => r.json())
+      .then(data => setUserWorkouts(Array.isArray(data) ? data : []))
+      .catch(() => {});
+    }
+
+
   // TEST CODE BELOOWWWWWWWWW ------------------------------------------------------------
 
     function displayWorkoutsForEvent(event) {
@@ -269,12 +284,22 @@ export default function Calendar() {
     }
 
     function handleOpen(workout) {
-      console.log(`clicked ${Object.keys(workout)}`)
-      setSelectedWorkout(workout);
+      // console.log(`clicked ${Object.keys(workout)}`) /* WORK WITH TAFARI FOR THIS*/
+      console.log("localStorage user:", localStorage.getItem("user")); // 👈 add this
+  console.log("workout being opened:", workout);
+      setSelectedWorkout({
+        title: workout.name,
+        type: workout.type,
+        time: Math.floor((workout.time || 0) / 60 + 0.5),
+        distance: workout.distance,
+        reps: workout.reps,
+        muscle_group: workout.muscle_group,
+        weight: workout.weight,
+        notes: workout.notes,
+        storedId: workout.id,
+        updated_at: new Date(workout.updated_at)
+      });
       setIsOpen(true);
-    }
-    function handleClose() {
-      setIsOpen(false)
     }
 
     const workoutsForEvent = event.workouts_list
@@ -288,6 +313,9 @@ export default function Calendar() {
       return <p className="workout-side">No workouts found for this event.</p>
     }
 
+    const expDate = new Date();
+    expDate.setDate(expDate.getDate() - 5);
+
     return (
       <>
         <ul className="workout-list">
@@ -295,6 +323,7 @@ export default function Calendar() {
             <li 
               key={workout.id}
               onClick={() => handleOpen(workout)}
+              style={{textDecoration: new Date(workout.updated_at) < expDate ? "line-through" : "none" }}
               className="workout-side cursor-pointer hover:text-purple-400"
               > - {workout.name}
             </li>
@@ -311,12 +340,18 @@ export default function Calendar() {
                   CALENDAR
                 </h1>
         <div className="calendar-page">
+          <Modal
+            openModal={isOpen}
+            closeModal={handleClose}
+            info={selectedWorkout}
+          />
           <ModalWindowTemp 
             addGoalOpen={addGoalOpen}
             setAddGoalOpen={setAddGoalOpen}
             addWorkoutOpen={addWorkoutOpen}
             setAddWorkoutOpen={setAddWorkoutOpen}
             selectedEvent={selectedEvent}
+            updateEventWorkouts={updateEventWorkouts}
           />
           {/* {selectedDay === null && ( */}
             <aside className="calendar-side-panel">
@@ -361,7 +396,7 @@ export default function Calendar() {
                 ) : (
                   <ul className="event-list">
                     {dayEvents.map((ev) => (
-                      <li key={ev.id} className={`${ev.type}`} onClick={() => setSelectedEvent(ev)}>
+                      <li key={ev.id} className={`${ev.type} event-item`} onClick={() => setSelectedEvent(ev)}>
                         <span className="event-name">{ev.name}</span>
                         {ev.start_time && (
                           <span className="event-time">{formatTime(ev.start_time)}</span>

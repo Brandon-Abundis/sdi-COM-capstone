@@ -1,14 +1,14 @@
     import React, { useState, useEffect} from 'react';
     import { useAuth } from "../../../app/AuthProvider.jsx";
 
-    export default function AddWorkoutWindow({setAddWorkoutOpen, selectedEvent}) {
+    export default function AddWorkoutWindow({setAddWorkoutOpen, selectedEvent, updateEventWorkouts}) {
         const { user } = useAuth();
         const [query, setQuery] = useState("");
-        const [selectedLocations, setSelectedLocations] = useState(new Set());
+        const [selectedWorkouts, setSelectedWorkouts] = useState(new Set());
         const [WorkoutLibrary, setWorkoutLibrary] = useState([])
         const [hasRun, setHasRun] = useState(false);
-    const [saveError, setSaveError] = useState("");
-    const [saving, setSaving] = useState(false);
+        const [saveError, setSaveError] = useState("");
+        const [saving, setSaving] = useState(false);
 
     useEffect(() => {
     
@@ -26,21 +26,24 @@
     useEffect(() => {
         if (WorkoutLibrary.length > 0 && selectedEvent?.workouts_list && !hasRun) {
             const existingIds = selectedEvent.workouts_list;
-            setSelectedLocations(new Set(existingIds));
+            setSelectedWorkouts(new Set(existingIds));
             setHasRun(true)
         }
     }, [WorkoutLibrary, selectedEvent, hasRun]);
 
     // console.log(WorkoutLibrary)
+    const expDate = new Date();
+    expDate.setDate(expDate.getDate() - 5);
+
     const toggleSelection = (id) => {
-        const next = new Set(selectedLocations);
+        const next = new Set(selectedWorkouts);
         next.has(id) ? next.delete(id) : next.add(id);
-        setSelectedLocations(next);
+        setSelectedWorkouts(next);
     };
 
     async function pushWorkoutToEvent(eventIDhere) {
         const workoutObj = {
-            workouts_list: [...selectedLocations]
+            workouts_list: [...selectedWorkouts]
         };
         setSaveError("");
         setSaving(true);
@@ -64,8 +67,13 @@
     }
 
     const handleFinish = (eventIDhere) => {
-        const finalEvent = WorkoutLibrary.filter(loc => selectedLocations.has(loc.id));
+        const finalEvent = WorkoutLibrary.filter(loc => selectedWorkouts.has(loc.id));
+        const updatedEvent = {
+        ...selectedEvent,
+        workouts_list: Array.from(selectedWorkouts)
+        };
         setAddWorkoutOpen(false)
+        updateEventWorkouts(updatedEvent)
         setHasRun(false)
         pushWorkoutToEvent(eventIDhere)
         
@@ -96,7 +104,9 @@
                     gap: '10px'
                 }}>
                     {WorkoutLibrary
-                        .filter(loc => loc.name.toLowerCase().includes(query.toLowerCase()))
+                        .filter(loc => loc.notes != "Removed")
+                        .filter(loc => new Date(loc.updated_at) >= expDate)
+                        .filter(loc => loc.name.toLowerCase().includes(query?.toLowerCase()))
                         .map(loc => (
                             <div
                                 key={loc.id}
@@ -105,7 +115,7 @@
                                     padding: '20px',
                                     border: '1px solid #000',
                                     cursor: 'pointer',
-                                    backgroundColor: Array.from(selectedLocations).some(id => Number(id) === Number(loc.id)) ? '#0d7345' : '#5e0505',
+                                    backgroundColor: Array.from(selectedWorkouts).some(id => Number(id) === Number(loc.id)) ? '#0d7345' : '#5e0505',
                                     textAlign: 'center',
                                     borderRadius: '4px'
                                 }}
@@ -129,7 +139,7 @@
                             onClick={() => toggleSelection(loc.id)}
                             style={{
                             padding: '20px', border: '1px solid #000', cursor: 'pointer',
-                            backgroundColor: selectedLocations.has(loc.id) ? '#d1e7dd' : '#fff',
+                            backgroundColor: selectedWorkouts.has(loc.id) ? '#d1e7dd' : '#fff',
                             textAlign: 'center'
                         }}
                         >
@@ -140,10 +150,9 @@
                 </div> */}
                 <button 
                     onClick={() => handleFinish(selectedEvent?.id)}
-                    disabled={selectedLocations.size === 0}
                     style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer', border: "2px solid black" }}
                 >
-                    Save {selectedLocations.size} workouts
+                    Save {selectedWorkouts.size} workouts
                 </button>
             </div>
         </>
