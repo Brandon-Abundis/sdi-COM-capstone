@@ -33,11 +33,11 @@ export default function WorkoutBox({ details, onClick, completed }) {
         {completed ? (
           <h2
             className={
-              "bg-green-600 w-25 p-1 rounded-2xl font-bold border-3 border-green-900"
+              "bg-green-600 w-25 p-1 rounded-2xl font-bold border-3 border-green-900 text-sm"
             }
           >
             {" "}
-            Completed{" "}
+            Completed ✓{" "}
           </h2>
         ) : (
           <h2
