@@ -340,15 +340,43 @@ export default function Calendar() {
       setSaving(false);
     }
   }
+  
 
   const selectedLabel = selectedDate
-    ? selectedDate.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-        timeZone: "UTC",
-      })
-    : null;
+  ? selectedDate.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  })
+  : null;
+  
+  const upcomingSelectedLabel = upcomingDateWindowStart
+  ? upcomingDateWindowStart.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  })
+  : null;
+  
+  function updateEventWorkouts(updatedEvent) {
+      setEvents(prev => prev.map(e => e.id === updatedEvent.id ? updatedEvent : e ));
+      setSelectedEvent(updatedEvent)
+    }
+
+    function handleClose() {
+      setIsOpen(false)
+      fetch(`http://localhost:8080/users/user_workouts/id/${user.id}`)
+      .then(r => r.json())
+      .then(data => setUserWorkouts(Array.isArray(data) ? data : []))
+      .catch(() => {});
+    }
+
+
+  // TEST CODE BELOOWWWWWWWWW ------------------------------------------------------------
+
+    function displayWorkoutsForEvent(event) {
 
   const upcomingSelectedLabel = upcomingDateWindowStart
     ? upcomingDateWindowStart.toLocaleDateString("en-US", {
@@ -365,12 +393,22 @@ export default function Calendar() {
     }
 
     function handleOpen(workout) {
-      console.log(`clicked ${Object.keys(workout)}`);
-      setSelectedWorkout(workout);
+      // console.log(`clicked ${Object.keys(workout)}`) /* WORK WITH TAFARI FOR THIS*/
+      console.log("localStorage user:", localStorage.getItem("user")); // 👈 add this
+  console.log("workout being opened:", workout);
+      setSelectedWorkout({
+        title: workout.name,
+        type: workout.type,
+        time: Math.floor((workout.time || 0) / 60 + 0.5),
+        distance: workout.distance,
+        reps: workout.reps,
+        muscle_group: workout.muscle_group,
+        weight: workout.weight,
+        notes: workout.notes,
+        storedId: workout.id,
+        updated_at: new Date(workout.updated_at)
+      });
       setIsOpen(true);
-    }
-    function handleClose() {
-      setIsOpen(false);
     }
 
     const workoutsForEvent = event.workouts_list
@@ -387,6 +425,9 @@ export default function Calendar() {
       return <p className="workout-side">No workouts found for this event.</p>;
     }
 
+    const expDate = new Date();
+    expDate.setDate(expDate.getDate() - 5);
+
     return (
       <>
         <ul className="workout-list">
@@ -394,6 +435,7 @@ export default function Calendar() {
             <li
               key={workout.id}
               onClick={() => handleOpen(workout)}
+              style={{textDecoration: new Date(workout.updated_at) < expDate ? "line-through" : "none" }}
               className="workout-side cursor-pointer hover:text-purple-400"
             >
               {" "}
@@ -406,51 +448,23 @@ export default function Calendar() {
   }
 
   return (
-    <div className="bg-base-100">
-      <h1 className="text-3xl font-bold text-primary mb-0 tracking-wide pt-6 pl-6 pr-6 pb-0">
-        CALENDAR
-      </h1>
-      <div className="calendar-page">
-        <ModalWindowTemp
-          addGoalOpen={addGoalOpen}
-          setAddGoalOpen={setAddGoalOpen}
-          addWorkoutOpen={addWorkoutOpen}
-          setAddWorkoutOpen={setAddWorkoutOpen}
-          selectedEvent={selectedEvent}
-        />
-        {/* {selectedDay === null && ( */}
-        <aside className="calendar-side-panel">
-          <div className="panel-date-heading">Upcoming Events</div>
-          {upcomingWeekEvents.length === 0 ? (
-            <p className="no-events">No events yet.</p>
-          ) : (
-            <ul
-              className="event-list upcoming-events" /*POSSIBLE UPDATE TO NEW DESIGN WITH WORKOUTS GREYED OUT*/
-            >
-              {upcomingWeekEvents.map((ev) => (
-                <li key={ev.id} className={`${ev.type}`}>
-                  <span className="event-name">{ev.name}</span>
-                  {ev.time && <span className="event-time">{ev.time}</span>}
-                  <span className="event-name">
-                    {getDaysAway(ev.start_date, selectedDate)}
-                  </span>{" "}
-                  {/*will resolve issue eventually*/}
-                </li>
-              ))}
-            </ul>
-          )}
-        </aside>
-        {/* )} */}
-
-        <div className="calendar-box">
-          <CalendarApp
-            currentDate={currentDate}
-            onMonthChange={handleMonthChange}
-            selectedDay={selectedDay}
-            onDaySelect={handleDaySelect}
-            events={events}
-            dayEvents={dayEvents}
-            dayWorkouts={dayWorkouts}
+      <div className="bg-base-100">
+                <h1 className="text-3xl font-bold text-primary mb-0 tracking-wide pt-6 pl-6 pr-6 pb-0">
+                  CALENDAR
+                </h1>
+        <div className="calendar-page">
+          <Modal
+            openModal={isOpen}
+            closeModal={handleClose}
+            info={selectedWorkout}
+          />
+          <ModalWindowTemp 
+            addGoalOpen={addGoalOpen}
+            setAddGoalOpen={setAddGoalOpen}
+            addWorkoutOpen={addWorkoutOpen}
+            setAddWorkoutOpen={setAddWorkoutOpen}
+            selectedEvent={selectedEvent}
+            updateEventWorkouts={updateEventWorkouts}
           />
         </div>
 
@@ -512,19 +526,107 @@ export default function Calendar() {
                   ))}
                 </ul>
               )}
-              {selectedEvent && (
-                <div className="workout-panel">
-                  <h4>
-                    <b>Workouts for {selectedEvent.name}</b>
-                  </h4>
-                  {displayWorkoutsForEvent(selectedEvent)}
-                  {/* <button type="button" className="add-btn" onClick={() => setAddGoalOpen(true)}>Add Goal</button> */}
-                  <button
-                    type="button"
-                    className="add-btn"
-                    onClick={() => setAddWorkoutOpen(true)}
-                  >
-                    Add Workout
+            </aside>
+          {/* )} */}
+
+          <div className="calendar-box">
+            <CalendarApp
+              currentDate={currentDate}
+              onMonthChange={handleMonthChange}
+              selectedDay={selectedDay}
+              onDaySelect={handleDaySelect}
+              events={events}
+              dayEvents={dayEvents}
+              dayWorkouts={dayWorkouts}
+            />
+          </div>
+
+          <aside className="calendar-side-panel">
+            {selectedDay == null ? (
+              <p className="panel-empty">Select a day to see or add events.</p>
+            ) : (
+              <>
+                <div className="panel-date-heading">{selectedLabel}</div>
+
+                {dayEvents.length === 0 ? (
+                  <p className="no-events">No events yet.</p>
+                ) : (
+                  <ul className="event-list">
+                    {dayEvents.map((ev) => (
+                      <li key={ev.id} className={`${ev.type} event-item`} onClick={() => setSelectedEvent(ev)}>
+                        <span className="event-name">{ev.name}</span>
+                        {ev.start_time && (
+                          <span className="event-time">{formatTime(ev.start_time)}</span>
+                        )}
+                        {confirmDeleteId === ev.id ? (
+                          <span className="delete-confirm">
+                            Remove?{" "}
+                            <button onClick={(e) => { e.stopPropagation(); handleDeleteEvent(ev.id);}}>
+                              Yes
+                            </button>
+                            <button onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(null);}}>
+                              No
+                            </button>
+                          </span>
+                        ) : (
+                          <button
+                            className="delete-btn"
+                            onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(ev.id); }}
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+      {selectedEvent && (
+      <div className="workout-panel">
+        <h4><b>Workouts for {selectedEvent.name}</b></h4>
+        {displayWorkoutsForEvent(selectedEvent)}
+        {/* <button type="button" className="add-btn" onClick={() => setAddGoalOpen(true)}>Add Goal</button> */}
+        <button type="button" className="add-btn" onClick={() => setAddWorkoutOpen(true)}>Add Workout</button>
+      </div>
+    )}
+                <form className="add-event-form" onSubmit={handleAddEvent}>
+                  <h3>Add Event</h3>
+                  <input
+                    type="text"
+                    placeholder="Event name"
+                    value={form.name}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, name: e.target.value }))
+                    }
+                  />
+                  <p>End date</p>
+                  <input
+                    type="date"
+                    value={form.end_date}
+                    onChange={(e) => 
+                      setForm((f) => ({ ...f, end_date: e.target.value }))
+                    }
+                  />
+                  <p>Start time</p>
+                  <input
+                    type="time"
+                    value={form.start_time}
+                    placeholder = "start_time"
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, start_time: e.target.value }))
+                    }
+                  />
+                  <p>End time</p>
+                  <input
+                    type="time"
+                    value={form.end_time}
+                    placeholder = "end_time"
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, end_time: e.target.value }))
+                    }
+                  />
+                  {saveError && <p className="save-error">{saveError}</p>}
+                  <button type="submit" disabled={saving || !form.name.trim()}>
+                    {saving ? "Saving..." : "Add Event"}
                   </button>
                 </div>
               )}

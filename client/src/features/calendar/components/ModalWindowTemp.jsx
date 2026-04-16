@@ -2,7 +2,7 @@ import React, { useState, useEffect} from 'react';
 import AddGoalWindow from "./AddGoalWindow.jsx"
 import AddWorkoutWindow from "./AddWorkoutWindow.jsx";
 
-export default function ModalWindowTemp({addGoalOpen, setAddGoalOpen, addWorkoutOpen, setAddWorkoutOpen, selectedEvent}) {
+export default function ModalWindowTemp({addGoalOpen, setAddGoalOpen, addWorkoutOpen, setAddWorkoutOpen, selectedEvent, updateEventWorkouts}) {
   const [query, setQuery] = useState("");
   const [selectedLocations, setSelectedLocations] = useState(new Set());
 
@@ -39,7 +39,7 @@ export default function ModalWindowTemp({addGoalOpen, setAddGoalOpen, addWorkout
                         }}
                     >
                         {addGoalOpen && (<AddGoalWindow setAddGoalOpen={setAddGoalOpen} />)}
-                        {addWorkoutOpen && (<AddWorkoutWindow setAddWorkoutOpen={setAddWorkoutOpen} selectedEvent={selectedEvent}/>)}
+                        {addWorkoutOpen && (<AddWorkoutWindow setAddWorkoutOpen={setAddWorkoutOpen} selectedEvent={selectedEvent} updateEventWorkouts={updateEventWorkouts}/>)}
                     </div>
                 </div>
                 )}
