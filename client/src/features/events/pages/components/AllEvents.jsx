@@ -15,16 +15,18 @@ export default function CurrentEvents({ selectedEvent, onSelectEvent }) {
         setAllGroups(groups);
 
         // Fetching events for every group
-        const eventPromises = groups.map(g =>
-          fetch(`http://localhost:8080/groups/group_events/id/${g.id}`).then(res => res.json())
+        const eventPromises = groups.map((g) =>
+          fetch(`http://localhost:8080/groups/group_events/id/${g.id}`).then(
+            (res) => res.json(),
+          ),
         );
 
         const results = await Promise.all(eventPromises);
-        const now = new Date().setHours(0,0,0,0);
+        const now = new Date().setHours(0, 0, 0, 0);
 
-        const current = results.flat().filter(e => {
-          const start = new Date(e.start_date).setHours(0,0,0,0);
-          const end = new Date(e.end_date || e.start_date).setHours(0,0,0,0);
+        const current = results.flat().filter((e) => {
+          const start = new Date(e.start_date).setHours(0, 0, 0, 0);
+          const end = new Date(e.end_date || e.start_date).setHours(0, 0, 0, 0);
           return start <= now && now <= end;
         });
 
@@ -41,16 +43,20 @@ export default function CurrentEvents({ selectedEvent, onSelectEvent }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between px-2">
-        <h2 className="text-lg font-bold text-accent px-1">Current Events</h2>
+        <h2 className="text-lg font-bold text-accent px-1">
+          All Ongoing Events
+        </h2>
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" />
-          <span className="text-[10px] font-bold text-[#e2dff5]/20 uppercase">Live: {events.length}</span>
+          <span className="text-[10px] font-bold text-[#e2dff5]/20 uppercase">
+            Live: {events.length}
+          </span>
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
         {events.map((event) => {
-          const group = allGroups.find(g => g.id === event.group_id);
+          const group = allGroups.find((g) => g.id === event.group_id);
           const isMember = group?.user_ids?.includes(user.id);
           const isSelected = selectedEvent?.id === event.id;
 
@@ -60,9 +66,10 @@ export default function CurrentEvents({ selectedEvent, onSelectEvent }) {
               onClick={() => onSelectEvent(event)}
               className={`flex flex-col rounded-2xl p-5 transition-all cursor-pointer group relative overflow-hidden
                 ${isSelected ? "ring-1 ring-[#7c3aed] shadow-[0_0_20px_rgba(124,58,237,0.2)]" : "shadow-l"}
-                ${isMember
-                  ? "bg-[#16112a] border border-[#7c3aed]/30"
-                  : "bg-[#0d0a1a] border border-[#2a2245] opacity-85 hover:opacity-100"
+                ${
+                  isMember
+                    ? "bg-[#16112a] border border-[#7c3aed]/30"
+                    : "bg-[#0d0a1a] border border-[#2a2245] opacity-85 hover:opacity-100"
                 }`}
             >
               {/* Membership Ribbon */}
@@ -74,22 +81,32 @@ export default function CurrentEvents({ selectedEvent, onSelectEvent }) {
 
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className={`text-[16.5px] font-bold truncate flex-shrink ${isMember ? 'text-[#e2dff5]' : 'text-[#e2dff5]/50'}`}>
+                  <h3
+                    className={`text-[16.5px] font-bold truncate flex-shrink ${isMember ? "text-[#e2dff5]" : "text-[#e2dff5]/50"}`}
+                  >
                     {event.name}
                   </h3>
                   <p className="text-[10px] font-bold text-[#c084fc] uppercase tracking-widest mt-1">
                     {event.group_name || "Joint Task Force"}
                   </p>
-                <span className="text-[11px] text-[#e2dff5]/70 leading-relaxed italic"> Description: </span>
+                  <span className="text-[11px] text-[#e2dff5]/70 leading-relaxed italic">
+                    {" "}
+                    Description:{" "}
+                  </span>
                 </div>
               </div>
 
               {/* The little note box thingy */}
-              <div className={`rounded-xl p-4 mb-4 border ${isMember ? 'bg-black/40 border-[#7c3aed]/20' : 'bg-transparent border-dashed border-[#2a2245]'}`}>
+              <div
+                className={`rounded-xl p-4 mb-4 border ${isMember ? "bg-black/40 border-[#7c3aed]/20" : "bg-transparent border-dashed border-[#2a2245]"}`}
+              >
                 {event.goalsDetails?.length > 0 ? (
                   <ul className="list-disc list-inside space-y-1.5">
                     {event.goalsDetails.map((g, idx) => (
-                      <li key={idx} className="text-[11px] text-[#e2dff5]/70 leading-relaxed">
+                      <li
+                        key={idx}
+                        className="text-[11px] text-[#e2dff5]/70 leading-relaxed"
+                      >
                         {g.notes}
                       </li>
                     ))}

@@ -43,7 +43,7 @@ export default function Sidebar({ isOpen, onClose, user }) {
             to="/events"
             className="block py-2 px-4 hover:bg-primary rounded"
           >
-            Events
+            Group Events
           </Link>
           <Link
             to="/leaderboard"

@@ -58,8 +58,8 @@ export default function UpcomingEvents() {
           myGroups.map((g) =>
             fetch(`http://localhost:8080/groups/group_events/id/${g.id}`)
               .then((res) => (res.ok ? res.json() : []))
-              .catch(() => [])
-          )
+              .catch(() => []),
+          ),
         );
       })
       .then((results) => {
@@ -102,13 +102,17 @@ export default function UpcomingEvents() {
         <div className="flex items-center justify-between border-t border-[#2a2245]/40 pt-1 mt-1">
           <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#e2dff5]/30 tracking-tight uppercase">
             <span className="opacity-40">📅</span>
-            <span>{formatDate(event.start_date)} @ {formatTime(event.start_time)}</span>
+            <span>
+              {formatDate(event.start_date)} @ {formatTime(event.start_time)}
+            </span>
           </div>
 
-          <span className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter border transition-all
-            ${isToday
-              ? "bg-[#7c3aed]/20 text-[#c084fc] border-[#7c3aed]/40 shadow-[0_0_8px_rgba(124,58,237,0.15)]"
-              : "bg-[#2a2245] text-[#e2dff5]/30 border-transparent group-hover:text-[#e2dff5]/50"
+          <span
+            className={`px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-tighter border transition-all
+            ${
+              isToday
+                ? "bg-[#7c3aed]/20 text-[#c084fc] border-[#7c3aed]/40 shadow-[0_0_8px_rgba(124,58,237,0.15)]"
+                : "bg-[#2a2245] text-[#e2dff5]/30 border-transparent group-hover:text-[#e2dff5]/50"
             }`}
           >
             {isToday ? "Today" : `In ${days}d`}
@@ -118,21 +122,36 @@ export default function UpcomingEvents() {
         {/* Expandable Content Area ...................................bruh*/}
         <div
           className={`grid transition-all duration-300 ease-in-out ${
-            isExpanded ? "grid-rows-[1fr] opacity-100 mt-2.5 pb-1" : "grid-rows-[0fr] opacity-0"
+            isExpanded
+              ? "grid-rows-[1fr] opacity-100 mt-2.5 pb-1"
+              : "grid-rows-[0fr] opacity-0"
           }`}
         >
           <div className="overflow-hidden bg-[#0d0a1a] rounded-lg border border-[#2a2245] p-2 flex flex-col gap-2">
-            <p className="text-[8px] font-black text-[#e2dff5]/20 uppercase tracking-[0.2em] px-1">Group Goal Details</p>
+            <p className="text-[8px] font-black text-[#e2dff5]/20 uppercase tracking-[0.2em] px-1">
+              Group Goal Details
+            </p>
             <div className="flex flex-col gap-1">
               {event.goalsDetails?.length > 0 ? (
                 event.goalsDetails.map((w, idx) => (
-                  <div key={idx} className="flex justify-between items-center bg-[#16112a] p-1.5 rounded border border-[#2a2245]/50">
-                    <span className="text-[10px] font-bold text-[#e2dff5]/70">{w.name}</span>
-                    <span className="text-[9px] text-[#c084fc] font-mono">{w.reps ? `${w.reps} reps` : `${formatSeconds(w.time)} min`}</span>
+                  <div
+                    key={idx}
+                    className="flex justify-between items-center bg-[#16112a] p-1.5 rounded border border-[#2a2245]/50"
+                  >
+                    <span className="text-[10px] font-bold text-[#e2dff5]/70">
+                      {w.name}
+                    </span>
+                    <span className="text-[9px] text-[#c084fc] font-mono">
+                      {w.reps
+                        ? `${w.reps} reps`
+                        : `${formatSeconds(w.time)} min`}
+                    </span>
                   </div>
                 ))
               ) : (
-                <p className="text-[9px] text-[#e2dff5]/20 italic text-center py-1">No additional data.</p>
+                <p className="text-[9px] text-[#e2dff5]/20 italic text-center py-1">
+                  No additional data.
+                </p>
               )}
             </div>
           </div>
@@ -143,13 +162,21 @@ export default function UpcomingEvents() {
 
   return (
     <div className="flex flex-col gap-3 w-full">
-      <h2 className="text-lg font-bold text-accent px-1">Upcoming Events</h2>
+      <h2 className="text-lg font-bold text-accent px-1">
+        Your Upcoming Events
+      </h2>
 
-      {loading && <p className="text-[10px] text-[#e2dff5]/30 animate-pulse px-2 uppercase tracking-widest">Scanning frequencies...</p>}
+      {loading && (
+        <p className="text-[10px] text-[#e2dff5]/30 animate-pulse px-2 uppercase tracking-widest">
+          Scanning frequencies...
+        </p>
+      )}
 
       {!loading && allEvents.length === 0 && (
         <div className="p-6 border border-dashed border-[#2a2245] rounded-xl text-center">
-          <p className="text-[10px] text-[#e2dff5]/20 font-bold uppercase tracking-[0.2em]">No Data</p>
+          <p className="text-[10px] text-[#e2dff5]/20 font-bold uppercase tracking-[0.2em]">
+            No Data
+          </p>
         </div>
       )}
 
@@ -157,7 +184,9 @@ export default function UpcomingEvents() {
         {within7.map(renderCard)}
         {beyond7.length > 0 && (
           <div className="mt-4 flex flex-col gap-2">
-            <p className="text-[10px] font-black text-[#e2dff5]/20 uppercase tracking-[0.4em] px-2 mb-1">Future Group Events</p>
+            <p className="text-[10px] font-black text-[#e2dff5]/20 uppercase tracking-[0.4em] px-2 mb-1">
+              Future Group Events
+            </p>
             {beyond7.map(renderCard)}
           </div>
         )}
