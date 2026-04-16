@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 export default function Profile() {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
 
   const { id } = useParams();
   const [userData, setUserData] = useState();
@@ -21,14 +21,19 @@ export default function Profile() {
     navigate("/login");
   };
 
-  // This will be the useEffect to fetch user data from express API.
   useEffect(() => {
-    fetch(`http://localhost:8080/users/id/${user.id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setUserData(data);
-      });
-  }, [user]);
+    const syncUser = async () => {
+      if (user?.id) {
+        const data = await refreshUser();
+
+        if (data) {
+          setUserData(data);
+        }
+      }
+    };
+
+    syncUser();
+  }, [user?.id]);
 
   if (!userData) return <h1>Loading...</h1>;
   return (
