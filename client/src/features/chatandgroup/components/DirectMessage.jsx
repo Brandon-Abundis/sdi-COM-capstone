@@ -5,11 +5,16 @@ import MessageBubble from "./MessageBubble";
 import ChallengeCard from "./ChallengeCard";
 import Avatar from "../../profile/Components/Avatar";
 
+/** Converts an ISO timestamp string into a human-readable "Mon, 3:45 PM" format */
 function formatTimestamp(iso) {
   const d = new Date(iso);
   return d.toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", hour12: true });
 }
 
+/**
+ * Returns a countdown label relative to today:
+ *   "Today", "In Nd", or "Nd ago"
+ */
 function getDaysUntil(dateStr) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -21,6 +26,10 @@ function getDaysUntil(dateStr) {
   return `In ${diff}d`;
 }
 
+/**
+ * Tries to parse a message's text as JSON.
+ * Returns the parsed object if it has `__challenge__: true`, otherwise null.
+ */
 function parseChallenge(text) {
   try {
     const data = JSON.parse(text);
@@ -30,6 +39,11 @@ function parseChallenge(text) {
   }
 }
 
+/**
+ * ChallengeModal (DM version) — Same form as the group variant but sends the
+ * challenge message as a direct message (`to_user_id`) rather than to a group.
+ * No group event is created — the challenge lives only in the DM thread.
+ */
 function ChallengeModal({ dmUser, user, onClose, onSent }) {
   const [exercise, setExercise] = useState("");
   const [goal, setGoal] = useState("");
@@ -145,15 +159,24 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
   );
 }
 
+/**
+ * DirectMessage — One-on-one chat panel between the logged-in user and `dmUser`.
+ * Loads the full user profile for the other party (for avatar rendering), fetches
+ * the conversation history, and auto-scrolls to the latest message.
+ * Supports plain text messages and challenge cards just like GroupChat.
+ * Clicking the header or the empty-state link navigates to the other user's profile.
+ */
 export default function DirectMessage({ dmUser }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [showChallenge, setShowChallenge] = useState(false);
+  // Full profile of the other user — needed to resolve their avatar
   const [dmUserFull, setDmUserFull] = useState(null);
   const bottomRef = useRef(null);
 
+  // Fetch the full profile of the other user so their Avatar renders correctly
   useEffect(() => {
     if (!dmUser?.user_id) return;
     fetch(`http://localhost:8080/users/id/${dmUser.user_id}`)
@@ -162,6 +185,7 @@ export default function DirectMessage({ dmUser }) {
       .catch(() => {});
   }, [dmUser?.user_id]);
 
+  // Load the DM conversation history whenever either participant changes
   useEffect(() => {
     if (!user?.id || !dmUser?.user_id) return;
     fetch(`http://localhost:8080/messages/dm/${user.id}/${dmUser.user_id}`)
@@ -170,10 +194,12 @@ export default function DirectMessage({ dmUser }) {
       .catch(() => {});
   }, [user?.id, dmUser?.user_id]);
 
+  // Scroll to the newest message whenever the list updates
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  /** Posts a new plain-text DM and appends it to the local list */
   async function handleSend(e) {
     e.preventDefault();
     if (!input.trim()) return;
@@ -189,10 +215,18 @@ export default function DirectMessage({ dmUser }) {
     setInput("");
   }
 
+  /** Appends a freshly-sent challenge message to the local message list */
   function handleChallengeSent(msg) {
     setMessages((prev) => [...prev, msg]);
   }
 
+  /**
+   * Decides which component to render for a single DM message:
+   *   - ChallengeCard if the text is a challenge JSON blob
+   *   - MessageBubble for plain text
+   * Resolves the correct avatar profile: own messages use the auth user,
+   * the other side uses the fetched dmUserFull.
+   */
   function renderMessage(msg) {
     const isOwn = msg.user_id === user?.id;
     const timestamp = formatTimestamp(msg.created_at);

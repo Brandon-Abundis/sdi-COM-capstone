@@ -1,10 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * ChallengeCard — Rich message card rendered in place of a plain MessageBubble
+ * when a message contains a `__challenge__` JSON payload.
+ *
+ * Displays the exercise, goal, date, time, and a countdown badge.
+ * Recipients (isOwn === false) see Accept / Decline buttons that update local
+ * status UI — no backend persistence for the response yet.
+ *
+ * Props:
+ *   challenge — { from_user_id, from_name, from_avatar, timestamp,
+ *                 exercise, goal, date, time, time_until, status }
+ *   isOwn     — hides the action buttons when true (it's your own challenge)
+ */
 export default function ChallengeCard({ challenge, isOwn }) {
-  const [status, setStatus] = useState(challenge.status); // 'pending' | 'accepted' | 'declined'
+  // Local UI-only status: 'pending' | 'accepted' | 'declined'
+  const [status, setStatus] = useState(challenge.status);
   const navigate = useNavigate();
 
+  // Border color changes with status to give visual feedback
   const statusStyles = {
     pending:  "border-[#7c3aed]",
     accepted: "border-[#34d399]",

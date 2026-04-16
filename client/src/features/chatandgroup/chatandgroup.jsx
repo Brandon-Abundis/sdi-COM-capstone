@@ -4,19 +4,28 @@ import GroupChat from "./components/GroupChat";
 import GroupCalendar from "./components/GroupCalendar";
 import DirectMessage from "./components/DirectMessage";
 
+// Default blank state for the global event form fields
 const EMPTY_GLOBAL = { title: "", description: "", start_date: "", end_date: "", start_time: "", end_time: "" };
 
+/**
+ * GlobalEventModal — Admin-only modal for broadcasting a site-wide event.
+ * POSTs to /global/create and shows a success message before auto-closing.
+ * Only rendered when `isAdmin` is true in the parent ChatAndGroup component.
+ */
 function GlobalEventModal({ onClose }) {
   const [form, setForm] = useState(EMPTY_GLOBAL);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  // Read the logged-in user from localStorage to attach their id to the request
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
+  /** Generic field updater — keeps the rest of the form untouched via spread */
   function set(field, val) {
     setForm((prev) => ({ ...prev, [field]: val }));
   }
 
+  /** Validates required fields, POSTs the event, then closes after 1.2 s on success */
   async function handleSubmit() {
     if (!form.title.trim() || !form.start_date) {
       setError("Title and start date are required.");
@@ -160,13 +169,20 @@ function GlobalEventModal({ onClose }) {
   );
 }
 
+/**
+ * InviteModal — Modal that lets a group member invite other users to the selected group.
+ * Fetches all users on mount, splits them into current members vs. non-members,
+ * and allows searching non-members by name before sending an invite PATCH request.
+ */
 function InviteModal({ group, onClose }) {
   const [allUsers, setAllUsers] = useState([]);
   const [members, setMembers] = useState([]);
+  // Tracks which user IDs have already been invited this session (local optimistic state)
   const [invitedIds, setInvitedIds] = useState(new Set());
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // On mount (or group change), load all users and separate the current group members
   useEffect(() => {
     fetch("http://localhost:8080/users/")
       .then((res) => (res.ok ? res.json() : []))
@@ -178,8 +194,10 @@ function InviteModal({ group, onClose }) {
       .finally(() => setLoading(false));
   }, [group.id]);
 
+  // Set for O(1) membership lookups
   const memberSet = new Set(group.user_ids ?? []);
 
+  // Filter out existing members and apply the search query
   const nonMembers = allUsers.filter(
     (u) =>
       !memberSet.has(u.id) &&
@@ -188,6 +206,7 @@ function InviteModal({ group, onClose }) {
         : true)
   );
 
+  /** Sends the invite PATCH and marks the user as invited locally */
   async function handleInvite(userId) {
     await fetch(`http://localhost:8080/groups/${group.id}/invite`, {
       method: "PATCH",
@@ -290,15 +309,26 @@ function InviteModal({ group, onClose }) {
   );
 }
 
+/**
+ * ChatAndGroup — Top-level page for all real-time communication features.
+ * Renders a GroupSidebar on the left and conditionally shows:
+ *   - GroupChat or GroupCalendar (tabbed) when a group is selected
+ *   - DirectMessage when a DM conversation is selected
+ *   - InviteModal when the "Invite Members" button is clicked (groups only)
+ *   - GlobalEventModal when an admin clicks "Global Event"
+ */
 export default function ChatAndGroup() {
   const [selectedItem, setSelectedItem] = useState(null);
+  // Controls whether the group panel shows "chat" or "calendar"
   const [groupTab, setGroupTab] = useState("chat");
   const [showInvite, setShowInvite] = useState(false);
   const [showGlobalEvent, setShowGlobalEvent] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+  // Gate the "Global Event" button to admins only
   const isAdmin = user.is_admin === true;
 
+  /** Called by GroupSidebar when the user picks a group or DM — resets tab to chat */
   function handleSelect(item) {
     setSelectedItem(item);
     setGroupTab("chat");

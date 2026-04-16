@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+/** Returns the integer number of days from today to the given date string (negative = past) */
 function getDaysUntil(dateStr) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -8,6 +9,7 @@ function getDaysUntil(dateStr) {
   return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
 }
 
+// Left-border accent colors keyed by event type for quick visual scanning
 const typeColors = {
   cardio:   "border-[#818cf8] text-[#818cf8]",
   strength: "border-[#c084fc] text-[#c084fc]",
@@ -16,14 +18,22 @@ const typeColors = {
 
 const EMPTY_FORM = { name: "", start_date: "", end_date: "", start_time: "", end_time: "" };
 
+/**
+ * CreateGroupEventModal — Form for group admins (or site admins) to schedule a new
+ * group event. POSTs to /groups/group_events and calls `onCreated` with the new
+ * event so it appears in the calendar list without a full page refresh.
+ */
 function CreateGroupEventModal({ group, onClose, onCreated }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  /** Generic field updater — patches a single field while keeping the rest intact */
   function set(field, val) {
     setForm((prev) => ({ ...prev, [field]: val }));
   }
 
+  /** Validates required fields then POSTs; calls onCreated on success */
   async function handleSubmit() {
     if (!form.name.trim() || !form.start_date) {
       setError("Event name and start date are required.");
@@ -152,24 +162,38 @@ function CreateGroupEventModal({ group, onClose, onCreated }) {
   );
 }
 
+/**
+ * GroupCalendar — Calendar tab for a group chat, showing all group events.
+ * Events are sorted by date and bucketed into three visual sections:
+ *   - Upcoming (within the next 7 days)
+ *   - Further Out (> 7 days away)
+ *   - Past (already occurred, rendered at reduced opacity)
+ *
+ * The "+ Create Event" button is shown only to group admins and site admins.
+ */
 export default function GroupCalendar({ group }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
+  // True if the current user is in the group's admin list
   const isGroupAdmin = (group?.admin_ids ?? []).includes(user.id);
+  // Either group admin or site-wide admin can create events
   const canCreate = isGroupAdmin || user.is_admin === true;
 
+  // Fetch all events for this group whenever the active group changes
   useEffect(() => {
     if (!group?.id) return;
     fetch(`http://localhost:8080/groups/group_events/id/${group.id}`)
       .then((res) => (res.ok ? res.json() : []))
+      // API may return a single object or an array — normalise to array
       .then((data) => setEvents(Array.isArray(data) ? data : [data].filter(Boolean)))
       .catch(() => setEvents([]))
       .finally(() => setLoading(false));
   }, [group?.id]);
 
+  /** Appends a newly-created event to the local list without a refetch */
   function handleCreated(newEvent) {
     setEvents((prev) => [...prev, newEvent]);
   }
