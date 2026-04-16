@@ -7,6 +7,8 @@
         const [selectedLocations, setSelectedLocations] = useState(new Set());
         const [WorkoutLibrary, setWorkoutLibrary] = useState([])
         const [hasRun, setHasRun] = useState(false);
+    const [saveError, setSaveError] = useState("");
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
     
@@ -37,19 +39,16 @@
     };
 
     async function pushWorkoutToEvent(eventIDhere) {
-        // need array of workouts
-        e.preventDefault();
-            const workoutObj = {
-            workouts_list: [...selectedLocations ]
+        const workoutObj = {
+            workouts_list: [...selectedLocations]
         };
-        // setSaveError("");
-        // if (!form.name.trim() || !selectedDate || !user?.id) return;
-        //     setSaving(true);
+        setSaveError("");
+        setSaving(true);
         try {
-            const res = await fetch("http://localhost:8080/users/user_events/id/:id", {
+            const res = await fetch(`http://localhost:8080/users/user_events/id/${eventIDhere}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(eventObject),
+                body: JSON.stringify(workoutObj),
             });
             if (res.ok) {
                 const newEvent = await res.json();
@@ -140,7 +139,7 @@
                         ))}
                 </div> */}
                 <button 
-                    onClick={handleFinish(eventIDhere)}
+                    onClick={() => handleFinish(selectedEvent?.id)}
                     disabled={selectedLocations.size === 0}
                     style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer', border: "2px solid black" }}
                 >
