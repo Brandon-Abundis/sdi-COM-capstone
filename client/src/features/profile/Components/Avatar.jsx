@@ -21,7 +21,7 @@ export default function Avatar({ userData }) {
   //   );
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center mr-1.5">
+    <div className="relative w-full h-full flex items-center justify-center">
       {!savedAvatar && (
         <span className="text-sm font-bold text-[#c084fc] leading-none">
           {initials}
@@ -30,7 +30,7 @@ export default function Avatar({ userData }) {
 
       <div className="relative w-full h-full flex items-center justify-center ">
         {savedAvatar && (
-          <div className="absolute inset-0 scale-150 transition-transform">
+          <div className="absolute inset-0 scale-100 transition-transform">
             {savedAvatar.back && (
               <img
                 src={savedAvatar.back}

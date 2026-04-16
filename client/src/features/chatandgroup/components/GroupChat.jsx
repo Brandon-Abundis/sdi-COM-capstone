@@ -279,7 +279,9 @@ export default function GroupChat({ group }) {
           challenge={{
             from_user_id: msg.user_id,
             from_name: msgUser.username || msg.username || `${msg.first_name} ${msg.last_name}`,
-            from_avatar: `https://i.pravatar.cc/40?u=${msg.user_id}`,
+            from_first_name: msgUser.first_name || msg.first_name || "?",
+            from_last_name: msgUser.last_name || msg.last_name || "?",
+            from_profile: msgUser.profile ?? null,
             timestamp,
             exercise: challenge.exercise ?? "",
             goal: challenge.goal ?? "",

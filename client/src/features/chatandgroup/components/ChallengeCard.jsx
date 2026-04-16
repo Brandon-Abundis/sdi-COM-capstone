@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Avatar from "../../profile/Components/Avatar";
 
 /**
  * ChallengeCard — Rich message card rendered in place of a plain MessageBubble
@@ -34,12 +35,12 @@ export default function ChallengeCard({ challenge, isOwn }) {
 
   return (
     <div className={`flex gap-3 ${isOwn ? "flex-row-reverse" : "flex-row"}`}>
-      <img
-        src={challenge.from_avatar}
-        alt={challenge.from_name}
-        className="w-8 h-8 rounded-full object-cover cursor-pointer flex-shrink-0 border-2 border-[#2a2245]"
+      <div
+        className="w-9 h-9 rounded-full overflow-hidden bg-[#2a2245] cursor-pointer flex-shrink-0 hover:ring-2 hover:ring-primary transition-all flex justify-center items-center pt-2"
         onClick={() => navigate(`/profile/${challenge.from_user_id}`)}
-      />
+      >
+        <Avatar userData={{ first_name: challenge.from_first_name, last_name: challenge.from_last_name, profile: challenge.from_profile }} />
+      </div>
       <div className={`max-w-[80%] ${isOwn ? "items-end" : "items-start"} flex flex-col gap-1`}>
         <div className={`flex items-baseline gap-2 ${isOwn ? "flex-row-reverse" : "flex-row"}`}>
           <span
