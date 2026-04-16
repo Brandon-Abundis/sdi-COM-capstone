@@ -47,7 +47,7 @@ export default function ProgressWidget() {
       }
     };
     loadProgress();
-  }, [user?.id]);
+  }, [user?.id, user?.xp]);
 
   if (loading)
     return <div className="card bg-base-200 p-4">Loading progress...</div>;
