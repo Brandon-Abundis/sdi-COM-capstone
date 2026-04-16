@@ -60,7 +60,7 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
-  height: 70vh;
+  height: 65vh;
 }
 
 /* Day-name header row */
@@ -259,12 +259,12 @@
   transition: border-color 0.15s;
 }
 
-.event-list li .event-name {
-  flex: 1;
+.workout-panel.workout-side {
+  font-style: italic;
 }
 
-.event-list li.personal-workout {
-  border-left: 4px solid #3b82f6;
+.event-list li .event-name {
+  flex: 1;
 }
 
 .event-list li.group-workout {
@@ -438,8 +438,6 @@
   color: #f87171;
   margin: 0;
 }
-
-
 /* -------------------------TEST-------------------------------- */
 
 .event-list.upcoming-events li.group-workout {
@@ -464,3 +462,28 @@
 
 
 /* -------------------------TEST-------------------------------- */
+/* ── Modal BG ──────────────────────────────────────── */
+
+/* .modal-window-bg {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  backgroundColor: 'rgba(0, 0, 0, 0.4)',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 9999
+}
+
+.modal-window-main {
+  backgroundColor: '#16112a',
+  padding: '16px',
+  borderRadius: '16px',
+  border: '1px solid #1e1838',
+  boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+  maxWidth: '600px',
+  width: '90%',
+  fontFamily: 'sans-serif'
+} */

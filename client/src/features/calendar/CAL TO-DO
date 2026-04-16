@@ -81,6 +81,13 @@ Ensure that individual workouts are routed to their workout on the workout page.
 
  - Ensure that the group events are all handled well -- DO SOLO ----DONE -->
 
+add event, make goals become completed workouts. 
+
+move goals to side panel that can be switched, then show list of active goals
+
+see when goals become complete, then link them to the calendar in their own unit. This will be an event labeled "Completed Goal!" or "Completed # Goals!" Color will be green. This will contain the Active Goals that were completed on a specific day. 
+
+
 
 
 ----- Minor changes ----------
@@ -100,4 +107,40 @@ click on workouts to add like excel.
     -Make graph where you can click then add to a workout. easy B)
 (work with tafari on this one he will be well versed and cool)
 
-click on 
+Work with adding goals from dashboard with Kobe 
+
+WORK ON EVENTS WITH JAMES
+
+Stuff needed to be done.
+
+Ensure goals populate on calendar.
+
+Ensure tracks completed workouts.
+
+Ensure tracks when all workouts completed.
+
+MAKE BUTTONS ADD GOALS AND ADD WORKOUTS.
+
+code annotations.
+
+
+Idea:
+Create window that corresponds to a list of workouts and list of goals. Pull all, click, then populate.
+
+Auto populate goals into calendar, and make that priority number 1
+
+
+
+FULL TO DO --------------------
+
+Add workout button should Add Workout to corresponding Event. Should also be in sync with event's existing workout list.
+
+Add Goal should be switchable in Upcoming Events, and should display tracked goals.
+
+When goal is completed, should get Goal and populate with what was given
+
+see when goals become complete, then link them to the calendar in their own unit. This will be an event labeled "Completed Goal!" or "Completed # Goals!" Color will be green. This will contain the Active Goals that were completed on a specific day. 
+
+
+TELL BACKEND to see if they can add a "completed_at" date or time for user_goals, & for group goals a "completed" boolean and a "completed_at" date or time.
+
