@@ -100,7 +100,7 @@ export default function EventsWidget() {
           <p className="text-sm font-semibold text-secondary truncate">
             {event.name}
           </p>
-          <p className="text-xs text-base-content/50">
+          <p className="text-xs text-base-content">
             {formatDate(event.start_date)}
             {event.start_time && ` · ${formatTime(event.start_time)}`}
             {event.end_time && ` – ${formatTime(event.end_time)}`}
@@ -112,7 +112,7 @@ export default function EventsWidget() {
           )}
         </div>
         <span
-          className={`text-[10px] font-bold shrink-0 px-2 py-1 rounded-md border ${
+          className={`text-xs font-bold shrink-0 px-2 py-1 rounded-md border ${
             days === 0
               ? "bg-primary text-primary-content border-transparent"
               : "bg-base-300 text-secondary border-primary"
@@ -136,7 +136,7 @@ export default function EventsWidget() {
 
       {todayEvents.length > 0 && (
         <div className="mb-2">
-          <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3 mb-1">
+          <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3">
             Today
           </p>
           {todayEvents.map(renderEventRow)}
@@ -146,7 +146,7 @@ export default function EventsWidget() {
       {upcomingEvents.length > 0 && (
         <div>
           {todayEvents.length > 0 && (
-            <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3 mb-1 mt-2">
+            <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3 mt-2">
               Upcoming
             </p>
           )}
