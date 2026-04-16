@@ -52,25 +52,10 @@ export default function EventsWidget() {
   }, [user?.id]);
 
   if (loading)
-    return (
-      <div className="card bg-base-200 p-4">
-        <h3 className="text-lg font-bold text-accent flex items-center gap-1.5 mb-4">
-          <span className="inline-block w-0.75 h-4 rounded-full bg-yellow-400/70 mr-1" />{" "}
-          Events
-        </h3>
-        <p className="text-sm text-base-content/50">Loading events...</p>
-      </div>
-    );
-
+    return <div className="card bg-base-200 p-4">Loading events...</div>;
   if (error)
     return (
-      <div className="card bg-base-200 p-4">
-        <h3 className="text-lg font-bold text-accent flex items-center gap-1.5 mb-4">
-          <span className="inline-block w-0.75 h-4 rounded-full bg-yellow-400/70 mr-1" />{" "}
-          Events
-        </h3>
-        <p className="text-sm text-error">Error: {error}</p>
-      </div>
+      <div className="card bg-base-200 p-4 text-error">Error: {error}</div>
     );
 
   const workoutMap = workouts.reduce((map, w) => {
@@ -143,9 +128,20 @@ export default function EventsWidget() {
         </div>
       )}
 
+      {todayEvents.length === 0 && (
+        <div className="mb-2">
+          <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3">
+            Today
+          </p>
+          <p className="text-xs text-base-content px-3 mt-2">
+            No events scheduled for today.
+          </p>
+        </div>
+      )}
+
       {upcomingEvents.length > 0 && (
         <div>
-          {todayEvents.length > 0 && (
+          {upcomingEvents.length > 0 && (
             <p className="text-sm font-bold text-base-content/70 uppercase tracking-wider px-3 mt-2">
               Upcoming
             </p>
