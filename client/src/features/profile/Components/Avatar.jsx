@@ -21,7 +21,7 @@ export default function Avatar({ userData }) {
   //   );
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center mr-1.5">
+    <div className="relative w-full h-full flex items-center justify-center">
       {!savedAvatar && (
         <span className="text-sm font-bold text-[#c084fc] leading-none">
           {initials}
