@@ -17,6 +17,8 @@
     .catch(() => setWorkoutLibrary([]));
     }, [user?.id]);
 
+
+
     // console.log(Object.keys(selectedEvent));
 
     useEffect(() => {
@@ -34,11 +36,40 @@
         setSelectedLocations(next);
     };
 
-    const handleFinish = () => {
+    async function pushWorkoutToEvent(eventIDhere) {
+        // need array of workouts
+        e.preventDefault();
+            const workoutObj = {
+            workouts_list: [...selectedLocations ]
+        };
+        // setSaveError("");
+        // if (!form.name.trim() || !selectedDate || !user?.id) return;
+        //     setSaving(true);
+        try {
+            const res = await fetch("http://localhost:8080/users/user_events/id/:id", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(eventObject),
+            });
+            if (res.ok) {
+                const newEvent = await res.json();
+            } else {
+                const body = await res.json().catch(() => ({}));
+                // setSaveError(body.message || `Error ${res.status}`);
+            }
+            } catch {
+                setSaveError("Could not reach the server.");
+            } finally {
+            setSaving(false);
+        }
+    }
+
+    const handleFinish = (eventIDhere) => {
         const finalEvent = WorkoutLibrary.filter(loc => selectedLocations.has(loc.id));
         setAddWorkoutOpen(false)
         setHasRun(false)
-        // console.log("Event Compiled:", finalEvent);
+        pushWorkoutToEvent(eventIDhere)
+        
     };
 
     return (
@@ -109,7 +140,7 @@
                         ))}
                 </div> */}
                 <button 
-                    onClick={handleFinish}
+                    onClick={handleFinish(eventIDhere)}
                     disabled={selectedLocations.size === 0}
                     style={{ marginTop: '20px', padding: '10px 20px', cursor: 'pointer', border: "2px solid black" }}
                 >
