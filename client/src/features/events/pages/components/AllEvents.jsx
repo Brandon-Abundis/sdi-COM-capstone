@@ -89,7 +89,7 @@ export default function CurrentEvents({ selectedEvent, onSelectEvent }) {
                 {event.goalsDetails?.length > 0 ? (
                   <ul className="list-disc list-inside space-y-1.5">
                     {event.goalsDetails.map((g, idx) => (
-                      <li key={idx} className="text-[11px] text-[#e2dff5]/70 leading-relaxed italic">
+                      <li key={idx} className="text-[11px] text-[#e2dff5]/70 leading-relaxed">
                         {g.notes}
                       </li>
                     ))}

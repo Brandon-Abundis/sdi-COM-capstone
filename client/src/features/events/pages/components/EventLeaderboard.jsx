@@ -52,7 +52,7 @@ export default function EventLeaderboard({ selectedEvent }) {
   }, [selectedEvent?.id]);
 
   if (!selectedEvent) return (
-    <div className="flex flex-col gap-3 h-full justify-center items-center opacity-30 border-2 border-dashed border-[#2a2245] rounded-3xl p-10 mx-2">
+    <div className="flex flex-col gap-3 h-full  items-center opacity-30 border-2 border-dashed border-[#2a2245] rounded-3xl p-10 mx-2">
       <span className="text-4xl">📊</span>
       <p className="text-[11px] font-black uppercase tracking-[0.3em] text-center">
         Select an Active Group Event <br/> to display standings
@@ -64,7 +64,7 @@ export default function EventLeaderboard({ selectedEvent }) {
     <div className="flex flex-col gap-5 px-2">
       {/* Header - Scaled Up */}
       <div className="px-1">
-        <h2 className="text-[15px] font-black text-[#c084fc] uppercase tracking-[0.3em]">Active Leaderboard</h2>
+        <h2 className="text-lg font-bold text-accent px-1">Active Leaderboard</h2>
         <p className="text-[14px]  text-[#e2dff5]/40  tracking-tighter mt-1">
           {selectedEvent.group_name} : <span className="text-[#c084fc]/80 ">{selectedEvent.name}</span>
         </p>
@@ -99,12 +99,15 @@ export default function EventLeaderboard({ selectedEvent }) {
 
                   {/* Avatar Container - fix the thingy ?????????*/}
                   <div className="w-10 h-10 relative rounded-full overflow-hidden border-2 border-[#2a2245] bg-black/40 flex-shrink-0 group-hover:border-[#7c3aed]/50 transition-colors">
-                    <Avatar userData={entry} />
+                    {/* Shifting the component down */}
+                    <div className="relative top-[6px] scale-110">
+                      <Avatar userData={entry} />
+                    </div>
                   </div>
 
                   {/* User Card modified*/}
                   <div className="flex flex-col">
-                    <p className="text-[14px] font-black text-[#e2dff5] group-hover:text-white leading-tight tracking-tight">
+                    <p className="text-[14px] font-bold text-[#e2dff5] group-hover:text-white leading-tight tracking-tight">
                       {entry.username}
                     </p>
                     <p className="text-[10px] font-bold text-[#e2dff5]/30 uppercase tracking-widest mt-0.5">
