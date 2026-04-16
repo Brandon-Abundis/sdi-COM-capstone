@@ -246,7 +246,7 @@ export default function Leaderboard() {
                     }`}
                   >
                     {/* Left section: Rank, Avatar, Name */}
-                    <div className="flex items-center gap-3 min-w-0">
+                    <div className="flex items-center gap-2 min-w-0">
                       <span
                         className={`text-lg font-bold w-5 flex-shrink-0 ${rank <= 3 ? "text-yellow-400" : "text-gray-400"}`}
                       >
@@ -256,24 +256,35 @@ export default function Leaderboard() {
                         className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
                         onClick={() => navigate(`/profile/${merge.id}`)}
                       >
-                        <Avatar userData={{ first_name: merge.first_name, last_name: merge.last_name, profile: merge.profile }} />
+                        <Avatar
+                          userData={{
+                            first_name: merge.first_name,
+                            last_name: merge.last_name,
+                            profile: merge.profile,
+                          }}
+                        />
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <span className="text-[10px] uppercase text-base-content/60 leading-none">{merge.rank}</span>
+                        <span className="text-[10px] uppercase text-base-content/60 leading-none">
+                          {merge.rank}
+                        </span>
                         <span className="font-semibold text-sm whitespace-nowrap">
                           {merge.first_name} {merge.last_name}
                         </span>
-                        <span className="text-sm text-base-content/60">
+                        <span className="text-xs text-base-content/60 truncate block max-w-32">
                           {merge.username}
                         </span>
                       </div>
                     </div>
 
                     {/* Right section: Score and Trophy */}
-                    <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                    <div className="flex items-center gap-1">
                       <span>{trophy}</span>
                       <span className="text-yellow-400 font-mono font-bold">
                         {((merge.score / 20) * 1.27).toFixed(0)}
+                        <span className="text-[10px] text-gray-400 ml-1 font-mono font-bold uppercase">
+                          /100
+                        </span>
                       </span>
                     </div>
                   </div>
@@ -314,7 +325,7 @@ export default function Leaderboard() {
                           : "border-1 border-transparent"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <span
                           className={`text-lg font-bold w-5 ${isTopThree ? "text-yellow-400" : "text-gray-500"}`}
                         >
@@ -324,7 +335,13 @@ export default function Leaderboard() {
                           className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
                           onClick={() => navigate(`/profile/${entry.user_id}`)}
                         >
-                          <Avatar userData={{ first_name: entry.first_name, last_name: entry.last_name, profile: entry.profile }} />
+                          <Avatar
+                            userData={{
+                              first_name: entry.first_name,
+                              last_name: entry.last_name,
+                              profile: entry.profile,
+                            }}
+                          />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase text-base-content/60 leading-none">
@@ -333,14 +350,14 @@ export default function Leaderboard() {
                           <span className="font-semibold text-sm">
                             {entry.first_name} {entry.last_name}
                           </span>
-                          <span className="text-sm text-base-content/60">
+                          <span className="text-xs text-base-content/60 truncate block max-w-37">
                             {entry.username}
                           </span>
                         </div>
                       </div>
 
                       {/* Time & Trophy */}
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         <span>{trophy}</span>
                         <span className="text-yellow-400 font-mono font-bold">
                           {formatTime(entry.time)}{" "}
@@ -385,7 +402,7 @@ export default function Leaderboard() {
                           : "border-1 border-transparent"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <span
                           className={`text-lg font-bold w-5 ${isTopThree ? "text-yellow-400" : "text-gray-500"}`}
                         >
@@ -395,7 +412,13 @@ export default function Leaderboard() {
                           className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
                           onClick={() => navigate(`/profile/${entry.user_id}`)}
                         >
-                          <Avatar userData={{ first_name: entry.first_name, last_name: entry.last_name, profile: entry.profile }} />
+                          <Avatar
+                            userData={{
+                              first_name: entry.first_name,
+                              last_name: entry.last_name,
+                              profile: entry.profile,
+                            }}
+                          />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase text-base-content/60 leading-none">
@@ -404,12 +427,12 @@ export default function Leaderboard() {
                           <span className="font-semibold text-sm">
                             {entry.first_name} {entry.last_name}
                           </span>
-                          <span className="text-sm text-base-content/60">
+                          <span className="text-xs text-base-content/60 truncate block max-w-42">
                             {entry.username}
                           </span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         <span>{trophy}</span>
                         <span className="text-yellow-400 font-mono font-bold">
                           {entry.reps}{" "}
@@ -453,7 +476,7 @@ export default function Leaderboard() {
                           : "border-1 border-transparent"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <span
                           className={`text-lg font-bold w-5 ${isTopThree ? "text-yellow-400" : "text-gray-500"}`}
                         >
@@ -463,7 +486,13 @@ export default function Leaderboard() {
                           className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
                           onClick={() => navigate(`/profile/${entry.user_id}`)}
                         >
-                          <Avatar userData={{ first_name: entry.first_name, last_name: entry.last_name, profile: entry.profile }} />
+                          <Avatar
+                            userData={{
+                              first_name: entry.first_name,
+                              last_name: entry.last_name,
+                              profile: entry.profile,
+                            }}
+                          />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase text-base-content/60 leading-none">
@@ -472,13 +501,13 @@ export default function Leaderboard() {
                           <span className="font-semibold text-sm">
                             {entry.first_name} {entry.last_name}
                           </span>
-                          <span className="text-sm text-base-content/60">
+                          <span className="text-xs text-base-content/60 truncate block max-w-42">
                             {entry.username}
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         <span>{trophy}</span>
                         <span className="text-yellow-400 font-mono font-bold">
                           {entry.reps}{" "}
@@ -496,7 +525,7 @@ export default function Leaderboard() {
           {/* --------------------------------------------------------------------------------- */}
           <div className="w-96 bg-base-200 rounded-xl shadow-2xl p-4 text-white">
             <h1 className="text-xl text-secondary font-bold text-center mb-1 pb-2 uppercase tracking-tight">
-              Most PT Minute this Week
+              Most PT Minutes this Week
             </h1>
             <div className="space-y-3">
               {applyFilters(merged)
@@ -524,7 +553,7 @@ export default function Leaderboard() {
                           : "border-1 border-transparent"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
                         <span
                           className={`text-lg font-bold w-5 ${isTopThree ? "text-yellow-400" : "text-gray-500"}`}
                         >
@@ -534,7 +563,13 @@ export default function Leaderboard() {
                           className="relative w-9 h-9 rounded-full overflow-hidden bg-base-200 flex-shrink-0 cursor-pointer hover:ring-2 hover:ring-primary transition-all justify-center items-center pt-2"
                           onClick={() => navigate(`/profile/${entry.id}`)}
                         >
-                          <Avatar userData={{ first_name: entry.first_name, last_name: entry.last_name, profile: entry.profile }} />
+                          <Avatar
+                            userData={{
+                              first_name: entry.first_name,
+                              last_name: entry.last_name,
+                              profile: entry.profile,
+                            }}
+                          />
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[10px] uppercase text-base-content/60 leading-none">
@@ -543,13 +578,13 @@ export default function Leaderboard() {
                           <span className="font-semibold text-sm">
                             {entry.first_name} {entry.last_name}
                           </span>
-                          <span className="text-sm text-base-content/60">
+                          <span className="text-xs text-base-content/60 truncate block max-w-33">
                             {entry.username}
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1">
                         <span>{trophy}</span>
                         <span className="text-yellow-400 font-mono font-bold">
                           {(entry.score / 7).toFixed(2)}{" "}
