@@ -4,11 +4,16 @@ import GroupMemberList from "./GroupMemberList";
 import MessageBubble from "./MessageBubble";
 import ChallengeCard from "./ChallengeCard";
 
+/** Converts an ISO timestamp string into a human-readable "Mon, 3:45 PM" format */
 function formatTimestamp(iso) {
   const d = new Date(iso);
   return d.toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", hour12: true });
 }
 
+/**
+ * Returns a countdown label relative to today:
+ *   "Today", "In Nd", or "Nd ago"
+ */
 function getDaysUntil(dateStr) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -20,6 +25,14 @@ function getDaysUntil(dateStr) {
   return `In ${diff}d`;
 }
 
+/**
+ * ChallengeModal — Form for issuing a fitness challenge within a group chat.
+ * On submit it:
+ *   1. Optionally creates a group event on the backend (best-effort, non-blocking).
+ *   2. Sends a regular chat message whose text is a JSON blob flagged with
+ *      `__challenge__: true` so the renderer knows to show a ChallengeCard instead
+ *      of a plain MessageBubble.
+ */
 function ChallengeModal({ group, user, onClose, onSent }) {
   const [exercise, setExercise] = useState("");
   const [goal, setGoal] = useState("");
@@ -160,14 +173,24 @@ function ChallengeModal({ group, user, onClose, onSent }) {
   );
 }
 
+/**
+ * GroupChat — Real-time-style chat panel for a single group.
+ * Fetches the message history and a member map on mount, then provides:
+ *   - A scrollable message list that auto-scrolls to the bottom on new messages
+ *   - Plain text messages rendered as MessageBubble
+ *   - Challenge messages (JSON with __challenge__ flag) rendered as ChallengeCard
+ *   - A ChallengeModal triggered by the ⚔️ button in the input bar
+ */
 export default function GroupChat({ group }) {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [showChallenge, setShowChallenge] = useState(false);
+  // Map of userId → full user object so avatars/names resolve correctly after the fact
   const [userMap, setUserMap] = useState({});
   const bottomRef = useRef(null);
 
+  // Build the userMap by fetching every group member's profile in parallel
   useEffect(() => {
     if (!group?.user_ids?.length) return;
     Promise.all(
@@ -183,6 +206,7 @@ export default function GroupChat({ group }) {
     });
   }, [group?.id]);
 
+  // Load message history whenever the active group changes
   useEffect(() => {
     if (!group?.id) return;
     fetch(`http://localhost:8080/messages/group/${group.id}`)
@@ -191,10 +215,12 @@ export default function GroupChat({ group }) {
       .catch(() => {});
   }, [group?.id]);
 
+  // Scroll to the newest message whenever the list updates
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  /** Posts a new plain-text message and appends it to the local list optimistically */
   async function handleSend(e) {
     e.preventDefault();
     if (!input.trim()) return;
@@ -213,10 +239,16 @@ export default function GroupChat({ group }) {
     setInput("");
   }
 
+  /** Appends a freshly-sent challenge message to the local message list */
   function handleChallengeSent(msg) {
     setMessages((prev) => [...prev, msg]);
   }
 
+  /**
+   * Tries to parse a message's text as JSON.
+   * Returns the parsed object if it has `__challenge__: true`, otherwise null.
+   * This flag is how challenge messages are distinguished from plain text.
+   */
   function parseChallenge(text) {
     try {
       const data = JSON.parse(text);
@@ -226,6 +258,12 @@ export default function GroupChat({ group }) {
     }
   }
 
+  /**
+   * Decides which component to render for a single message:
+   *   - ChallengeCard if the text is a challenge JSON blob
+   *   - MessageBubble for all other messages
+   * Resolves the sender's avatar/name from userMap with fallback to inline fields.
+   */
   function renderMessage(msg) {
     const isOwn = msg.user_id === user?.id;
     const timestamp = formatTimestamp(msg.created_at);

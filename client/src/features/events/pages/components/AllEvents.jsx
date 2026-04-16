@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import EventCard from "./EventCard";
 
+/**
+ * Returns true if today falls within [startDate, endDate].
+ * When no endDate is provided the event is treated as a single-day event.
+ */
 function isCurrentEvent(startDateStr, endDateStr) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -11,6 +15,12 @@ function isCurrentEvent(startDateStr, endDateStr) {
   return startDate <= today && today <= endDate;
 }
 
+/**
+ * AllEvents — "Current Events" column on the Events page.
+ * Fetches every group and their events, then keeps only those where today falls
+ * within the event's date range. Clicking an EventCard lifts the selection up
+ * to the parent Events component so the leaderboard can update.
+ */
 export default function AllEvents({ selectedEvent, onSelectEvent }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
