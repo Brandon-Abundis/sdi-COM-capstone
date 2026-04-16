@@ -284,7 +284,9 @@ export default function DirectMessage({ dmUser }) {
           challenge={{
             from_user_id: msg.user_id,
             from_name: msg.username || `${msg.first_name} ${msg.last_name}`,
-            from_avatar: `https://i.pravatar.cc/40?u=${msg.user_id}`,
+            from_first_name: msg.first_name || "?",
+            from_last_name: msg.last_name || "?",
+            from_profile: resolvedProfile,
             timestamp,
             exercise: challenge.exercise ?? "",
             goal: challenge.goal ?? "",
@@ -330,7 +332,7 @@ export default function DirectMessage({ dmUser }) {
         className="px-4 py-3 border-b border-[#1e1838] flex items-center gap-3 cursor-pointer hover:bg-[#7c3aed]/10 transition-colors"
         onClick={() => navigate(`/profile/${dmUser.user_id}`)}
       >
-        <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0 border-2 border-[#1e1838] relative">
+        <div className="w-9 h-9 rounded-full overflow-hidden bg-[#2a2245] cursor-pointer flex-shrink-0 hover:ring-2 hover:ring-primary transition-all flex justify-center items-center pt-2">
           {dmUserFull ? (
             <Avatar userData={dmUserFull} />
           ) : (

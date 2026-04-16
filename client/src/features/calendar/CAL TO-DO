@@ -133,7 +133,7 @@ Auto populate goals into calendar, and make that priority number 1
 
 FULL TO DO --------------------
 
-Add workout button should Add Workout to corresponding Event. Should also be in sync with event's existing workout list.
+            <!-- Add workout button should Add Workout to corresponding Event. Should also be in sync with event's existing workout list.   -->
 
 Add Goal should be switchable in Upcoming Events, and should display tracked goals.
 
@@ -144,3 +144,8 @@ see when goals become complete, then link them to the calendar in their own unit
 
 TELL BACKEND to see if they can add a "completed_at" date or time for user_goals, & for group goals a "completed" boolean and a "completed_at" date or time.
 
+Check to see how to label individual workouts as completed. Will NEED to work with tafari, and will only diplay events as complete but won't do anything. I am thinking that it may be possible to click a workout and have it pop up the model for the specific workout selected.
+
+Ensure that the workouts that are shown are ones that are only in progress, not completed.
+
+When all completed, ensure that Completed Goals are populating only if exist, and Rival Challenges are appearing only if they exist. They will display as a workout in the Event Field on the right, and when clicked will show what the goals/rival submission was.
