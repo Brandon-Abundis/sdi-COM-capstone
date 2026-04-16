@@ -52,7 +52,12 @@ export default function WorkoutBox({ details, onClick, completed }) {
         <h2 className="text-center mt-1 font-semibold"> {time} Min. </h2>
         <h2 className="text-center mt-1 font-medium">
           {" "}
-          {updated_at.toDateString()}{" "}
+          {updated_at.toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+          })}{" "}
         </h2>
         <h2 className="text-center mt-1 bg-base-300 w-50 self-center rounded-2xl">
           {" "}
