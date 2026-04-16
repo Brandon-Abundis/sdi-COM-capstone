@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../app/AuthProvider";
-
 export default function AvatarSelection() {
+  const background = [
+    null,
+    "/Avatar/bg/bg1.png",
+    "/Avatar/bg/bg2.jpg",
+    "/Avatar/bg/bg3.jpeg",
+    "/Avatar/bg/bg4.jpg",
+  ];
   const base_pic = ["/Avatar/male.png", "/Avatar/female.png"];
   const colors = [
     "/Avatar/color/image.png",
@@ -18,6 +24,14 @@ export default function AvatarSelection() {
     "/Avatar/headband.png",
     "/Avatar/wreath.png",
   ];
+  const hands = [
+    "Avatar/Hands/image (1).png",
+    "Avatar/Hands/image (2).png",
+    "Avatar/Hands/image (3).png",
+    "Avatar/Hands/image (4).png",
+    "Avatar/Hands/image (5).png",
+    "Avatar/Hands/image (6).png",
+  ];
   const gloves = ["/Avatar/gloves.png", "/Avatar/gloves2.png"];
   const misc = [
     "/Avatar/outline.png",
@@ -27,8 +41,12 @@ export default function AvatarSelection() {
 
   const { user, refreshUser, profile } = useAuth();
 
+  const [back, setBack] = useState(profile?.back || null);
+
   const [base, setBase] = useState(profile?.base || base_pic[0]);
   const [color, setColor] = useState(profile?.color || colors[0]);
+  const [hand, setHand] = useState(profile?.hand || hands[0]);
+
   const [head, setHead] = useState(profile?.head || null);
   const [chosenGloves, setChosenGloves] = useState(
     profile?.chosenGloves || null,
@@ -37,7 +55,9 @@ export default function AvatarSelection() {
 
   useEffect(() => {
     if (profile) {
+      setBack(profile.back || null);
       setColor(profile.color || colors[0]);
+      setHand(profile.hand || hands[0]);
 
       setBase(profile.base || base_pic[0]);
       setHead(profile.head || null);
@@ -74,17 +94,20 @@ export default function AvatarSelection() {
 
   const handleSave = () => {
     const avatarSelection = {
+      back,
+      hand,
       color,
       base,
       head,
       chosenGloves,
       chosenMisc,
     };
-
     const updatedProfile = {
       ...user,
       profile: avatarSelection,
     };
+
+    // localStorage.setItem("user", JSON.stringify(updatedProfile));
 
     edit(updatedProfile);
   };
@@ -96,8 +119,19 @@ export default function AvatarSelection() {
           Preview
         </h2>
         <div className="relative w-64 h-64 border-4 border-accent rounded-2xl overflow-hidden bg-[#2a2245] shadow-2xl">
+          {back && back !== null && (
+            <img
+              src={back}
+              alt=""
+              className="absolute inset-0 w-full h-full z-2 object-cover"
+            />
+          )}
           <img
             src={color}
+            className="absolute inset-0 w-full h-full z-5 object-contain"
+          />
+          <img
+            src={hand}
             className="absolute inset-0 w-full h-full z-5 object-contain"
           />
 
@@ -173,7 +207,10 @@ export default function AvatarSelection() {
                     ? "border-accent bg-accent/20"
                     : "border-transparent hover:bg-base-300"
                 }`}
-                onClick={() => setColor(pic)}
+                onClick={() => {
+                  setColor(pic);
+                  setHand(hands[index]);
+                }}
               />
             ))}
           </div>
@@ -242,6 +279,25 @@ export default function AvatarSelection() {
                     setChosenMisc([...chosenMisc, pic]);
                   }
                 }}
+              />
+            ))}
+          </div>
+        </section>
+        <section>
+          <h3 className="text-sm font-semibold mb-2 opacity-70 uppercase tracking-wider">
+            Background
+          </h3>
+          <div className="grid grid-cols-8 gap-4 p-3 bg-base-200 rounded-lg min-h-[100px]">
+            {background.map((pic, index) => (
+              <img
+                key={index}
+                src={pic}
+                className={`w-full aspect-square p-2 rounded-md cursor-pointer border-2 transition-all object-contain ${
+                  back === pic
+                    ? "border-accent bg-accent/20"
+                    : "border-transparent hover:bg-base-300"
+                }`}
+                onClick={() => setBack(pic)}
               />
             ))}
           </div>

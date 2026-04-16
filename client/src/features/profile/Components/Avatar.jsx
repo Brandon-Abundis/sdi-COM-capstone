@@ -28,24 +28,55 @@ export default function Avatar({ userData }) {
         </span>
       )}
 
-      {savedAvatar && (
-        <>
-          <img src={savedAvatar.color} className="absolute inset-0 z-5" />
-          <img src={savedAvatar.base} className="absolute inset-0 z-10" />
-          {savedAvatar.head && (
-            <img src={savedAvatar.head} className="absolute inset-0 z-30" />
-          )}
-          {savedAvatar.chosenGloves && (
+      <div className="relative w-full h-full flex items-center justify-center ">
+        {savedAvatar && (
+          <div className="absolute inset-0 scale-150 transition-transform">
+            {savedAvatar.back && (
+              <img
+                src={savedAvatar.back}
+                className="absolute inset-0 z-0 object-cover"
+              />
+            )}
+
             <img
-              src={savedAvatar.chosenGloves}
-              className="absolute inset-0 z-20 object-contain scale-150"
+              src={savedAvatar.color}
+              className="absolute inset-0 z-5 object-contain"
             />
-          )}
-          {savedAvatar.chosenMisc?.map((path, i) => (
-            <img key={i} src={path} className="absolute inset-0 z-40" />
-          ))}
-        </>
-      )}
+
+            <img
+              src={savedAvatar.hand}
+              className="absolute inset-0 z-6 object-contain"
+            />
+
+            <img
+              src={savedAvatar.base}
+              className="absolute inset-0 z-10 object-contain"
+            />
+
+            {savedAvatar.chosenGloves && (
+              <img
+                src={savedAvatar.chosenGloves}
+                className="absolute inset-0 z-20 object-contain"
+              />
+            )}
+
+            {savedAvatar.head && (
+              <img
+                src={savedAvatar.head}
+                className="absolute inset-0 z-30 object-contain"
+              />
+            )}
+
+            {savedAvatar.chosenMisc?.map((path, i) => (
+              <img
+                key={i}
+                src={path}
+                className="absolute inset-0 z-40 object-contain"
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

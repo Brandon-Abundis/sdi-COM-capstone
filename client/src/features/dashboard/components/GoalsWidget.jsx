@@ -33,6 +33,11 @@ export default function GoalsWidget() {
     setShowAddGoalModal(false);
   };
 
+  const handleGoalCompleted = (goalId) => {
+    // Remove the completed goal from the list
+    setGoals((prevGoals) => prevGoals.filter((goal) => goal.id !== goalId));
+  };
+
   if (loading)
     return <div className="card bg-base-200 p-4">Loading goals...</div>;
   if (error)
@@ -58,8 +63,11 @@ export default function GoalsWidget() {
     );
   };
 
+  // Filter goals to only show incomplete goals
+  const incompleteGoals = goals.filter((goal) => !goal.completed);
+
   // Sort goals by updated_at (newest first)
-  const sortedGoals = [...goals].sort((a, b) => {
+  const sortedGoals = [...incompleteGoals].sort((a, b) => {
     const dateA = new Date(a.updated_at);
     const dateB = new Date(b.updated_at);
     return dateB - dateA;
@@ -67,15 +75,18 @@ export default function GoalsWidget() {
 
   return (
     <div className="card bg-base-200 p-4">
-      <h3 className="text-2xl font-semibold text-primary mb-4">Active Goals</h3>
+      <h3 className="text-2xl font-semibold text-primary mb-4">
+        🏃 Active Goals
+      </h3>
 
-      {goals.length > 0 && (
-        <p className="text-sm text-base-content/70 mb-4">
-          {goals.length} active goal{goals.length !== 1 ? "s" : ""}
+      {incompleteGoals.length > 0 && (
+        <p className="text-sm font-bold text-base-content/70 uppercase mb-4">
+          {incompleteGoals.length} active goal
+          {incompleteGoals.length !== 1 ? "s" : ""}
         </p>
       )}
 
-      {goals.length > 0 ? (
+      {incompleteGoals.length > 0 ? (
         <>
           <div className="space-y-4 mb-4">
             {sortedGoals.slice(0, 3).map((goal) => (
@@ -106,12 +117,12 @@ export default function GoalsWidget() {
           </div>
 
           <div className="flex gap-2 pt-4 border-t border-base-300">
-            {goals.length > 3 && (
+            {incompleteGoals.length > 3 && (
               <button
                 onClick={() => setShowAllGoalsModal(true)}
                 className="btn btn-sm btn-outline flex-1"
               >
-                View All Goals ({goals.length})
+                View All Goals ({incompleteGoals.length})
               </button>
             )}
             <button
@@ -129,7 +140,8 @@ export default function GoalsWidget() {
       <ViewAllGoalsModal
         isOpen={showAllGoalsModal}
         onClose={() => setShowAllGoalsModal(false)}
-        goals={goals}
+        goals={incompleteGoals}
+        onGoalCompleted={handleGoalCompleted}
       />
 
       <AddNewGoalModal
