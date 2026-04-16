@@ -127,7 +127,7 @@ export default function EventsWidget() {
   return (
     <div className="card bg-base-200 p-4">
       <h3 className="text-2xl font-bold text-primary flex items-center gap-1.5 mb-4">
-        ⚡ Events
+        ⚡ Your Events
       </h3>
 
       {todayEvents.length === 0 && upcomingEvents.length === 0 && (
