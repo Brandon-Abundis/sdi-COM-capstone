@@ -606,30 +606,41 @@ const inviteToGroup = async (req, res) => {
 };
 
 const getEventsById = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params; // group_id
+
   try {
-    const result = await db("group_events").select("*").where("group_id", id);
-    if (result) {
-      createLog({
-        method: "GET",
-        action: "FETCH_GROUP_EVENTS",
-        status_code: 200,
-        user_id: id,
-        metadata: { message: "fetched all group events for a group" },
-      });
-    }
+    const events = await db("group_events")
+      .join("groups", "group_events.group_id", "=", "groups.id")
+      .select(
+        "group_events.*",
+        "groups.name as group_name",
+        "groups.user_ids as group_members"
+      )
+      .where("group_events.group_id", id)
+      .orderBy("group_events.start_date", "asc");
+
+    //workouts_list IDs into actual workout objects
+    const result = await Promise.all(events.map(async (event) => {
+      let workoutDetails = [];
+      let goalsDetails = [];
+      if (event.workouts_list && event.workouts_list.length > 0) {
+        workoutDetails = await db("group_workouts")
+          .whereIn("id", event.workouts_list);
+      }
+      if (event.goals_list && event.goals_list.length > 0) {
+        goalsDetails = await db("group_goals")
+          .whereIn('id', event.goals_list);
+      }
+      return { ...event, workoutDetails, goalsDetails };
+    }));
+
     res.status(200).send(result);
   } catch (err) {
-    createLog({
-      method: "GET",
-      action: "FETCH_GROUP_EVENTS",
-      status_code: 500,
-      user_id: id,
-      metadata: err,
-    });
-    res.status(500).send({ message: err });
+    res.status(500).send({ message: err.message });
   }
 };
+
+
 
 module.exports = {
   getAll,
