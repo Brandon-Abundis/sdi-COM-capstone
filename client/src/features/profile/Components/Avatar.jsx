@@ -22,8 +22,8 @@ export default function Avatar({ userData }) {
 
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      {!savedAvatar && (
-        <span className="text-sm font-bold text-[#c084fc] leading-none">
+      {!savedAvatar ? (
+        <span className="flex items-center justify-center text-sm font-bold text-[#c084fc] h-full w-full translate-y-[-3px] ">
           {initials}
         </span>
       ) : (
@@ -45,15 +45,10 @@ export default function Avatar({ userData }) {
             className="absolute inset-0 z-6 object-contain"
           />
 
-      <div className="relative w-full h-full flex items-center justify-center ">
-        {savedAvatar && (
-          <div className="absolute inset-0 scale-100 transition-transform">
-            {savedAvatar.back && (
-              <img
-                src={savedAvatar.back}
-                className="absolute inset-0 z-0 object-cover"
-              />
-            )}
+          <img
+            src={savedAvatar.base}
+            className="absolute inset-0 z-10 object-contain"
+          />
 
           {savedAvatar.chosenGloves && (
             <img
