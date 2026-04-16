@@ -30,6 +30,18 @@ export default function CurrentEvents({ selectedEvent, onSelectEvent }) {
           return start <= now && now <= end;
         });
 
+        // --- NEW LOGIC: Sort by Membership ---
+        current.sort((a, b) => {
+          const aGroup = groups.find((g) => g.id === a.group_id);
+          const bGroup = groups.find((g) => g.id === b.group_id);
+
+          const aIsMember = aGroup?.user_ids?.includes(user?.id) ? 1 : 0;
+          const bIsMember = bGroup?.user_ids?.includes(user?.id) ? 1 : 0;
+
+          // Returns -1 (moves 'a' up) if 'a' is a member and 'b' is not
+          return bIsMember - aIsMember;
+        });
+
         setEvents(current);
       } catch (err) {
         console.error("Fetch Error:", err);
@@ -38,14 +50,12 @@ export default function CurrentEvents({ selectedEvent, onSelectEvent }) {
       }
     }
     fetchData();
-  }, []);
+  }, [user?.id]); // Re-sort if user ID becomes available
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between px-2">
-        <h2 className="text-lg font-bold text-accent px-1">
-          All Ongoing Events
-        </h2>
+        <h2 className="text-lg font-bold text-accent px-1">Current Events</h2>
         <div className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" />
           <span className="text-[10px] font-bold text-[#e2dff5]/20 uppercase">
