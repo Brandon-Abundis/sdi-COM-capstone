@@ -2,20 +2,26 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../profile/Components/Avatar";
 
+/**
+ * GroupMemberList — Right-side panel that lists every member of the active group.
+ * Fetches each member's full profile in parallel so avatars and ranks display correctly.
+ * Clicking a member row navigates to their profile page.
+ */
 export default function GroupMemberList({ group }) {
   const navigate = useNavigate();
   const [members, setMembers] = useState([]);
 
+  // Re-fetch whenever the group changes — fetches all member profiles in parallel
   useEffect(() => {
     if (!group?.user_ids?.length) return;
 
-    // Fetch each member by id
     Promise.all(
       group.user_ids.map((id) =>
         fetch(`http://localhost:8080/users/id/${id}`)
           .then((res) => (res.ok ? res.json() : null))
           .catch(() => null)
       )
+    // Filter out any null results from failed fetches
     ).then((results) => setMembers(results.filter(Boolean)));
   }, [group?.id]);
 

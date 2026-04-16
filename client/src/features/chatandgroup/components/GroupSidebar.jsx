@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../../app/AuthProvider";
 import Avatar from "../../profile/Components/Avatar";
 
+/**
+ * CreateGroupModal — Simple form for creating a new group.
+ * POSTs the group name + creator's userId, then calls `onCreated` with the
+ * returned group object so the sidebar can add it immediately without a refresh.
+ */
 function CreateGroupModal({ userId, onClose, onCreated }) {
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  /** Submits the new group form; calls onCreated on success */
   async function handleSubmit(e) {
     e.preventDefault();
     if (!name.trim() || submitting) return;
@@ -59,9 +65,15 @@ function CreateGroupModal({ userId, onClose, onCreated }) {
   );
 }
 
+/**
+ * NewDMModal — User picker for starting a new direct message conversation.
+ * Receives the full user list from the parent (already loaded), filters it
+ * by the search query, and calls `onSelect` with the chosen user's DM descriptor.
+ */
 function NewDMModal({ dmUsers, onClose, onSelect }) {
   const [query, setQuery] = useState("");
 
+  // Filter the user list to only those whose display name includes the search term
   const filtered = query.trim()
     ? dmUsers.filter((u) =>
         (u.username || `${u.first_name} ${u.last_name}`).toLowerCase().includes(query.toLowerCase())
@@ -111,9 +123,16 @@ function NewDMModal({ dmUsers, onClose, onSelect }) {
   );
 }
 
+/**
+ * InviteModal (sidebar version) — Reuses the already-fetched `allUsers` list from
+ * GroupSidebar to avoid a second network request. Shows current members at the top
+ * and lets the user search + invite non-members via a PATCH request.
+ */
 function InviteModal({ group, allUsers, onClose }) {
   const [query, setQuery] = useState("");
+  // Tracks locally-invited IDs this session to show "Invited ✓" optimistically
   const [invitedIds, setInvitedIds] = useState(new Set());
+  // Set for O(1) membership checks when splitting members vs non-members
   const memberSet = new Set(group.user_ids ?? []);
 
   const filtered = (query.trim()
@@ -218,7 +237,13 @@ function InviteModal({ group, allUsers, onClose }) {
   );
 }
 
+/**
+ * LeaveConfirmModal — Two-step confirmation before leaving a group.
+ * First click shows a warning; second click fires `onConfirm` which calls the
+ * leave API and removes the group from the sidebar list.
+ */
 function LeaveConfirmModal({ group, onConfirm, onClose }) {
+  // `confirmed` tracks whether the user has already clicked "Yes, leave" once
   const [confirmed, setConfirmed] = useState(false);
 
   return (
@@ -278,22 +303,44 @@ function LeaveConfirmModal({ group, onConfirm, onClose }) {
   );
 }
 
+/**
+ * GroupSidebar — Left navigation panel for the Chat & Group page.
+ * On mount it fetches in parallel:
+ *   - The current user's groups
+ *   - All users (for the DM list and invite modals)
+ *   - All groups (for the group-search feature)
+ *
+ * Renders two sections:
+ *   - "My Groups" with inline invite (👤) and leave (✕) actions
+ *   - "Direct Messages" showing up to the first 10 users
+ *
+ * Also hosts the CreateGroupModal, NewDMModal, InviteModal, and LeaveConfirmModal.
+ */
 export default function GroupSidebar({ selectedItem, onSelect }) {
   const { user } = useAuth();
+  // Groups the current user belongs to
   const [groups, setGroups] = useState([]);
+  // All users except self — shown in the DM section
   const [dmUsers, setDmUsers] = useState([]);
+  // All users — shared with InviteModal so it doesn't need to refetch
   const [allUsers, setAllUsers] = useState([]);
+  // Every group in the system — used for the group-search dropdown
   const [allGroups, setAllGroups] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Set of group IDs the user has joined — drives "Joined ✓" badges in search results
   const [joinedIds, setJoinedIds] = useState(new Set());
 
   const [searchQuery, setSearchQuery] = useState("");
+  // True while the user is actively typing in the group search input
   const [searching, setSearching] = useState(false);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [showNewDM, setShowNewDM] = useState(false);
+  // When set, the InviteModal opens for this specific group
   const [inviteGroup, setInviteGroup] = useState(null);
+  // When set, the LeaveConfirmModal opens for this specific group
   const [leaveGroup, setLeaveGroup] = useState(null);
 
+  // Kick off all three data fetches in parallel on mount (or when user changes)
   useEffect(() => {
     if (!user?.id) return;
 
@@ -314,6 +361,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
         setGroups(groupData);
         setJoinedIds(new Set(groupData.map((g) => g.id)));
         setAllUsers(userData);
+        // Exclude self from the DM list
         setDmUsers(userData.filter((u) => u.id !== user.id));
         setAllGroups(allGroupData);
         setLoading(false);
@@ -321,12 +369,14 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
     );
   }, [user?.id]);
 
+  // Live-filter allGroups by the search query for the group-discovery dropdown
   const searchResults = searchQuery.trim()
     ? allGroups.filter((g) =>
         g.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
+  /** Sends a join PATCH, then adds the group to the local list if not already present */
   async function handleJoin(group) {
     await fetch(`http://localhost:8080/groups/${group.id}/join`, {
       method: "PATCH",
@@ -339,6 +389,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
     );
   }
 
+  /** Sends the leave PATCH, removes the group from local state, and dismisses the modal */
   async function handleLeaveConfirmed(groupId) {
     await fetch(`http://localhost:8080/groups/${groupId}/leave`, {
       method: "PATCH",
@@ -350,6 +401,7 @@ export default function GroupSidebar({ selectedItem, onSelect }) {
     setLeaveGroup(null);
   }
 
+  /** Adds a newly-created group to the sidebar list and marks it as joined */
   function handleGroupCreated(newGroup) {
     setGroups((prev) => [...prev, newGroup]);
     setJoinedIds((prev) => new Set([...prev, newGroup.id]));
