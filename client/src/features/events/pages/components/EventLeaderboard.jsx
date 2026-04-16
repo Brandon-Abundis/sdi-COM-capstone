@@ -2,20 +2,35 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../../profile/Components/Avatar";
 
+// Medal emojis for the top-3 positions
 const medals = ["🥇", "🥈", "🥉"];
 
+/**
+ * EventLeaderboard — Right column on the Events page.
+ * When no event is selected it shows a placeholder prompt.
+ * When an event is selected it fetches in parallel:
+ *   - The event's parent group (to get the member list)
+ *   - All scores
+ *   - All users (for name/avatar resolution)
+ * Then filters scores to group members only, sorts by score descending,
+ * and shows the top 10. Clicking a row navigates to that user's profile.
+ *
+ * Score display formula: (score / 20) * 1.27 — converts raw score to a display value.
+ */
 export default function EventLeaderboard({ selectedEvent }) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Re-run whenever the selected event changes
   useEffect(() => {
     if (!selectedEvent?.id) return;
     setLoading(true);
     setError(null);
     setEntries([]);
 
+    // Fetch the group, all scores, and all users in parallel for efficiency
     Promise.all([
       fetch(`http://localhost:8080/groups/id/${selectedEvent.group_id}`)
         .then((r) => (r.ok ? r.json() : null)),
@@ -25,12 +40,15 @@ export default function EventLeaderboard({ selectedEvent }) {
         .then((r) => (r.ok ? r.json() : [])),
     ])
       .then(([group, scores, users]) => {
+        // Set of member IDs for O(1) filtering
         const memberIds = new Set(group?.user_ids ?? []);
+        // Map userId → user object for quick name/avatar lookup
         const userMap = Object.fromEntries(
           users.map((u) => [u.id, u])
         );
 
         const filtered = scores
+          // Only include scores from group members (skip filter if group has no members list)
           .filter((s) => memberIds.size === 0 || memberIds.has(s.user_id))
           .sort((a, b) => b.score - a.score)
           .slice(0, 10)

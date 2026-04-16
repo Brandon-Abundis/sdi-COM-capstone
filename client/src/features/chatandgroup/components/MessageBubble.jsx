@@ -1,6 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../profile/Components/Avatar";
 
+/**
+ * MessageBubble — Renders a single chat message.
+ * Layout mirrors common messaging apps:
+ *   - Own messages align right with a purple bubble
+ *   - Others' messages align left with a dark bubble
+ * The avatar and username are clickable and navigate to the sender's profile.
+ *
+ * Props:
+ *   message — { id, user_id, first_name, last_name, username, profile, text, timestamp }
+ *   isOwn   — true when message.user_id matches the logged-in user
+ */
 export default function MessageBubble({ message, isOwn }) {
   const navigate = useNavigate();
 

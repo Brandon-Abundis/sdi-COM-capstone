@@ -1,3 +1,4 @@
+// Static lookup for friendly descriptions by event name — falls back to a generic label
 const DESCRIPTIONS = {
   "Squad PT":        "Group strength & endurance training",
   "Formation Run":   "Unit run maintaining formation pace and cohesion",
@@ -5,12 +6,14 @@ const DESCRIPTIONS = {
   "Section Training":"Drill and physical readiness exercises",
 };
 
+/** Formats a date string to "Apr 15, 2026" style */
 function formatDate(dateStr) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
+/** Converts a 24-hour "HH:MM" time string to "3:45 PM" style */
 function formatTime(timeStr) {
   if (!timeStr) return "";
   const [h, m] = timeStr.split(":").map(Number);
@@ -20,6 +23,10 @@ function formatTime(timeStr) {
   return `${hour}${mins} ${ampm}`;
 }
 
+/**
+ * EndsInBadge — Small badge showing how many days until (or since) an event ends.
+ * Used on "current events" cards where the end date is the relevant countdown.
+ */
 function EndsInBadge({ date }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -34,6 +41,11 @@ function EndsInBadge({ date }) {
   );
 }
 
+/**
+ * CountdownBadge — Badge showing how many days until an event starts.
+ * Shows "Today" with a primary-color badge when the event is today.
+ * Used on "upcoming events" cards where the start date is the relevant countdown.
+ */
 function CountdownBadge({ date }) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -48,7 +60,18 @@ function CountdownBadge({ date }) {
   );
 }
 
+/**
+ * EventCard — Selectable card representing a single group event.
+ * Used in both AllEvents (current) and potentially UpcomingEvents contexts.
+ *
+ * Props:
+ *   event         — the event object from the API
+ *   isSelected    — highlights the card with a primary border when true
+ *   onClick       — called with the full event object when the card is clicked
+ *   showCountdown — if true shows CountdownBadge (start date), else EndsInBadge (end date)
+ */
 export default function EventCard({ event, isSelected, onClick, showCountdown }) {
+  // Look up a friendly description or fall back to a generic label
   const description = DESCRIPTIONS[event.name] ?? "Physical training event";
 
   return (
