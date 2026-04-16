@@ -15,6 +15,7 @@ const formatSeconds = (totalSeconds) => {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
+/** Converts a 24-hour "HH:MM" time string to "3:45 PM" style */
 function formatTime(timeStr) {
   if (!timeStr) return "";
   const [h, m] = timeStr.split(":").map(Number);
@@ -24,6 +25,7 @@ function formatTime(timeStr) {
   return `${hour}${mins} ${ampm}`;
 }
 
+/** Returns integer days from today to dateStr (negative = past) */
 function getDaysUntil(dateStr) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -32,6 +34,13 @@ function getDaysUntil(dateStr) {
   return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
 }
 
+/**
+ * UpcomingEvents — Left column on the Events page showing future group events.
+ * Fetches every group's events, discards past ones, then splits the remaining
+ * events into two buckets:
+ *   - within7: starting within the next 7 days (shown first)
+ *   - beyond7: starting more than 7 days out (shown under "Further Out" heading)
+ */
 export default function UpcomingEvents() {
   const [allEvents, setAllEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,6 +76,7 @@ export default function UpcomingEvents() {
   const within7 = allEvents.filter((e) => getDaysUntil(e.start_date) <= 7);
   const beyond7 = allEvents.filter((e) => getDaysUntil(e.start_date) > 7);
 
+  /** Renders a single upcoming event row with its date, time, and days-until badge */
   function renderCard(event) {
     const days = getDaysUntil(event.start_date);
     const isToday = days === 0;

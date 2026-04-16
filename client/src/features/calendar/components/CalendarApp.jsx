@@ -21,9 +21,6 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
     return events
     .filter((e) => {
       const startDay = new Date(e.start_date);
-      // if (e.end_date) {
-      //   const endDay = new Date(e.end_date)
-      // } 
       const endDay = e.end_date ? new Date(e.end_date) : startDay
 
       if (!isNaN(startDay) && !isNaN(endDay)) {
@@ -31,7 +28,6 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
         const end = new Date(Date.UTC(endDay.getUTCFullYear(), endDay.getUTCMonth(), endDay.getUTCDate()));
         
         return (calendarDate >= s && calendarDate <= end)
-        // .sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
       } else {
         return false
       }
@@ -51,7 +47,6 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
   function handleDayClick(day) {
     onDaySelect(selectedDay === day ? null : day);
   }
-//  console.log(dayEvents)
 
 
   return (
@@ -108,15 +103,6 @@ export default function CalendarApp({ currentDate, onMonthChange, selectedDay, o
               {dayEvents.length > 3 && (
                 <span className="event-tab-more">+{dayEvents.length - 3} more</span>
               )}
-              {/* <div className="Workouts">
-                <CalendarPopulator
-                  day={day}
-                  dayEvents={dayEvents}
-                  dayWorkouts={dayWorkouts}
-                  events={events}
-                  selectedDay={selectedDay}
-                />
-              </div> */}
             </div>
           );
         })}

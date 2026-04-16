@@ -47,7 +47,7 @@ export default function ProgressWidget() {
       }
     };
     loadProgress();
-  }, [user?.id]);
+  }, [user?.id, user?.xp]);
 
   if (loading)
     return <div className="card bg-base-200 p-4">Loading progress...</div>;
@@ -58,20 +58,20 @@ export default function ProgressWidget() {
 
   return (
     <div className="card bg-base-200 p-4">
-      <h3 className="text-2xl font-semibold text-primary mb-4">💪 Progress</h3>
+      <h3 className="text-2xl font-bold text-primary mb-4">💪 Progress</h3>
 
       {userRank ? (
         <div className="space-y-4">
           <div className="bg-base-300 rounded-lg p-3">
-            <p className="text-sm text-base-content/60 uppercase tracking-wide mb-1">
+            <p className="text-sm font-bold text-base-content/70 uppercase tracking-wide">
               Your Rank
             </p>
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-bold text-secondary">
+              <span className="text-3xl font-bold text-primary">
                 #{userRank}
               </span>
               <div className="text-right">
-                <p className="text-xl font-semibold text-primary">
+                <p className="text-xl font-bold text-yellow-400">
                   {user.xp || 0} XP
                 </p>
               </div>
@@ -82,7 +82,7 @@ export default function ProgressWidget() {
           </div>
 
           <div>
-            <p className="text-xs text-base-content/60 uppercase tracking-wide mb-2">
+            <p className="text-sm font-bold text-base-content/70 uppercase tracking-wide mb-2">
               Nearby Users
             </p>
             <div className="space-y-2">

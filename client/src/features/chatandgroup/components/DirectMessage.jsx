@@ -5,11 +5,21 @@ import MessageBubble from "./MessageBubble";
 import ChallengeCard from "./ChallengeCard";
 import Avatar from "../../profile/Components/Avatar";
 
+/** Converts an ISO timestamp string into a human-readable "Mon, 3:45 PM" format */
 function formatTimestamp(iso) {
   const d = new Date(iso);
-  return d.toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit", hour12: true });
+  return d.toLocaleString("en-US", {
+    weekday: "short",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
 }
 
+/**
+ * Returns a countdown label relative to today:
+ *   "Today", "In Nd", or "Nd ago"
+ */
 function getDaysUntil(dateStr) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -21,6 +31,10 @@ function getDaysUntil(dateStr) {
   return `In ${diff}d`;
 }
 
+/**
+ * Tries to parse a message's text as JSON.
+ * Returns the parsed object if it has `__challenge__: true`, otherwise null.
+ */
 function parseChallenge(text) {
   try {
     const data = JSON.parse(text);
@@ -30,6 +44,11 @@ function parseChallenge(text) {
   }
 }
 
+/**
+ * ChallengeModal (DM version) — Same form as the group variant but sends the
+ * challenge message as a direct message (`to_user_id`) rather than to a group.
+ * No group event is created — the challenge lives only in the DM thread.
+ */
 function ChallengeModal({ dmUser, user, onClose, onSent }) {
   const [exercise, setExercise] = useState("");
   const [goal, setGoal] = useState("");
@@ -66,7 +85,12 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
       if (!msgRes.ok) throw new Error("Failed to send challenge");
       const msg = await msgRes.json();
 
-      onSent({ ...msg, first_name: user.first_name, last_name: user.last_name, username: user.username });
+      onSent({
+        ...msg,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        username: user.username,
+      });
       onClose();
     } catch (err) {
       setError(err.message);
@@ -79,13 +103,22 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="bg-[#16112a] border border-[#2a2245] rounded-2xl p-6 w-96 flex flex-col gap-4 shadow-xl">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-[#c084fc] uppercase tracking-wide">⚔️ Issue a Challenge</h2>
-          <button onClick={onClose} className="text-[#e2dff5]/40 hover:text-[#c084fc] text-lg">✕</button>
+          <h2 className="text-sm font-bold text-[#c084fc] uppercase tracking-wide">
+            ⚔️ Issue a Challenge
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-[#e2dff5]/40 hover:text-[#c084fc] text-lg"
+          >
+            ✕
+          </button>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">Exercise</label>
+            <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">
+              Exercise
+            </label>
             <input
               required
               type="text"
@@ -97,7 +130,9 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">Goal</label>
+            <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">
+              Goal
+            </label>
             <input
               required
               type="text"
@@ -110,7 +145,9 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
 
           <div className="flex gap-2">
             <div className="flex flex-col gap-1 flex-1">
-              <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">Date</label>
+              <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">
+                Date
+              </label>
               <input
                 required
                 type="date"
@@ -120,7 +157,9 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
               />
             </div>
             <div className="flex flex-col gap-1 flex-1">
-              <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">Time (optional)</label>
+              <label className="text-[10px] uppercase font-bold text-[#e2dff5]/40 tracking-wider">
+                Time (optional)
+              </label>
               <input
                 type="time"
                 value={time}
@@ -145,23 +184,35 @@ function ChallengeModal({ dmUser, user, onClose, onSent }) {
   );
 }
 
+/**
+ * DirectMessage — One-on-one chat panel between the logged-in user and `dmUser`.
+ * Loads the full user profile for the other party (for avatar rendering), fetches
+ * the conversation history, and auto-scrolls to the latest message.
+ * Supports plain text messages and challenge cards just like GroupChat.
+ * Clicking the header or the empty-state link navigates to the other user's profile.
+ */
 export default function DirectMessage({ dmUser }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [showChallenge, setShowChallenge] = useState(false);
+  // Full profile of the other user — needed to resolve their avatar
   const [dmUserFull, setDmUserFull] = useState(null);
   const bottomRef = useRef(null);
 
+  // Fetch the full profile of the other user so their Avatar renders correctly
   useEffect(() => {
     if (!dmUser?.user_id) return;
     fetch(`http://localhost:8080/users/id/${dmUser.user_id}`)
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => { if (data) setDmUserFull(data); })
+      .then((data) => {
+        if (data) setDmUserFull(data);
+      })
       .catch(() => {});
   }, [dmUser?.user_id]);
 
+  // Load the DM conversation history whenever either participant changes
   useEffect(() => {
     if (!user?.id || !dmUser?.user_id) return;
     fetch(`http://localhost:8080/messages/dm/${user.id}/${dmUser.user_id}`)
@@ -170,29 +221,51 @@ export default function DirectMessage({ dmUser }) {
       .catch(() => {});
   }, [user?.id, dmUser?.user_id]);
 
+  // Scroll to the newest message whenever the list updates
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  /** Posts a new plain-text DM and appends it to the local list */
   async function handleSend(e) {
     e.preventDefault();
     if (!input.trim()) return;
     const res = await fetch("http://localhost:8080/messages/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: input.trim(), user_id: user.id, to_user_id: dmUser.user_id }),
+      body: JSON.stringify({
+        text: input.trim(),
+        user_id: user.id,
+        to_user_id: dmUser.user_id,
+      }),
     });
     if (res.ok) {
       const msg = await res.json();
-      setMessages((prev) => [...prev, { ...msg, first_name: user.first_name, last_name: user.last_name, username: user.username }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          ...msg,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          username: user.username,
+        },
+      ]);
     }
     setInput("");
   }
 
+  /** Appends a freshly-sent challenge message to the local message list */
   function handleChallengeSent(msg) {
     setMessages((prev) => [...prev, msg]);
   }
 
+  /**
+   * Decides which component to render for a single DM message:
+   *   - ChallengeCard if the text is a challenge JSON blob
+   *   - MessageBubble for plain text
+   * Resolves the correct avatar profile: own messages use the auth user,
+   * the other side uses the fetched dmUserFull.
+   */
   function renderMessage(msg) {
     const isOwn = msg.user_id === user?.id;
     const timestamp = formatTimestamp(msg.created_at);
@@ -257,7 +330,7 @@ export default function DirectMessage({ dmUser }) {
         className="px-4 py-3 border-b border-[#1e1838] flex items-center gap-3 cursor-pointer hover:bg-[#7c3aed]/10 transition-colors"
         onClick={() => navigate(`/profile/${dmUser.user_id}`)}
       >
-        <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0 border-2 border-[#1e1838]">
+        <div className="w-8 h-8 rounded-full overflow-hidden bg-[#2a2245] flex-shrink-0 border-2 border-[#1e1838] relative">
           {dmUserFull ? (
             <Avatar userData={dmUserFull} />
           ) : (
@@ -267,8 +340,12 @@ export default function DirectMessage({ dmUser }) {
           )}
         </div>
         <div>
-          <span className="font-semibold text-[#e2dff5] text-sm">{dmUser.username}</span>
-          {dmUser.rank && <span className="ml-2 text-xs text-[#a78bfa]">{dmUser.rank}</span>}
+          <span className="font-semibold text-[#e2dff5] text-sm">
+            {dmUser.username}
+          </span>
+          {dmUser.rank && (
+            <span className="ml-2 text-xs text-[#a78bfa]">{dmUser.rank}</span>
+          )}
         </div>
       </div>
 
@@ -285,7 +362,10 @@ export default function DirectMessage({ dmUser }) {
         <div ref={bottomRef} />
       </div>
 
-      <form onSubmit={handleSend} className="p-3 border-t border-[#1e1838] flex gap-2">
+      <form
+        onSubmit={handleSend}
+        className="p-3 border-t border-[#1e1838] flex gap-2"
+      >
         <button
           type="button"
           onClick={() => setShowChallenge(true)}

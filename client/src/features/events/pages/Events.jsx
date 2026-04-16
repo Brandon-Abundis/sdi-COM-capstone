@@ -3,7 +3,16 @@ import UpcomingEvents from "./components/UpcomingEvents";
 import AllEvents from "./components/AllEvents";
 import EventLeaderboard from "./components/EventLeaderboard";
 
+/**
+ * Events — Top-level page that orchestrates the three events sub-components.
+ * Owns `selectedEvent` state and passes it down so AllEvents and EventLeaderboard
+ * stay in sync: clicking a card in AllEvents drives the leaderboard on the right.
+ *
+ * Layout (3-column grid on md+):
+ *   UpcomingEvents | AllEvents (current) | EventLeaderboard
+ */
 export default function Events() {
+  // The event the user has clicked in AllEvents — null means nothing selected
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   return (

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { updateUserGoal } from "../api/userGoals";
+import { updateUserXP } from "../api/userProgress";
+import { useAuth } from "../../../app/AuthProvider";
 
 export default function ViewAllGoalsModal({
   isOpen,
@@ -7,6 +9,7 @@ export default function ViewAllGoalsModal({
   goals,
   onGoalCompleted,
 }) {
+  const { user, refreshUser } = useAuth();
   const [completing, setCompleting] = useState(null);
   const formatTime = (seconds) => {
     if (!seconds && seconds !== 0) return null;
@@ -51,7 +54,17 @@ export default function ViewAllGoalsModal({
   const handleMarkCompleted = async (goalId) => {
     setCompleting(goalId);
     try {
+      // Update goal completion status
       await updateUserGoal(goalId, { completed: true });
+
+      // Increment user XP by 100
+      if (user && user.id) {
+        const currentXp = parseInt(user.xp) || 0;
+        const newXp = currentXp + 100;
+        await updateUserXP(user.id, newXp);
+        await refreshUser();
+      }
+
       onGoalCompleted(goalId);
     } catch (err) {
       console.error("Error marking goal as completed:", err);

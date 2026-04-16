@@ -13,3 +13,23 @@ export const fetchAllUsers = async () => {
     throw error;
   }
 };
+
+export const updateUserXP = async (userId, newXp) => {
+  try {
+    const res = await fetch(`${BASE_URL}/users/id/${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ xp: String(newXp) }),
+    });
+    if (!res.ok) {
+      throw new Error("Failed to update user XP");
+    }
+    const updatedUser = await res.json();
+    return updatedUser;
+  } catch (error) {
+    console.error("Error updating user XP:", error);
+    throw error;
+  }
+};

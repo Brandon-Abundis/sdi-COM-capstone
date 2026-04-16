@@ -10,22 +10,37 @@ const rankColors = {
 
 const medals = ["🥇", "🥈", "🥉"];
 
+/**
+ * EventLeaderboard — Right column on the Events page.
+ * When no event is selected it shows a placeholder prompt.
+ * When an event is selected it fetches in parallel:
+ *   - The event's parent group (to get the member list)
+ *   - All scores
+ *   - All users (for name/avatar resolution)
+ * Then filters scores to group members only, sorts by score descending,
+ * and shows the top 10. Clicking a row navigates to that user's profile.
+ *
+ * Score display formula: (score / 20) * 1.27 — converts raw score to a display value.
+ */
 export default function EventLeaderboard({ selectedEvent }) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Re-run whenever the selected event changes
   useEffect(() => {
     if (!selectedEvent?.id) return;
     setLoading(true);
     setEntries([]);
 
+    // Fetch the group, all scores, and all users in parallel for efficiency
     Promise.all([
       fetch(`http://localhost:8080/groups/id/${selectedEvent.group_id}`).then((r) => r.json()),
       fetch("http://localhost:8080/scores/").then((r) => r.json()),
       fetch("http://localhost:8080/users/").then((r) => r.json()),
     ])
       .then(([group, scores, users]) => {
+        // Set of member IDs for O(1) filtering
         const memberIds = new Set(group?.user_ids ?? []);
         const userMap = Object.fromEntries(users.map((u) => [u.id, u]));
 
